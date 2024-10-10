@@ -2,3 +2,6 @@ build/
 **/Makefile
 **/cmake_install.cmake 
 **/CMakeFiles
+*.img
+*.o
+*.bin

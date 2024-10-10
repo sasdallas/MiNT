@@ -32,6 +32,9 @@ add_definitions(
     -D_CRT_NON_CONFORMING_SWPRINTFS
 )
 
+# Languages
+ENABLE_LANGUAGE(ASM-ATT)
+
 
 # Setup project directories
 add_subdirectory("boot")
