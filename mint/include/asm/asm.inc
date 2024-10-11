@@ -13,6 +13,9 @@
 #ifndef     __ASM_INC__
 #define     __ASM_INC__
 
+/* Specify to use Intel syntax (AT&T sucks, deal with it) */
+.intel_syntax noprefix
+
 /* Conversion */
 #define BIN(x) 0b##x
 #define OCT(x) 0##x
@@ -24,9 +27,9 @@
 
 
 /* String variables */
-#define CR 13
-#define LF 10
-#define NUL 0
+#define CR  "\r"
+#define LF  "\n"
+#define NUL "\0"
 
 
 #endif 

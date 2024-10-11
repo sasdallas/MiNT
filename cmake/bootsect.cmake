@@ -1,6 +1,19 @@
 include(${CMAKE_MODULE_PATH}/CMakeMacros.cmake)
 
-function(GenerateBootSector bs_id bs_file bs_out bs_addr)
+function(GenerateBootSector bs_id bs_file bs_out)
+    get_cmake_defines(_defines)
+    get_cmake_includes(_includes)
+
+    add_custom_command(
+        OUTPUT ${bs_out}
+        COMMAND nasm -f bin -o ${bs_out} -I ${MINT_BINARY_DIR}/mint/include/asm/ -D__ASM__ ${_includes} ${_defines} ${bs_file}
+        DEPENDS ${bs_file}
+    )
+
+    add_custom_target(${bs_id} ALL DEPENDS ${bs_out})
+endfunction()
+
+function(GenerateBootSectorGAS bs_id bs_file bs_out bs_addr)
     set(_object_file ${bs_out}.o)
 
     get_cmake_defines(_defines)
