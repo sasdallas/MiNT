@@ -26,14 +26,22 @@ endif()
 include(cmake/build_config.cmake) # Configuration options
 include(cmake/detect_arch.cmake) # Cross-compilation (future)
 
-# A bit of extra compiler flags
+# MiNT specific compiler flags
+# __MINT__          Identifies MiNT project
+# VERSION           Version number. Not a string!
+# VERSION_STR       Version string
 add_definitions(
     -D__MINT__
+    -DVERSION=${CMAKE_PROJECT_VERSION}
+    -DVERSION_STR="${CMAKE_PROJECT_VERSION}"
+)
+
+# A bit of extra compiler flags
+add_definitions(
     -D_CRT_NON_CONFORMING_SWPRINTFS
 )
 
 # Languages
-ENABLE_LANGUAGE(ASM-ATT)
 
 
 # Setup project directories

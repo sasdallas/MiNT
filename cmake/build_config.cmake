@@ -1,1 +1,1 @@
-# Compiler options for CMake
+# Build configuration for CMake

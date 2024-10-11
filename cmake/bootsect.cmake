@@ -6,7 +6,7 @@ function(GenerateBootSector bs_id bs_file bs_out)
 
     add_custom_command(
         OUTPUT ${bs_out}
-        COMMAND nasm -f bin -o ${bs_out} -I ${MINT_BINARY_DIR}/mint/include/asm/ -D__ASM__ ${_includes} ${_defines} ${bs_file}
+        COMMAND nasm -i${MINT_SOURCE_DIR}/mint/include/asm/ -f bin -o ${bs_out}  -D__ASM__ ${_includes} ${_defines} ${bs_file}
         DEPENDS ${bs_file}
     )
 
@@ -21,7 +21,7 @@ function(GenerateBootSectorGAS bs_id bs_file bs_out bs_addr)
 
     add_custom_command(
         OUTPUT ${_object_file}
-        COMMAND ${CMAKE_ASM_COMPILER} -x assembler-with-cpp -o ${_object_file} -I ${MINT_SOURCE_DIR}/mint/include/asm -I ${MINT_BINARY_DIR}/mint/include/asm ${_includes} ${_defines} -D__ASM__ -c ${bs_file}
+        COMMAND ${CMAKE_ASM_COMPILER} -x assembler-with-cpp -o ${_object_file} -I ${MINT_SOURCE_DIR}/mint/include/asm ${_includes} ${_defines} -D__ASM__ -c ${bs_file}
         DEPENDS ${bs_file}
     )
 

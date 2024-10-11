@@ -3,10 +3,7 @@
 // DESCRIPTION:  Main assembly macro file
 // AUTHOR:       Samuel S.
 // CREATED:      October 9th, 2024
-// LICENSE:      Some components are present from other OSes/projects.
-//               Because of this, normal BSD-clause licensing for this file DOES NOT APPLY.
-//               In accordance with GPL, this file is open-source and free to use.
-//               ReactOS                  See EXTERNAL/ReactOS.LICENSE (GPL)
+// LICENSE:      Under the license of MiNT (BSD 3-clause)
 // =======================================================================================================
 
 

@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.asm": "asm-collection",
+        "*.S": "gas",
+        "*.inc": "c"
+    }
+}
