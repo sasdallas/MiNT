@@ -1,40 +1,35 @@
+
+
 enableA20_KKbrd_Out:
     cli                     // Clear interrupts
     pusha
     
     call waitInput          
-    mov al, 0xAD            // Disable keyboard command
-    out 0x64, al            // Disable the keyboard
-    call waitInput          
-
-    mov al, 0xD0            // Read output port command
-    out 0x64, al            // Send read output port command to controller
-    call waitOutput         // Wait for output
-
-    in al, 0x60              
-    push eax                // Get the output port data and store it
-    call waitInput
     
-    mov al, 0xD1            // Write output port command
-    out 0x64, al            // Send write output port command to controller
-    call waitInput          
+    mov al, HEX(0D1)
+    out HEX(064), al
+    call waitInput
 
-    pop eax
-    or al, 2                // Set bit 1(enable A20)
-    out 0x60, al            // Write data back to the output port
+    mov al, HEX(0DF)
+    out HEX(060), al
+    call waitInput
 
-    call waitInput          
-    mov al, 0xAE            // Enable keyboard command
-    out 0x64, al            // Enable keyboard
-
-    call waitInput          
+    mov al, HEX(0FF)
+    out HEX(064), al
+    call waitInput
 
     popa
-    sti                     // Enable interrupts
-    ret                     // Return
+    ret
+
 
 waitInput:
+    // Extra instructions to be encoded
+    .word HEX(00eb), HEX(00eb) // jmp $+2, jmp $+22
+
     in al, 0x64
+    cmp al, HEX(0FF)
+    jz waitInput
     test al, 2
     jnz waitInput
+
     ret
