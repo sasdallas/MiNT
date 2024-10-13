@@ -1,5 +1,5 @@
 ; =======================================================================================================
-; FILE:         asm.inc
+; FILE:         asm_nasm.inc
 ; DESCRIPTION:  Main assembly macro file
 ; AUTHOR:       Samuel S.
 ; CREATED:      October 9th, 2024

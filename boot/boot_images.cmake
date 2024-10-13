@@ -19,23 +19,11 @@ ${CDBOOT_FILE} 3
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/bootfiles.sort ${ISO_SORT_FILE_DATA})
 
 
-file(WRITE ${MINT_BINARY_DIR}/bootcd.cmake.lst "")
-file(WRITE ${MINT_BINARY_DIR}/bootcd.cmake.lst "${CMAKE_CURRENT_BINARY_DIR}/empty\nloader/cdboot.bin=${CDBOOT_FILE}")
-
-
-
-file(GENERATE
-        OUTPUT ${MINT_BINARY_DIR}/bootcd.Debug.lst
-        INPUT ${MINT_BINARY_DIR}/bootcd.cmake.lst)
-
-
-
 add_custom_target(bootcd
-    ALL
     COMMAND mkisofs -quiet -o ${MINT_BINARY_DIR}/bootcd.iso -iso-level 4
-        -eltorito-boot loader/cdboot.bin -no-emul-boot -boot-load-size 4 -c loader/bootcat
+        -eltorito-boot loader/cdboot.bin -no-emul-boot -boot-load-size 4
         -no-cache-inodes -graft-points  -sort ${CMAKE_CURRENT_BINARY_DIR}/bootfiles.sort
-        -path-list ${MINT_BINARY_DIR}/bootcd.Debug.lst
+        -path-list ${MINT_BINARY_DIR}/boot/bootcd.$<CONFIG>.lst
     COMMAND isohybrid -b ${CDLDR_FILE} -t 0x96 ${MINT_BINARY_DIR}/bootcd.iso
     DEPENDS cdboot cdldr
     )

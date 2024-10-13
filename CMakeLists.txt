@@ -28,8 +28,9 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 # Includes
-include(cmake/build_config.cmake) # Configuration options
-include(cmake/cross_compile.cmake) # Cross-compilation (future)
+include(cmake/build_config.cmake)   # Configuration options
+include(cmake/cross_compile.cmake)  # Cross-compilation (future)
+include(cmake/cds.cmake)            # CD files
 
 # MiNT specific compiler flags
 # __MINT__          Identifies MiNT project
@@ -55,5 +56,12 @@ else ()
     setup_crosscompile()
 endif()
 
+# "Include" directories
+add_subdirectory("mint/include/asm/")
+
 # Setup project directories
 add_subdirectory("boot")
+
+
+# Create CD files
+create_cd_lists()
