@@ -1,7 +1,7 @@
 # The MiNT operating system
 An NT-like operating system written with a goal of understanding Windows' architecture.
 
-In development.
+In development and an experiment. Not designed to be commercial.
 
 # Licensing
 While MiNT is in itself BSD licensed, some parts are not.

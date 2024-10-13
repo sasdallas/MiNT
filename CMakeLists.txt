@@ -9,6 +9,11 @@ project(MINT VERSION 1.0
 # CMake variables
 set(CMAKE_MODULE_PATH "${MINT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
+
+# MiNT directories
+set(MINT_TOOLS_FOLDER "${CMAKE_CURRENT_BINARY_DIR}")
+
+
 # ARCH must be defined.
 if (NOT ARCH)
     message(FATAL_ERROR "Please use the -DARCH=<architecture> option with one of the following architectures: i386")
@@ -24,7 +29,7 @@ endif()
 
 # Includes
 include(cmake/build_config.cmake) # Configuration options
-include(cmake/detect_arch.cmake) # Cross-compilation (future)
+include(cmake/cross_compile.cmake) # Cross-compilation (future)
 
 # MiNT specific compiler flags
 # __MINT__          Identifies MiNT project
@@ -41,8 +46,14 @@ add_definitions(
     -D_CRT_NON_CONFORMING_SWPRINTFS
 )
 
-# Languages
-
+# Cross-compiling means we set our default CMake compiler to an i686 one
+# Host tools need to be built with the host compiler.
+if (NOT CMAKE_CROSSCOMPILING)
+    message(FATAL_ERROR "how are you not cross compiling")
+else () 
+    # Setup host tools
+    setup_crosscompile()
+endif()
 
 # Setup project directories
 add_subdirectory("boot")

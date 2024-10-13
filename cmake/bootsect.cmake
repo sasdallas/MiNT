@@ -27,8 +27,8 @@ function(GenerateBootSectorGAS bs_id bs_file bs_out bs_addr)
 
     add_custom_command(
         OUTPUT ${bs_out}
-        COMMAND objcopy --output-target binary --image-base 0x${bs_addr} ${_object_file} ${bs_out}
-        DEPENDS ${_object_file}
+        COMMAND mint-obj2bin ${_object_file} ${bs_out} ${bs_addr}
+        DEPENDS ${_object_file} mint-obj2bin
     )
 
     set_source_files_properties(${_object_file} ${bs_out} PROPERTIES GENERATED TRUE)
