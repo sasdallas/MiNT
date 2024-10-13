@@ -1,5 +1,4 @@
 
-
 enableA20_KKbrd_Out:
     cli                     // Clear interrupts
     pusha

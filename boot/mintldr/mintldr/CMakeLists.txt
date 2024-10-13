@@ -7,7 +7,9 @@ include("${CMAKE_MODULE_PATH}/bootsect.cmake")
 # Setup include parameters
 include_directories(BEFORE include)
 include_directories(
+    include/
     ${MINT_SOURCE_DIR}/mint/include/asm/
+    ${MINT_SOURCE_DIR}/mint/include/mint/
 )
 
 # Create boot sector target
@@ -17,12 +19,30 @@ GenerateBootSectorGAS(mintldr_realmode
                 F800)
                 
 
+# Assemble general sources
+list(APPEND MINTLDR_GENERAL_C_SOURCE
+        mintldr.c)
+
+list(APPEND MINTLDR_GENERAL_SOURCE
+        ${MINTLDR_GENERAL_C_SOURCE})
+
+add_library(
+    mintldr_general
+    ${MINTLDR_GENERAL_SOURCE}
+)
+
+# Create the general MINTLDR library, which will be linked to mintldr_executable
 
 
 if (ARCH STREQUAL "i386")
     # Building for an i386 target
     list(APPEND MINTLDR_ARCH_ASM_SOURCE
-            arch/i386/entry.S)
+            arch/i386/entry.S
+            arch/i386/idt.S)
+
+    list(APPEND MINTLDR_ARCH_C_SOURCE
+            arch/i386/idt.c
+            arch/i386/irq.c)
 else()
     message(FATAL_ERROR "No targets besides i386 have been implemented")
 endif()
@@ -30,7 +50,8 @@ endif()
 
 # Concatenate list of sources together
 list(APPEND MINTLDR_ARCH_SOURCE
-        ${MINTLDR_ARCH_ASM_SOURCE})
+        ${MINTLDR_ARCH_ASM_SOURCE}
+        ${MINTLDR_ARCH_C_SOURCE})
 
 # Create a new executable
 add_executable(mintldr_executable ${MINTLDR_ARCH_SOURCE})
@@ -56,6 +77,9 @@ add_dependencies(mintldr_executable asm)
 setImageBase(mintldr_executable 0x10000) # Higher half baby
 setImageSubsystem(mintldr_executable native)
 setEntrypoint(mintldr_executable arch_entrypoint)
+
+# Add in our mintldr common
+target_link_libraries(mintldr_executable mintldr_general)
 
 # This will concatenate the realmode bootsector and mintldr together into MINTLDR.SYS
 add_custom_command(
