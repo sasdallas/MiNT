@@ -13,8 +13,10 @@ installGDT:
 // ----------------------------------------
 
 gdt_data:
-    .long 0                    // Null descriptor
-    .long 0
+    .word HEX(0000)
+    .word HEX(0000)
+    .word HEX(0000)
+    .word HEX(0000)
     
     // GDT code starts here
     .word HEX(0FFFF)           // Limit low

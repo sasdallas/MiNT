@@ -59,8 +59,8 @@ _rm_entrypoint:
 JumpToProtectedMode:
     cli
 
-    // call installGDT
-    lgdt gdtptr
+    call installGDT
+    
 
     // Enable protected mode
     mov eax, cr0
@@ -82,44 +82,6 @@ pe_entrypoint:
     .long 0 // When saving entrypoint this'll get overwritten.
     nop // Random opcode
 
-
-
-.align 4    /* force 4-byte alignment */
-gdt:
-    /* NULL Descriptor */
-    .word HEX(0000)
-    .word HEX(0000)
-    .word HEX(0000)
-    .word HEX(0000)
-
-    /* 32-bit flat CS */
-    .word HEX(FFFF)
-    .word HEX(0000)
-    .word HEX(9A00)
-    .word HEX(00CF)
-
-    /* 32-bit flat DS */
-    .word HEX(FFFF)
-    .word HEX(0000)
-    .word HEX(9200)
-    .word HEX(00CF)
-
-    /* 16-bit real mode CS */
-    .word HEX(FFFF)
-    .word HEX(0000)
-    .word HEX(9E00)
-    .word HEX(0000)
-
-    /* 16-bit real mode DS */
-    .word HEX(FFFF)
-    .word HEX(0000)
-    .word HEX(9200)
-    .word HEX(0000)
-
-/* GDT table pointer */
-gdtptr:
-    .word HEX(27)       /* Limit */
-    .word gdt, 0        /* Base Address */
 
 // Includes
 #include "a20.inc"
