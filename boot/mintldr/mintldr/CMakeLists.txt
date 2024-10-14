@@ -20,15 +20,11 @@ GenerateBootSectorGAS(mintldr_realmode
                 
 
 # Assemble general sources
-list(APPEND MINTLDR_GENERAL_C_SOURCE
-        mintldr.c)
-
-list(APPEND MINTLDR_GENERAL_SOURCE
-        ${MINTLDR_GENERAL_C_SOURCE})
+include("mintldr.cmake")
 
 add_library(
     mintldr_general
-    ${MINTLDR_GENERAL_SOURCE}
+    ${MINTLDR_SOURCE}
 )
 
 # Create the general MINTLDR library, which will be linked to mintldr_executable
@@ -42,7 +38,8 @@ if (ARCH STREQUAL "i386")
 
     list(APPEND MINTLDR_ARCH_C_SOURCE
             arch/i386/idt.c
-            arch/i386/irq.c)
+            arch/i386/irq.c
+            arch/i386/gfx.c)
 else()
     message(FATAL_ERROR "No targets besides i386 have been implemented")
 endif()

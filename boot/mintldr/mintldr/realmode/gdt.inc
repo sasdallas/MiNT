@@ -13,26 +13,38 @@ installGDT:
 // ----------------------------------------
 
 gdt_data:
+    // Null segment
     .word HEX(0000)
     .word HEX(0000)
     .word HEX(0000)
     .word HEX(0000)
     
-    // GDT code starts here
-    .word HEX(0FFFF)           // Limit low
+    // 32-bit GDT code segment
+    .word HEX(FFFF)            // Limit low
     .word 0                    // Base low
     .byte 0                    // Base middle
     .byte BIN(10011010)        // Access
     .byte BIN(11001111)        // Granularity
     .byte 0                    // Base high
 
-    // GDT data starts here(mostly same as code, only difference is access)
-    .word HEX(0FFFF)           // Limit low, again.
+    // 32-bit GDT data segment
+    .word HEX(FFFF)            // Limit low, again.
     .word 0                    // Base low
-    .byte 0                    // Base middle
-    .byte BIN(10010010)        // Access - different
-    .byte BIN(11001111)        // Granularity
-    .byte 0
+    .word HEX(9200)
+    .word HEX(00CF)
+
+    // 16-bit GDT code segment
+    .word HEX(FFFF)
+    .word HEX(0000)
+    .word HEX(9E00)
+    .word HEX(0000)
+
+    // 16-bit GDT data segment
+    .word HEX(FFFF)
+    .word HEX(0000)
+    .word HEX(9200)
+    .word HEX(0000)
+
 
 gdt_end:
 toc:

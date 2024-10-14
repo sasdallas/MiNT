@@ -36,8 +36,8 @@ IdtSetVector(
         // TODO: Fail
     }
 
-    i386Idt[Vector].BaseLow = (USHORT)ServiceHandler & 0xFFFF;
-    i386Idt[Vector].BaseHi = (USHORT)ServiceHandler >> 16;
+    i386Idt[Vector].BaseLow = (ULONG)ServiceHandler & 0xFFFF;
+    i386Idt[Vector].BaseHi = (ULONG)ServiceHandler >> 16;
     i386Idt[Vector].Segment = Segment;
     i386Idt[Vector].Access = Access;
 }
@@ -51,25 +51,21 @@ IdtInit() {
     i386IdtDescriptor.Base = (ULONG)&i386Idt;
 
     /* Initialize handlers */
-    IdtSetVector(0, i386DivByZero, 0x8E00, 0x08);
-    IdtSetVector(1, i386DebugException, 0x8E00, 0x08);
-    IdtSetVector(2, i386NMIException, 0x8E00, 0x08);
-    IdtSetVector(3, i386Breakpoint, 0x8E00, 0x08);
-    IdtSetVector(4, i386Overflow, 0x8E00, 0x08);
-    IdtSetVector(5, i386BoundException, 0x8E00, 0x08);
-    IdtSetVector(6, i386InvalidOpcodeException, 0x8E00, 0x08);
-    IdtSetVector(7, i386FPUNotAvailableException, 0x8E00, 0x08);
-    IdtSetVector(8, i386DoubleFault, 0x8E00, 0x08);
-    IdtSetVector(9, i386CoprocessorSegmentException, 0x8E00, 0x08);
-    IdtSetVector(10, i386InvaildTSS, 0x8E00, 0x08);
-    IdtSetVector(11, i386SegmentNotPresent, 0x8E00, 0x08);
-    IdtSetVector(12, i386StackException, 0x8E00, 0x08);
-    IdtSetVector(13, i386GeneralProtectionFault, 0x8E00, 0x08);
-    IdtSetVector(14, i386PageFault, 0x8E00, 0x08);
-
-
-    /* Install IDT */
-    //InstallIdt(&i386IdtDescriptor);
+    IdtSetVector(0, &i386DivByZero, 0x8E00, 0x08);
+    IdtSetVector(1, &i386DebugException, 0x8E00, 0x08);
+    IdtSetVector(2, &i386NMIException, 0x8E00, 0x08);
+    IdtSetVector(3, &i386Breakpoint, 0x8E00, 0x08);
+    IdtSetVector(4, &i386Overflow, 0x8E00, 0x08);
+    IdtSetVector(5, &i386BoundException, 0x8E00, 0x08);
+    IdtSetVector(6, &i386InvalidOpcodeException, 0x8E00, 0x08);
+    IdtSetVector(7, &i386FPUNotAvailableException, 0x8E00, 0x08);
+    IdtSetVector(8, &i386DoubleFault, 0x8E00, 0x08);
+    IdtSetVector(9, &i386CoprocessorSegmentException, 0x8E00, 0x08);
+    IdtSetVector(10, &i386InvaildTSS, 0x8E00, 0x08);
+    IdtSetVector(11, &i386SegmentNotPresent, 0x8E00, 0x08);
+    IdtSetVector(12, &i386StackException, 0x8E00, 0x08);
+    IdtSetVector(13, &i386GeneralProtectionFault, 0x8E00, 0x08);
+    IdtSetVector(14, &i386PageFault, 0x8E00, 0x08);
 }
 
 

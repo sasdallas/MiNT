@@ -25,9 +25,15 @@ _arch_entrypoint:
     mov gs, ax
     mov ss, ax
 
+    /* Setup stack */
+    mov esp, dword ptr ds:[stack32] // x86common says to do this
+
+
     /* No idea why we preload this, but it works... */
     lidt idtptr
     call _IdtInit
+
+    // sti
 
     call _MintStart
 
@@ -37,3 +43,6 @@ _arch_entrypoint:
 idtptr:
     .word 255
     .long _i386Idt
+
+stack32:
+    .long HEX(F000)

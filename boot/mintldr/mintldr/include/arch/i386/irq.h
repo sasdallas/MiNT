@@ -11,6 +11,10 @@
  * Copyright (C) 2024 Samuel S.
  */
 
+
+#ifndef ARCH_IRQ_H
+#define ARCH_IRQ_H
+
 // IRQ definitions
 void __cdecl i386DivByZero(void);
 void __cdecl i386DebugException(void);
@@ -27,3 +31,5 @@ void __cdecl i386SegmentNotPresent(void);
 void __cdecl i386StackException(void); 
 void __cdecl i386GeneralProtectionFault(void); 
 void __cdecl i386PageFault(void); 
+
+#endif

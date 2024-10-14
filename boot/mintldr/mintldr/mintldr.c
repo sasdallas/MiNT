@@ -12,10 +12,12 @@
  */
 
 #include <mintldr.h>
+#include <gfx.h>
+#include <ui/ui.h>
 
 void
 __cdecl
 MintStart() {
-    *((int*)0xb8000)=0x07690748;
-
+    UiInit();
+    UiPrint("MINTLDR v%s", VERSION_STR);
 }
