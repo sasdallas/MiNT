@@ -36,5 +36,22 @@ UiPrint(
     PCSTR Format, ...
 );
 
+/* Set position */
+VOID
+UiSetPosition(
+    INT XPos,
+    INT YPos
+);
+
+
+/* Get Y */
+INT
+UiGetY();
+
+/* Get X */
+INT
+UiGetX();
+
+
 
 #endif

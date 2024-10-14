@@ -42,9 +42,16 @@ UiPrint(
     va_list ap;
     va_start(ap, Format);
 
+    /* The amount of characters written */
     SIZE_T CharactersWritten;
 
+    /* Argument width, or padding */
+    INT ArgumentWidth = 0;
+
     while (*Format) {
+        /* Reset argument width */
+        ArgumentWidth = 0;
+
         if (Format[0] != '%' || Format[1] == '%')
         {
             if (Format[0] == '%')
@@ -68,10 +75,17 @@ UiPrint(
             Format += CharactersUntilFmt;
             CharactersWritten += CharactersUntilFmt;
             continue;
-        }
+        }        
 
         /* Now we should check the % */
         const PCSTR FormatStart = Format++;
+
+        while (*Format >= '0' && *Format <= '9')
+        {
+            ArgumentWidth *= 10;
+            ArgumentWidth += *Format - '0';
+            *Format++;
+        }
 
         switch (*Format) {
             
@@ -108,30 +122,82 @@ UiPrint(
 
             /* %i - Integer */
             case 'I':
-            case 'i':
+            case 'i': {
                 Format++;
                 INT Integer = va_arg(ap, INT);
+                CHAR StringBuffer[32] = {0};
 
-                // TBD
+                /* Convert integer to string, assuming base-10 */
+                itoa(Integer, StringBuffer, 10);
+
+                /* Calculate string length */
+                SIZE_T BufferLength = strlen(StringBuffer);
+
+                /* If an argument length was specified, deal with that */
+                if (ArgumentWidth && ArgumentWidth > BufferLength)
+                {
+                    CHAR PaddingBuffer[32] = {0};
+                    for (INT i = 0; i < ArgumentWidth - BufferLength; i++)
+                    {
+                        PaddingBuffer[i] = '0';
+                    }
+
+                    if (UiPrintData(&StringBuffer, BufferLength) != TRUE)
+                    {
+                        return -1;
+                    }
+                }
+
+                if (UiPrintData(&StringBuffer, BufferLength) != TRUE)
+                {
+                    return -1;
+                }
+
+                CharactersWritten += BufferLength;
 
                 break;
+            }
 
             /* %u - Unsigned */
+            /* %x - Hexadecimal */
             case 'U':
             case 'u':
-
-                // TBD
-
-                break;
-
-            /* %x - Hexadecimal */
             case 'X':
-            case 'x':
+            case 'x': {
+                Format++;
+                unsigned int Value = va_arg(ap, unsigned int);
+                CHAR StringBuffer[32] = {0};
 
-                // TBD
+                /* Convert hex number to string, assuming base-16 */
+                itoa(Value, StringBuffer, 16);
+
+                /* Calculate string length */
+                SIZE_T BufferLength = strlen(StringBuffer);
+
+                /* If an argument length was specified, deal with that */
+                if (ArgumentWidth && ArgumentWidth > BufferLength)
+                {
+                    CHAR PaddingBuffer[32] = {0};
+                    for (INT i = 0; i < ArgumentWidth - BufferLength; i++)
+                    {
+                        PaddingBuffer[i] = '0';
+                    }
+
+                    if (UiPrintData(&PaddingBuffer, ArgumentWidth - BufferLength) != TRUE)
+                    {
+                        return -1;
+                    }
+                }
+
+                if (UiPrintData(&StringBuffer, BufferLength) != TRUE)
+                {
+                    return -1;
+                }
+
+                CharactersWritten += BufferLength;
 
                 break;
-
+            }
             
             /* Anything else */
             default:
@@ -146,9 +212,7 @@ UiPrint(
                 Format += WriteLength;
                 CharactersWritten += WriteLength;
                 break;
-
         }
-        
     }
 
     va_end(ap);

@@ -28,7 +28,7 @@ i386CommonExceptionHandler:
     push esi
     push edi
     push fs
-    push 0
+    push 0 
     push 0
     push eax
     push ecx
@@ -37,6 +37,8 @@ i386CommonExceptionHandler:
     push es
     push gs
     mov eax, dr7
+    push eax
+    mov eax, dr6
     push eax
     mov eax, dr3
     push eax
@@ -47,7 +49,38 @@ i386CommonExceptionHandler:
     mov eax, dr0
     push eax
     sub esp, 6 * 4
-    
+
+
+    /* Push KSPECIAL_REGISTERS */
+    sub esp, 44
+    sgdt [esp]
+    sidt [esp + 8]
+    str word ptr [esp + 16]
+    sldt word ptr [esp + 18]
+    mov eax, dr7;
+    push eax
+    mov eax, dr6;
+    push eax
+    mov eax, dr3;
+    push eax
+    mov eax, dr2;
+    push eax
+    mov eax, dr1;
+    push eax
+    mov eax, dr0;
+    push eax
+    mov eax, cr4;
+    push eax
+    mov eax, cr3;
+    push eax
+    mov eax, cr2;
+    push eax
+    mov eax, cr0;
+    push eax
+
+    lea eax, [esp + (21 * 4)] 
+    push esp
+    push eax
     push dword ptr ds:[i386ExceptionIndex]
 
     call _i386ExceptionHandler

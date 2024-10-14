@@ -69,3 +69,21 @@ typedef struct _KTRAP_FRAME {
     ULONG V86Fs;
     ULONG V86Gs;
 } KTRAP_FRAME, *PKTRAP_FRAME;
+
+typedef struct _KSPECIAL_REGISTERS {
+    ULONG Cr0;
+    ULONG Cr2;
+    ULONG Cr3;
+    ULONG Cr4;
+    ULONG KernelDr0;
+    ULONG KernelDr1;
+    ULONG KernelDr2;
+    ULONG KernelDr3;
+    ULONG KernelDr6;
+    ULONG KernelDr7;
+    KDESCRIPTOR Gdtr;
+    KDESCRIPTOR Idtr;
+    USHORT Tr;
+    USHORT Ldtr;
+    ULONG Reserved[6];
+} KSPECIAL_REGISTERS, *PKSPECIAL_REGISTERS;

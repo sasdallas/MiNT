@@ -87,3 +87,27 @@ UiPutCharacter(CHAR c) {
     }
 } 
 
+/* Set position */
+VOID
+UiSetPosition(
+    INT XPos,
+    INT YPos
+)
+{
+    UI_CurrentX = XPos;
+    UI_CurrentY = YPos;
+}
+
+/* Get X */
+INT
+UiGetX()
+{
+    return UI_CurrentX;
+}
+
+/* Get Y */
+INT
+UiGetY()
+{
+    return UI_CurrentY;
+}

@@ -21,4 +21,14 @@ MintStart() {
     UiInit();
     UiPrint("MINTLDR v%s\n", VERSION_STR);
     UiPrint("Starting MiNT\n");
+
+    UiPrint("\nUiPrint Testing\n");
+    UiPrint("Integer: %i\n", 5);
+    UiPrint("String: %s\n", "HELLO");
+    UiPrint("Character: %c\n", 'g');
+    UiPrint("Hexadecimal: 0x%x\n", 0xDEADBEEF);
+    UiPrint("\tTabbing\n");
+
+    int thing = 0;
+    int test = 5 / thing;
 }

@@ -67,16 +67,16 @@ void
 GfxDrawPopup(int x, int y, int width, int height, const char* title, const char* message)
 {
     // Draw popup background
-    GfxDrawRect(x, y, width, height, ' ', COLOR_BLACK, COLOR_LIGHT_GRAY);
+    GfxDrawRect(x, y, width, height, ' ', COLOR_BLACK, COLOR_BLUE);
     
     // Draw title bar
-    GfxDrawRect(x, y, width, 1, ' ', COLOR_WHITE, COLOR_BLUE);
+    GfxDrawRect(x, y, width, 1, ' ', COLOR_WHITE, COLOR_LIGHT_GRAY);
     
     // Draw title text
     int titleLen = 0;
     while (title[titleLen] != '\0' && titleLen < width - 2)
     {
-        GfxPutChar(x + 1 + titleLen, y, title[titleLen], COLOR_WHITE, COLOR_BLUE);
+        GfxPutChar(x + 1 + titleLen, y, title[titleLen], COLOR_BLACK, COLOR_LIGHT_GRAY);
         titleLen++;
     }
     
@@ -93,7 +93,7 @@ GfxDrawPopup(int x, int y, int width, int height, const char* title, const char*
         }
         else
         {
-            GfxPutChar(curX, curY, message[msgLen], COLOR_BLACK, COLOR_LIGHT_GRAY);
+            GfxPutChar(curX, curY, message[msgLen], COLOR_WHITE, COLOR_BLUE);
             curX++;
         }
         msgLen++;

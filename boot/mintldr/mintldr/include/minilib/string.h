@@ -19,7 +19,7 @@
 /* String length */
 INT
 strlen(
-    PCSTR String
+    _In_ PCSTR String
 );
 
 /* Copy string */
@@ -28,6 +28,23 @@ strcpy(
     _Out_ char* Destination,
     _In_ CONST char* Source
 );
+
+/* Memory set */
+PVOID
+memset(
+    _In_ PVOID Destination,
+    _In_ CHAR Character,
+    _In_ SIZE_T Length
+);
+
+/* Integer to string */
+VOID
+itoa(
+    _In_ PVOID Input, 
+    _In_ PCHAR Buffer,
+    _In_ INT IntBase
+);
+
 
 
 #endif
