@@ -15,7 +15,10 @@ function(detect_host_architecture)
 endfunction()
 
 function(setup_crosscompile)
-    list(APPEND HOST_TOOLS obj2bin)
+
+    message(STATUS "Configuring host tools")
+
+    list(APPEND HOST_TOOLS obj2bin hpp)
 
     # See root project CMake file for explanation
     ExternalProject_add(tools

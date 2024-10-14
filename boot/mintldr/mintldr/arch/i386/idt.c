@@ -17,7 +17,7 @@
 #include <ndk/arch/i386/ke.h>
 
 
-KI386_IDT_ENTRY DECLSPEC_ALIGN(4) i386Idt[32]; // IDT entries
+KI386_IDT_ENTRY __declspec(align(4)) i386Idt[32]; // IDT entries
 KDESCRIPTOR i386IdtDescriptor; // IDT descriptor
 
 extern VOID InstallIdt(PKDESCRIPTOR i386IdtDescriptor);

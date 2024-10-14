@@ -33,8 +33,6 @@ _arch_entrypoint:
     lidt idtptr
     call _IdtInit
 
-    // sti
-
     call _MintStart
 
     cli

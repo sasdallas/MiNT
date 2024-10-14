@@ -17,6 +17,8 @@
 /*** Screen details (+ colors) ***/
 #ifdef _M_IX86
 #include <arch/i386/gfx.h>
+#else
+#warning "Architecture Unknown"
 #endif
 
 /*** Exposed functions ***/

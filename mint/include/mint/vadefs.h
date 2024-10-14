@@ -2,6 +2,7 @@
  * @file mint/include/mint/vadefs.h
  * @brief va definitions
  * 
+ * This file is part of the MiNT SDK package.
  * 
  * @copyright
  * This file is released into the public domain.

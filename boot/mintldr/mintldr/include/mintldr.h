@@ -14,7 +14,7 @@
 #ifndef MINTLDR_H
 #define MINTLDR_H
 
-#include <windef.h>
+#include <WinDef.h>
 
 #include <arch/i386/irq.h>
 

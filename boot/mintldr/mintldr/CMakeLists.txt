@@ -27,6 +27,8 @@ add_library(
     ${MINTLDR_SOURCE}
 )
 
+# add_dependencies(mintldr_general xdk)
+
 # Create the general MINTLDR library, which will be linked to mintldr_executable
 
 
@@ -76,7 +78,7 @@ setImageSubsystem(mintldr_executable native)
 setEntrypoint(mintldr_executable arch_entrypoint)
 
 # Add in our mintldr common
-target_link_libraries(mintldr_executable mintldr_general)
+target_link_libraries(mintldr_executable mintldr_general minilib_library)
 
 # This will concatenate the realmode bootsector and mintldr together into MINTLDR.SYS
 add_custom_command(

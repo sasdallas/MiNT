@@ -19,21 +19,6 @@
 /* This file has all the 'printf' style functions */
 
 
-/* TO BE MOVED */
-static
-INT
-StrLen(
-    PCSTR String
-)
-{
-    SIZE_T Length = 0;
-    while (String[Length])
-    {
-        Length += 1;
-    }
-    return Length;
-}
-
 static
 BOOL
 UiPrintData(
@@ -110,7 +95,7 @@ UiPrint(
             case 's':
                 Format++;
                 const PCSTR Str = va_arg(ap, const PCSTR);
-                SIZE_T StrLength = StrLen(Str);
+                SIZE_T StrLength = strlen(Str);
 
                 if (UiPrintData(Str, StrLength)) 
                 {
@@ -151,7 +136,7 @@ UiPrint(
             /* Anything else */
             default:
                 Format = FormatStart;
-                SIZE_T WriteLength = StrLen(Format);
+                SIZE_T WriteLength = strlen(Format);
                 
                 if (UiPrintData(Format, WriteLength) != TRUE)
                 {

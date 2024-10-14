@@ -18,25 +18,25 @@
 
 static const CHAR *i386ExceptionMessages[] =
 {
-    "Exception 00: DIVIDE BY ZERO",
-    "Exception 01: DEBUG EXCEPTION",
-    "Exception 02: NON-MASKABLE INTERRUPT EXCEPTION",
-    "Exception 03: BREAKPOINT (INT 3)",
-    "Exception 04: OVERFLOW",
-    "Exception 05: BOUND EXCEPTION",
-    "Exception 06: INVALID OPCODE",
-    "Exception 07: FPU NOT AVAILABLE",
-    "Exception 08: DOUBLE FAULT",
-    "Exception 09: COPROCESSOR SEGMENT OVERRUN",
-    "Exception 0A: INVALID TSS",
-    "Exception 0B: SEGMENT NOT PRESENT",
-    "Exception 0C: STACK EXCEPTION",
-    "Exception 0D: GENERAL PROTECTION FAULT",
-    "Exception 0E: PAGE FAULT",
-    "Exception 0F: Reserved",
-    "Exception 10: COPROCESSOR ERROR",
-    "Exception 11: ALIGNMENT CHECK",
-    "Exception 12: MACHINE CHECK"
+    "*** CPU Exception 00: DIVIDE BY ZERO",
+    "*** CPU Exception 01: DEBUG EXCEPTION",
+    "*** CPU Exception 02: NON-MASKABLE INTERRUPT EXCEPTION",
+    "*** CPU Exception 03: DEBUGGER BREAKPOINT",
+    "*** CPU Exception 04: OVERFLOW",
+    "*** CPU Exception 05: BOUND EXCEPTION",
+    "*** CPU Exception 06: INVALID OPCODE",
+    "*** CPU Exception 07: FPU NOT AVAILABLE",
+    "*** CPU Exception 08: DOUBLE FAULT",
+    "*** CPU Exception 09: COPROCESSOR SEGMENT OVERRUN",
+    "*** CPU Exception 10: INVALID TSS",
+    "*** CPU Exception 11: SEGMENT NOT PRESENT",
+    "*** CPU Exception 12: STACK EXCEPTION",
+    "*** CPU Exception 13: GENERAL PROTECTION FAULT",
+    "*** CPU Exception 14: PAGE FAULT",
+    "*** CPU Exception 15: Reserved",
+    "*** CPU Exception 16: COPROCESSOR ERROR",
+    "*** CPU Exception 17: ALIGNMENT CHECK",
+    "*** CPU Exception 18: MACHINE CHECK"
 };
 
 /* Handler method */
@@ -47,7 +47,7 @@ i386ExceptionHandler(ULONG TrapIndex, PKTRAP_FRAME TrapFrame) {
 
     UiSetColors(COLOR_WHITE, COLOR_BLUE);
     UiClearScreen();
-    UiPrint("Fatal exception occurred\n");
+    UiPrint("MINTLDR encountered a fatal exception while loading.\n");
     UiPrint("%s", i386ExceptionMessages[TrapIndex]);
 
     for (;;);

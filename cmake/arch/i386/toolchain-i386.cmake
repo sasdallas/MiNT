@@ -27,6 +27,7 @@ set(CMAKE_EXE_LINKER_FLAGS_INIT "-nostdlib -Wl,--enable-auto-image-base,--disabl
 
 set(CMAKE_FIND_ROOT_PATH /usr/i686-w64-mingw32)
 
+add_compile_options("$<$<NOT:$<COMPILE_LANGUAGE:CXX>>:-nostdinc>")
 
 message (STATUS "Building for i686 toolchain with MinGW32-based compiler")
 
