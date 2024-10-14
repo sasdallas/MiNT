@@ -94,10 +94,10 @@ UiPrint(
             case 'S':
             case 's':
                 Format++;
-                const PCSTR Str = va_arg(ap, const PCSTR);
+                const char* Str = va_arg(ap, const char*);
                 SIZE_T StrLength = strlen(Str);
 
-                if (UiPrintData(Str, StrLength)) 
+                if (UiPrintData(Str, StrLength) != TRUE) 
                 {
                     return -1;
                 }

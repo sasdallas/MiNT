@@ -19,5 +19,6 @@ void
 __cdecl
 MintStart() {
     UiInit();
-    UiPrint("MINTLDR v%s", VERSION_STR);
+    UiPrint("MINTLDR v%s\n", VERSION_STR);
+    UiPrint("Starting MiNT\n");
 }
