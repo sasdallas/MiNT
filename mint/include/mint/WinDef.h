@@ -1,11 +1,12 @@
 /**
- * @file mint/include/mint/windef.h
- * @brief Basic Windows definitions
+ * @file mint/include/mint/WinDef.h
+ * @brief Windows definitions
  * 
- * This file is part of the MiNT SDK package.
  * 
  * @copyright
- * This file is released into the public domain.
+ * This file is part of the MiNT operating system
+ * However, it has been released into the public domain and is free to use
+ * This file comes with no warranty.
  */
 
 #ifndef WINDEF_H
@@ -20,6 +21,9 @@
 
 /* API definitions */
 #define MINTAPI __stdcall
+
+/* DECLSPEC definitions */
+#define DECLSPEC_IMPORT __declspec(dllimport)
 
 /* Calling conventions */
 #define APIENTRY MINTAPI

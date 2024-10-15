@@ -34,14 +34,14 @@ UiPrintData(
     return TRUE;
 }
 
-INT
-UiPrint(
-    PCSTR Format, ...
-) 
-{
-    va_list ap;
-    va_start(ap, Format);
 
+/* UiPrint but it takes a va_list object */ 
+INT
+UiVAPrint(
+    PCSTR Format,
+    va_list ap
+)
+{
     /* The amount of characters written */
     SIZE_T CharactersWritten;
 
@@ -214,6 +214,20 @@ UiPrint(
                 break;
         }
     }
+
+    return CharactersWritten;
+}
+
+
+INT
+UiPrint(
+    PCSTR Format, ...
+) 
+{
+    va_list ap;
+    va_start(ap, Format);
+
+    SIZE_T CharactersWritten = UiVAPrint(Format, ap);
 
     va_end(ap);
     return CharactersWritten;

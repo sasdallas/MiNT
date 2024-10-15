@@ -43,8 +43,6 @@ static const CHAR *i386ExceptionMessages[] =
 void
 __cdecl
 i386ExceptionHandler(ULONG TrapIndex, PKTRAP_FRAME TrapFrame, PKSPECIAL_REGISTERS SpecialFrame) {
-    //GfxDrawPopup(0, 0, 20, 30, "MiNT - System Exception", "Fatal exception occurred");
-
     UiSetColors(COLOR_WHITE, COLOR_BLUE);
     UiClearScreen(); 
 

@@ -8,3 +8,9 @@
 
 #undef _Out_
 #define _Out_
+
+#undef IN
+#define IN
+
+#undef OUT
+#define OUT

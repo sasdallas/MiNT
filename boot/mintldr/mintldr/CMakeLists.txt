@@ -39,9 +39,11 @@ if (ARCH STREQUAL "i386")
             arch/i386/idt.S)
 
     list(APPEND MINTLDR_ARCH_C_SOURCE
+            arch/i386/mach/mach.c
             arch/i386/idt.c
             arch/i386/irq.c
-            arch/i386/gfx.c)
+            arch/i386/gfx.c
+            arch/i386/tinyhal.c)
 else()
     message(FATAL_ERROR "No targets besides i386 have been implemented")
 endif()

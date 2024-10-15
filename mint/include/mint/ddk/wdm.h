@@ -1,6 +1,6 @@
 /**
- * @file mint/include/mint/mintdefs.h
- * @brief MiNT definitions.
+ * @file mint/include/mint/ddk/wdm.h
+ * @brief WDM header
  * 
  * 
  * @copyright
@@ -9,12 +9,12 @@
  * This file comes with no warranty.
  */
 
-#ifndef MINTDEFS_H
-#define MINTDEFS_H
+#pragma once
 
-/* __MINT__ identifier */
-#ifndef __MINT__
-#define __MINT__
-#endif
+#ifndef _WDMDDK_
+#define _WDMDDK_
+
+#define MINTHALAPI DECLSPEC_IMPORT
+
 
 #endif

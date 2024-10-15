@@ -47,6 +47,11 @@ add_definitions(
     -D_CRT_NON_CONFORMING_SWPRINTFS
 )
 
+# Fix for __FILE__ being absolute
+file(RELATIVE_PATH _PATH_PREFIX ${MINT_BINARY_DIR} ${MINT_SOURCE_DIR})
+add_compile_options(-ffile-prefix-map=${MINT_SOURCE_DIR}=)
+add_compile_options(-ffile-prefix-map=${_PATH_PREFIX}=)
+
 # Cross-compiling means we set our default CMake compiler to an i686 one
 # Host tools need to be built with the host compiler.
 if (NOT CMAKE_CROSSCOMPILING)

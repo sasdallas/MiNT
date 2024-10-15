@@ -18,4 +18,27 @@
 
 #include <arch/i386/irq.h>
 
+/*** MINTLDR Functions ***/
+
+/* Bug check method */
+void
+__cdecl
+MintBugCheckEx(
+    _In_ ULONG BugCode,
+    _In_ PCHAR File,
+    _In_ ULONG Line
+);
+
+/* Bug check (but with text) */
+void
+__cdecl
+MintBugCheckMsg(
+    ULONG BugCode,
+    PCHAR File,
+    ULONG Line,
+    PCSTR *Format,
+    ...
+);
+
+
 #endif 

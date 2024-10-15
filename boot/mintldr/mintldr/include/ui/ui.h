@@ -14,6 +14,8 @@
 #ifndef UI_H
 #define UI_H
 
+#include <vadefs.h>
+
 /* Initialize UI system */
 void
 UiInit();
@@ -34,6 +36,13 @@ UiPutCharacter(CHAR c);
 INT
 UiPrint(
     PCSTR Format, ...
+);
+
+/* UiPrint but it takes a va_list object */ 
+INT
+UiVAPrint(
+    PCSTR Format,
+    va_list ap
 );
 
 /* Set position */
