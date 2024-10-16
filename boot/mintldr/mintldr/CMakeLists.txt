@@ -39,11 +39,12 @@ if (ARCH STREQUAL "i386")
             arch/i386/idt.S)
 
     list(APPEND MINTLDR_ARCH_C_SOURCE
+            arch/i386/tinyhal.c
             arch/i386/mach/mach.c
+            arch/i386/mach/serial.c
             arch/i386/idt.c
             arch/i386/irq.c
-            arch/i386/gfx.c
-            arch/i386/tinyhal.c)
+            arch/i386/gfx.c)
 else()
     message(FATAL_ERROR "No targets besides i386 have been implemented")
 endif()
@@ -65,6 +66,10 @@ get_filename_component(_linker_script "mintldr.ld" ABSOLUTE)
 target_link_options(mintldr_executable PRIVATE "-Wl,-T,${_linker_script}")
 set_property(TARGET mintldr_executable APPEND PROPERTY LINK_DEPENDS ${_linker_script})
 
+add_custom_command(TARGET mintldr_executable
+                    POST_BUILD 
+                    COMMAND ${CMAKE_OBJCOPY} --only-keep-debug $<TARGET_FILE:mintldr_executable> ${CMAKE_CURRENT_BINARY_DIR}/mintldr_exe_dbg.sym
+)
 add_custom_command(TARGET mintldr_executable
                     POST_BUILD
                     COMMAND ${CMAKE_STRIP} --remove-section=.rossym $<TARGET_FILE:mintldr_executable>

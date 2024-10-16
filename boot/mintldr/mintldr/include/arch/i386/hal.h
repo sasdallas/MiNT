@@ -24,7 +24,7 @@
 VOID
 MINTHALAPI
 WRITE_PORT_UCHAR(
-    IN PUCHAR Port,
+    IN UINT Port,
     IN UCHAR Value
 );
 
@@ -32,7 +32,7 @@ WRITE_PORT_UCHAR(
 VOID
 MINTHALAPI
 WRITE_PORT_USHORT(
-    IN PUCHAR Port,
+    IN UINT Port,
     IN USHORT Value
 );
 
@@ -40,7 +40,7 @@ WRITE_PORT_USHORT(
 VOID
 MINTHALAPI
 WRITE_PORT_ULONG(
-    IN PUCHAR Port,
+    IN UINT Port,
     IN ULONG Value
 );
 
@@ -48,21 +48,21 @@ WRITE_PORT_ULONG(
 UCHAR
 MINTHALAPI
 READ_PORT_UCHAR(
-    IN PUCHAR Port
+    IN UINT Port
 );
 
 /* Read 16-bit value */
 UCHAR
 MINTHALAPI
 READ_PORT_USHORT(
-    IN PUCHAR Port
+    IN UINT Port
 );
 
 /* Read 32-bit value */
 UCHAR
 MINTHALAPI
 READ_PORT_ULONG(
-    IN PUCHAR Port
+    IN UINT Port
 );
 
 

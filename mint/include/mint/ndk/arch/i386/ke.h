@@ -18,7 +18,7 @@
 typedef struct _KDESCRIPTOR {
     USHORT Limit;
     ULONG Base;
-} KDESCRIPTOR, *PKDESCRIPTOR;
+} __attribute__((packed)) KDESCRIPTOR, *PKDESCRIPTOR;
 
 /* IDT entry */
 typedef struct _KI386_IDT_ENTRY {
@@ -68,7 +68,7 @@ typedef struct _KTRAP_FRAME {
     ULONG V86Ds;
     ULONG V86Fs;
     ULONG V86Gs;
-} KTRAP_FRAME, *PKTRAP_FRAME;
+} __attribute__((packed)) KTRAP_FRAME, *PKTRAP_FRAME;
 
 typedef struct _KSPECIAL_REGISTERS {
     ULONG Cr0;

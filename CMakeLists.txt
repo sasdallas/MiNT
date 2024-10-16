@@ -21,12 +21,6 @@ endif()
 
 string(TOLOWER ${ARCH} ARCH)
 
-# Setup the operating system build configuration
-if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    message(STATUS "Using DEBUG build type")
-    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Select build type" FORCE)
-endif()
-
 # Includes
 include(cmake/build_config.cmake)   # Configuration options
 include(cmake/cross_compile.cmake)  # Cross-compilation (future)
@@ -41,6 +35,27 @@ add_definitions(
     -DVERSION=${CMAKE_PROJECT_VERSION}
     -DVERSION_STR="${CMAKE_PROJECT_VERSION}"
 )
+
+# Setup the operating system build configuration
+if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    message(WARNING "No build type specified, using DEBUG build type")
+    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Select build type" FORCE)
+endif()
+
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Building for a DEBUG target")
+    add_definitions(
+        -DDEBUG
+        -DBUILDTYPE=DEBUG
+    )
+else()
+    message(STATUS "Building for a RELEASE target")
+    add_definitions(
+        -DRELEASE
+        -DBUILDTYPE=RELEASE
+    )
+endif()
 
 # A bit of extra compiler flags
 add_definitions(

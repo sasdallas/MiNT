@@ -2,6 +2,7 @@
  * @file mintldr/arch/i386/tinyhal.c
  * @brief Tiny HAL library for i386
  * 
+ * @todo This should be implemented in a system-wide HAL library that MINTLDR links to.
  * 
  * @copyright
  * This file is part of MiNT, which is created by Samuel.
@@ -19,7 +20,7 @@
 VOID
 MINTHALAPI
 WRITE_PORT_UCHAR(
-    IN PUCHAR Port,
+    IN UINT Port,
     IN UCHAR Value
 )
 {
@@ -30,7 +31,7 @@ WRITE_PORT_UCHAR(
 VOID
 MINTHALAPI
 WRITE_PORT_USHORT(
-    IN PUCHAR Port,
+    IN UINT Port,
     IN USHORT Value
 )
 {
@@ -41,7 +42,7 @@ WRITE_PORT_USHORT(
 VOID
 MINTHALAPI
 WRITE_PORT_ULONG(
-    IN PUCHAR Port,
+    IN UINT Port,
     IN ULONG Value
 )
 {
@@ -53,7 +54,7 @@ WRITE_PORT_ULONG(
 UCHAR
 MINTHALAPI
 READ_PORT_UCHAR(
-    IN PUCHAR Port
+    IN UINT Port
 )
 {
     UCHAR Output;
@@ -65,7 +66,7 @@ READ_PORT_UCHAR(
 UCHAR
 MINTHALAPI
 READ_PORT_USHORT(
-    IN PUCHAR Port
+    IN UINT Port
 )
 {
     USHORT Output;
@@ -77,7 +78,7 @@ READ_PORT_USHORT(
 UCHAR
 MINTHALAPI
 READ_PORT_ULONG(
-    IN PUCHAR Port
+    IN UINT Port
 )
 {
     ULONG Output;

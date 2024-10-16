@@ -3,6 +3,7 @@
 #pragma once
 
 
+/* Parameters */
 #undef _In_
 #define _In_
 
@@ -14,3 +15,7 @@
 
 #undef OUT
 #define OUT
+
+/* Preprocessor shenanigans */
+#define STATIC static
+#define EXTERN extern

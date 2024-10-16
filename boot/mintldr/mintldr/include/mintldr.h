@@ -15,8 +15,10 @@
 #define MINTLDR_H
 
 #include <WinDef.h>
-
 #include <arch/i386/irq.h>
+#include <ui/ui.h>
+#include <dbg.h>
+
 
 /*** MINTLDR Functions ***/
 

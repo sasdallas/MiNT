@@ -17,6 +17,8 @@
 
 .global _arch_entrypoint
 _arch_entrypoint:
+    cli
+
     /* Setup segments */
     mov ax, PMODE_DS
     mov ds, ax
@@ -29,9 +31,10 @@ _arch_entrypoint:
     mov esp, dword ptr ds:[stack32] // x86common says to do this
 
 
-    /* No idea why we preload this, but it works... */
-    lidt idtptr
+    /* Load the IDT */
     call _IdtInit
+    sti
+
 
     call _MintStart
 

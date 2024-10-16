@@ -16,7 +16,7 @@
 #include <ui/ui.h>
 #include <ndk/arch/i386/ke.h>
 
-static const CHAR *i386ExceptionMessages[] =
+STATIC CONST CHAR *i386ExceptionMessages[] =
 {
     "*** CPU Exception 00: DIVIDE BY ZERO",
     "*** CPU Exception 01: DEBUG EXCEPTION",
@@ -36,13 +36,41 @@ static const CHAR *i386ExceptionMessages[] =
     "*** CPU Exception 15: Reserved",
     "*** CPU Exception 16: COPROCESSOR ERROR",
     "*** CPU Exception 17: ALIGNMENT CHECK",
-    "*** CPU Exception 18: MACHINE CHECK"
+    "*** CPU Exception 18: MACHINE CHECK",
+    "*** CPU Exception 19: VIRTUALIZATION EXCEPTION"
 };
 
-/* Handler method */
+
+
+EXTERN
+VOID
+IdtSendEoi(
+    _In_ UCHAR InterruptNumber
+);
+
+
+/* Interrupt handler method */
 void
 __cdecl
-i386ExceptionHandler(ULONG TrapIndex, PKTRAP_FRAME TrapFrame, PKSPECIAL_REGISTERS SpecialFrame) {
+i386InterruptHandler(
+    ULONG TrapIndex,
+    PKTRAP_FRAME TrapFrame,
+    PKSPECIAL_REGISTERS SpecialFrame
+)
+{
+    IdtSendEoi(TrapIndex);
+}
+
+/* Exception handler method */
+/* TODO: Implement catches */
+void
+__cdecl
+i386ExceptionHandler(
+    ULONG TrapIndex,
+    PKTRAP_FRAME TrapFrame,
+    PKSPECIAL_REGISTERS SpecialFrame
+)
+{
     UiSetColors(COLOR_WHITE, COLOR_BLUE);
     UiClearScreen(); 
 
@@ -58,7 +86,15 @@ i386ExceptionHandler(ULONG TrapIndex, PKTRAP_FRAME TrapFrame, PKSPECIAL_REGISTER
     
 
     UiPrint("MINTLDR encountered a fatal exception while loading.\n");
-    UiPrint("%s\n\n", i386ExceptionMessages[TrapIndex]);
+    if (TrapIndex <= 19)
+    {
+        UiPrint("%s\n\n", i386ExceptionMessages[TrapIndex]);
+    }
+    else if (TrapIndex < 32)
+    {
+        UiPrint("*** Reserved CPU exception\n");
+    }
+    
 
 #ifdef _M_IX86
     UiPrint("Registers:\n");

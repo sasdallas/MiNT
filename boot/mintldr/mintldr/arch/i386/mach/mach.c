@@ -15,11 +15,22 @@
 #include <arch/mach.h>
 
 
+EXTERN
+VOID
+MachInitializeSerialController(
+    UINT ComPort,
+    UINT BaudRate
+);
+
+
 /* Initialize mach interface */
 VOID
 MachInit() 
 {
-    /* zzzzzz */
+    MachInitializeSerialController(
+        1, /* COM1 */
+        9600 /* 9600 baud */
+    );
 }
 
 

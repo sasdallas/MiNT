@@ -14,7 +14,7 @@
 #ifndef _WDMDDK_
 #define _WDMDDK_
 
-#define MINTHALAPI DECLSPEC_IMPORT
+#define MINTHALAPI
 
 
 #endif
