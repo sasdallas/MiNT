@@ -6,8 +6,12 @@ In development and an experiment. Not designed to be commercial.
 # Licensing
 While MiNT is in itself BSD licensed, some parts are not.
 
-A few headers such as the `asm.inc` header use certain macros/code snippets from projects such as ReactOS.\
-ReactOS, for example, is a GPLv3 licensed project and requires all code deriving from it to be GPL-licensed.
+Files will always have their original sources and copyright disclaimers marked at the top.
 
-In accordance with this, some files will be open-source and free to use as they were. These files are marked as such in licensing.
+If these files **DO NOT** have a copyright disclaimer at the top, you are free to use them in any way you see fit.
+
+To clarify, files that DO NOT have a copyright disclaimer are released into the public domain.\
+They come under NO warranty and are given in the hopes they are helpful.
+
+If files are sourced from other projects, you should always be able to find their licenses in `EXTERNAL/`
 
