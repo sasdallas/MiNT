@@ -57,7 +57,6 @@ MachInitializeSerialController(
         default:
             /* Most of the ports further beyond here are at I/O addresses in memory that can vary */
             /* tinyhal isn't advanced enough yet to check BDA so imma be a lazy coder */
-            WARN("Unknown serial port");
             IoPort = MACH_I386_COM1_PORT;
             break;
     }
@@ -105,7 +104,6 @@ MachInitializeSerialController(
     if (READ_PORT_UCHAR(IoPort + MACH_I386_SERIAL_RECVBUF) != 0xFF)
     {
         /* Faulty port */
-        WARN("Serial port faulty");
         IoPort = 0x0;
         return;
     }

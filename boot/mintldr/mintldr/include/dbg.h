@@ -11,20 +11,34 @@
  * Copyright (C) 2024 Samuel S.
  */
 
-/* This is currently just stubs because mach doesn't have serial output */
 
 #ifndef DBG_H
 #define DBG_H
 
+/* Use a template to prevent errors */
+EXTERN
+INT
+MachPrintSerial(
+    PCSTR Format,
+    ...
+);
+
 /* INFO macro - Used for lightweight information messages */
-/* It's best to use the mach log function instead of this */
-#define INFO(message)
+#define INFO(message)   MachPrintSerial("[INFO] (%s:%i) %s: ", __FILE__, __LINE__, __FUNCTION__); \
+                        MachPrintSerial message; \
+                        MachPrintSerial("\n");
 
 /* WARN macro - Used for warnings */
-#define WARN(message)
+#define WARN(message)   MachPrintSerial("[WARN] (%s:%i) %s: ", __FILE__, __LINE__, __FUNCTION__); \
+                        MachPrintSerial message; \
+                        MachPrintSerial("\n");
 
 /* ERROR macro - Used for errors. If critical is one a bugcheck is done (rhyming) */
-#define ERROR(critical, message)
+#define ERROR(critical, message)    \
+        MachPrintSerial("[%s] (%s:%i) %s: ", (critical ? "CRIT" : "ERR ") __FILE__, __LINE__, __FUNCTION__); \
+        MachPrintSerial message; \
+        MachPrintSerial("\n"); \
+        if (critical) MintBugCheckMsg(NULL, __FILE__, __LINE__, message);
 
 /* DEBUG macro - Used for debugging messages */
 #ifdef DEBUG

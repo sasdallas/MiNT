@@ -129,9 +129,6 @@ i386ExceptionHandler(
                 (USHORT)TrapFrame->HardwareSegSs);
         
 
-    /*UiPrint("LDTR: %4x\tTR: %4x\n",
-                SpecialFrame->Ldtr, SpecialFrame->Tr); */
-
 #else
     UiPrint("Unknown/in development architecture\n");
 #endif

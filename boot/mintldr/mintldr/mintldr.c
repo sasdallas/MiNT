@@ -26,6 +26,9 @@ MintStart() {
     /* Initialize mach system */
     MachInit();
 
+    /* Write basic information */
+    INFO(("MINTLDR v%s", VERSION_STR));
+    
 
     UiPrint("MINTLDR v%s\n", VERSION_STR);
     UiPrint("Starting MiNT\n");
@@ -37,7 +40,6 @@ MintStart() {
     UiPrint("Hexadecimal: 0x%x\n", 0xDEADBEEF);
     UiPrint("\tTabbing\n");
 
-    MachPrintSerial("Hello, world!");
     UiPrint("Sent to serial\n");
 
     for (;;);
