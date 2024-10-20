@@ -19,7 +19,7 @@
 
 
 KI386_IDT_ENTRY i386Idt[256]; // IDT entries
-KDESCRIPTOR i386IdtDescriptor; // IDT descriptor
+EXTERN PKDESCRIPTOR _i386_IDTDescriptor; // IDT descriptor
 
 extern VOID InstallIdt(PKDESCRIPTOR i386IdtDescriptor);
 
@@ -85,9 +85,6 @@ void
 __cdecl 
 IdtInit()
 {
-    /* Initialize IDT descriptor */
-    i386IdtDescriptor.Limit = 0xFFFF; /* Too high? */
-    i386IdtDescriptor.Base = (ULONG)i386Idt;
 
     /* Initialize handlers */
     IdtSetVector(0, &i386DivByZero, 0x8E00, 0x08);
@@ -148,8 +145,6 @@ IdtInit()
     IdtSendPicCommand(MACH_I386_PIC2_IO, MACH_I386_PIC_DATA, PicMask2);
 
 
-    /* Load the IDT */
-    __asm__ __volatile__("lidt (%0)" :: "r"(&i386IdtDescriptor));
 }
 
 

@@ -29,4 +29,12 @@
 #define NUL "\0"
 
 
+/* ljmp16 */
+.macro ljmp16 segment, offset
+    .byte 0xEA
+    .word offset
+    .word segment
+.endm
+
+
 #endif 

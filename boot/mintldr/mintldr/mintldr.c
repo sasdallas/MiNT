@@ -16,6 +16,7 @@
 #include <vadefs.h>
 #include <ui/ui.h>
 #include <arch/mach.h>
+#include <arch/i386/i386.h>
 
 void
 __cdecl
@@ -33,15 +34,13 @@ MintStart() {
     UiPrint("MINTLDR v%s\n", VERSION_STR);
     UiPrint("Starting MiNT\n");
 
-    UiPrint("\nUiPrint Testing\n");
-    UiPrint("Integer: %i\n", 5);
-    UiPrint("String: %s\n", "HELLO");
-    UiPrint("Character: %c\n", 'g');
-    UiPrint("Hexadecimal: 0x%x\n", 0xDEADBEEF);
-    UiPrint("\tTabbing\n");
+    REGISTERS Registers;
+    Registers.x.eflags = 0;
+    Registers.b.ah = 0x04;
+    bios32(0x1A, &Registers, &Registers);
 
-    UiPrint("Sent to serial\n");
-
+    if (!BIOS32_SUCCESS(Registers)) UiPrint("Failed\n");
+    else UiPrint("OK");
     for (;;);
 }
 

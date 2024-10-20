@@ -36,7 +36,8 @@ if (ARCH STREQUAL "i386")
     # Building for an i386 target
     list(APPEND MINTLDR_ARCH_ASM_SOURCE
             arch/i386/entry.S
-            arch/i386/idt.S)
+            arch/i386/idt.S
+            arch/i386/bios32.S)
 
     list(APPEND MINTLDR_ARCH_C_SOURCE
             arch/i386/tinyhal.c

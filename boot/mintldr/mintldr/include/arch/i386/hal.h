@@ -19,6 +19,7 @@
 
 #include <ddk/wdm.h>
 #include <WinDef.h>
+#include <arch/i386/i386.h>
 
 /* Write 8-bit value */
 VOID
@@ -64,7 +65,6 @@ MINTHALAPI
 READ_PORT_ULONG(
     IN UINT Port
 );
-
 
 
 
