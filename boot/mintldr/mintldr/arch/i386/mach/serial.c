@@ -18,7 +18,13 @@
 #include <arch/i386/mach.h>
 #include <mintldr.h>
 
-STATIC UINT IoPort = 0x3F4; /* I/O address of serial port */
+STATIC UINT IoPort = MACH_I386_COM1_PORT; /* I/O address of serial port */
+
+STATIC
+VOID
+MachSendSerialCharacter(
+    CHAR c
+);
 
 /* Initialize the serial system (and test it). This is specific to mach internally */
 VOID
@@ -27,6 +33,8 @@ MachInitializeSerialController(
     UINT BaudRate
 )
 {
+    
+
     /* Handle ComPort */
     switch (ComPort)
     {
@@ -53,6 +61,14 @@ MachInitializeSerialController(
             IoPort = MACH_I386_COM1_PORT;
             break;
     }
+
+    UiPrint("MACH: Preparing serial port 0x%x\n", IoPort);
+
+    /**** WARNING WARNING WARNING WARNING WARNING WARNING ****/
+    /**** THIS CODE DOES NOT WORK. I DO NOT KNOW WHY. I AM NOT SURE WHY ****/
+    /**** HOWEVER, NOT CONFIGURING THE SERIAL PORT DOES ALLOW US TO OUTPUT ON EMULATORS ****/
+    /**** DISABLE ONLY IF YOU KNOW WHAT YOU ARE DOING. ****/
+    return;
 
     /* BaudRate is set my MSB/LSB in divisors */
     UINT Divisor = 115200 / BaudRate;
@@ -91,6 +107,7 @@ MachInitializeSerialController(
         /* Faulty port */
         WARN("Serial port faulty");
         IoPort = 0x0;
+        return;
     }
 
     /* Reset in normal operations mode */
@@ -121,4 +138,35 @@ MachRecieveSerialCharacter()
 
     /* Return character */
     return READ_PORT_UCHAR(IoPort + MACH_I386_SERIAL_RECVBUF);
+}
+
+/* Data print method */
+STATIC
+BOOL
+MachPrintSerialData(
+    PCSTR Data,
+    SIZE_T Length
+)
+{
+    
+    for (SIZE_T i = 0; i < Length; i++) 
+    {
+        MachSendSerialCharacter(Data[i]);
+    }
+
+    return TRUE;
+}
+
+/* Print line to serial */
+INT
+MachPrintSerial(
+    PCSTR Format,
+    ...
+)
+{
+    va_list ap;
+    va_start(ap, Format);
+    INT ReturnValue = UiPrintCallback((MachPrintSerialData), Format, ap);
+    va_end(ap);
+    return ReturnValue;
 }

@@ -20,11 +20,12 @@
 void
 __cdecl
 MintStart() {
+    /* Initialize UI system */
+    UiInit();
+
     /* Initialize mach system */
     MachInit();
 
-    /* Initialize UI system */
-    UiInit();
 
     UiPrint("MINTLDR v%s\n", VERSION_STR);
     UiPrint("Starting MiNT\n");
@@ -36,8 +37,10 @@ MintStart() {
     UiPrint("Hexadecimal: 0x%x\n", 0xDEADBEEF);
     UiPrint("\tTabbing\n");
 
-    for (;;);
+    MachPrintSerial("Hello, world!");
+    UiPrint("Sent to serial\n");
 
+    for (;;);
 }
 
 

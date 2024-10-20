@@ -38,6 +38,17 @@ UiPrint(
     PCSTR Format, ...
 );
 
+/* BAD HANDLER SYNTAX! */
+typedef INT (*UiCallback)(PCSTR, SIZE_T);
+
+/* UiPrint to a custom data object */
+INT
+UiPrintCallback(
+    UiCallback Callback,
+    PCSTR Format,
+    va_list ap
+);
+
 /* UiPrint but it takes a va_list object */ 
 INT
 UiVAPrint(

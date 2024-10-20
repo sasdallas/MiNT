@@ -18,7 +18,6 @@
 
 /* This file has all the 'printf' style functions */
 
-
 static
 BOOL
 UiPrintData(
@@ -34,10 +33,10 @@ UiPrintData(
     return TRUE;
 }
 
-
-/* UiPrint but it takes a va_list object */ 
+/* UiPrint to a custom data object */
 INT
-UiVAPrint(
+UiPrintCallback(
+    UiCallback Callback,
     PCSTR Format,
     va_list ap
 )
@@ -67,7 +66,7 @@ UiVAPrint(
             }
 
             /* Print out */
-            if (UiPrintData(Format, CharactersUntilFmt) != TRUE) 
+            if (Callback(Format, CharactersUntilFmt) != TRUE) 
             {
                 return -1;
             }
@@ -95,7 +94,7 @@ UiVAPrint(
                 Format++;
                 CHAR c = (CHAR)va_arg(ap, INT);
 
-                if (UiPrintData(&c, sizeof(c)) != TRUE) 
+                if (Callback(&c, sizeof(c)) != TRUE) 
                 {
                     return -1;
                 }
@@ -108,10 +107,10 @@ UiVAPrint(
             case 'S':
             case 's':
                 Format++;
-                const char* Str = va_arg(ap, const char*);
+                CONST CHAR* Str = va_arg(ap, const char*);
                 SIZE_T StrLength = strlen(Str);
 
-                if (UiPrintData(Str, StrLength) != TRUE) 
+                if (Callback(Str, StrLength) != TRUE) 
                 {
                     return -1;
                 }
@@ -142,13 +141,13 @@ UiVAPrint(
                         PaddingBuffer[i] = '0';
                     }
 
-                    if (UiPrintData(&StringBuffer, BufferLength) != TRUE)
+                    if (Callback((PCSTR)&StringBuffer, BufferLength) != TRUE)
                     {
                         return -1;
                     }
                 }
 
-                if (UiPrintData(&StringBuffer, BufferLength) != TRUE)
+                if (Callback((PCSTR)&StringBuffer, BufferLength) != TRUE)
                 {
                     return -1;
                 }
@@ -183,13 +182,13 @@ UiVAPrint(
                         PaddingBuffer[i] = '0';
                     }
 
-                    if (UiPrintData(&PaddingBuffer, ArgumentWidth - BufferLength) != TRUE)
+                    if (Callback(&PaddingBuffer, ArgumentWidth - BufferLength) != TRUE)
                     {
                         return -1;
                     }
                 }
 
-                if (UiPrintData(&StringBuffer, BufferLength) != TRUE)
+                if (Callback(&StringBuffer, BufferLength) != TRUE)
                 {
                     return -1;
                 }
@@ -204,7 +203,7 @@ UiVAPrint(
                 Format = FormatStart;
                 SIZE_T WriteLength = strlen(Format);
                 
-                if (UiPrintData(Format, WriteLength) != TRUE)
+                if (Callback(Format, WriteLength) != TRUE)
                 {
                     return -1;
                 }
@@ -219,6 +218,24 @@ UiVAPrint(
 }
 
 
+
+
+
+/* UiPrint but it takes a va_list object */ 
+INT
+UiVAPrint(
+    PCSTR Format,
+    va_list ap
+)
+{
+    UiPrintCallback(
+        (UiPrintData),
+        Format,
+        ap
+    );
+}
+
+/* Main print method */
 INT
 UiPrint(
     PCSTR Format, ...

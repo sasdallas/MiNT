@@ -29,7 +29,7 @@ MachInit()
 {
     MachInitializeSerialController(
         1, /* COM1 */
-        9600 /* 9600 baud */
+        38400 /* 38400 baud */
     );
 }
 

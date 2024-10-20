@@ -54,10 +54,12 @@ void
 __cdecl
 i386InterruptHandler(
     ULONG TrapIndex,
+    ULONG InterruptIndex,
     PKTRAP_FRAME TrapFrame,
     PKSPECIAL_REGISTERS SpecialFrame
 )
 {
+    // UiPrint("Interrupt %i (IRQ %i)\n", TrapIndex, InterruptIndex);
     IdtSendEoi(TrapIndex);
 }
 

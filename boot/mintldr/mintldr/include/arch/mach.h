@@ -23,6 +23,12 @@
 VOID
 MachInit();
 
+/* Print line to serial */
+INT
+MachPrintSerial(
+    PCSTR Format,
+    ...
+);
 
 
 
