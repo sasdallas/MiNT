@@ -1,6 +1,6 @@
 /**
- * @file mint/include/mint/ddk/wdm.h
- * @brief WDM header
+ * @file mint/include/mint/xdk/ntdef.h
+ * @brief This is the example brief text. Make fun of me if I use this.
  * 
  * 
  * @copyright
@@ -10,11 +10,3 @@
  */
 
 #pragma once
-
-#ifndef _WDMDDK_
-#define _WDMDDK_
-
-#define MINTHALAPI
-
-
-#endif

@@ -33,6 +33,8 @@ _arch_entrypoint:
     /* Load IDT */
     lidt i386_IDTDescriptor
 
+    /* Jump to continue address */
+    jmp dword ptr ds:[_arch_continue]
 
 /* Continue address. This is modified for BIOS32 calls */
 .global _arch_continue
@@ -43,10 +45,16 @@ _arch_continue:
 /* The main entrypoint for the first time */
 _arch_startup:
 
+    /* Patch SwitchToRealMode_Address */
+    mov eax, dword ptr ds:[BSS_RealModeEntry]
+    mov dword ptr ds:[SwitchToRealMode_Address], eax
+
+
     /* Load the IDT */
     call _IdtInit
     sti
 
+    /* Call MintStart */
     call _MintStart
 
     cli
@@ -56,6 +64,7 @@ _arch_startup:
 /* Switching to real mode function */
 /* SwitchToRealMode_Address is set by _arch_entrypoint to the BSS data of the address */
 /* This BSS data is in turn set by realmode startup */
+.global SwitchToRealMode
 SwitchToRealMode:
     /* pmode segments */
     mov ax, PMODE_DS

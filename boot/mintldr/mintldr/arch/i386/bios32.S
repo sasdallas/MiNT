@@ -18,6 +18,9 @@ Bios32RegsOutput:
     .long 0
 
 
+.extern SwitchToRealMode
+.extern _arch_continue
+
 //
 // bios32(int vector, REGS* input, REGS* output);
 //
@@ -47,3 +50,21 @@ _bios32:
     mov ecx, REGS_SIZE / 4
 
     /* Switch to real mode */
+    mov dword ptr [_arch_continue], offset bios32_return
+    jmp SwitchToRealMode
+
+bios32_return:
+    /* Copy output registers */
+    mov esi, BSS_RegisterSet
+    mov edi, dword ptr [Bios32RegsOutput]
+    mov ecx, REGS_SIZE / 4
+    rep movsd
+
+    /* Restore all registers and segment registers */
+    popa
+    pop gs
+    pop fs
+    pop es
+    pop ds
+
+    ret

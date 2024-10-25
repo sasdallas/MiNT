@@ -93,9 +93,12 @@ RealMode:
     sti
 
     /* Call our RealModeBios32 handler */
+    /* BUG: Stack isn't being properly done. RealModeBios32 DOES NOT use ret, it just jumps to JumpToProtectedMode. */
+    /* But not calling doesn't work... */
     call RealModeBios32    
 
     /* We're done, so we'll just head to JumpToProtectedMode to get back */
+.global JumpToProtectedMode
 JumpToProtectedMode:
     cli
 

@@ -36,15 +36,25 @@ RealModeBios32:
     mov gs, ax
     
     /* Setup main registers */
+
+    mov eax, dword ptr cs:[BSS_RegisterSet + REGS_EBP]
+    test eax, eax
+    jz RealModeBios32_SetupRegs
+    mov ebp, eax
+
+RealModeBios32_SetupRegs:
     mov eax, dword ptr cs:[BSS_RegisterSet + REGS_EAX]
     mov ebx, dword ptr cs:[BSS_RegisterSet + REGS_EBX]
     mov ecx, dword ptr cs:[BSS_RegisterSet + REGS_ECX]
     mov edx, dword ptr cs:[BSS_RegisterSet + REGS_EDX]
     mov esi, dword ptr cs:[BSS_RegisterSet + REGS_ESI]
     mov edi, dword ptr cs:[BSS_RegisterSet + REGS_EDI]
-    mov ebp, dword ptr cs:[BSS_RegisterSet + REGS_EBP]
 
-    /* Enncode interrupt vector (CD = INT opcode) */
+    // mov ebp, dword ptr cs:[BSS_RegisterSet + REGS_EBP]
+
+    /* Encode interrupt vector (CD = INT opcode) */
+
+    
     .byte HEX(0cd)
 RealModeBios32_Interrupt:
     .byte 00
@@ -77,5 +87,5 @@ RealModeBios32_Interrupt:
     pop es
     pop ds
 
-    ret
+    jmp JumpToProtectedMode
     
