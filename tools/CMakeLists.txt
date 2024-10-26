@@ -13,4 +13,4 @@ endfunction()
 include_directories("${MINT_SOURCE_DIR}/mint/include/")
 
 add_host_tool(obj2bin obj2bin/obj2bin.c)
-
+add_host_tool(pefixup pefixup/pefixup.c)
