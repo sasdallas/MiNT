@@ -92,6 +92,7 @@ include_directories(
 
 # Setup project directories
 add_subdirectory("boot")
+add_subdirectory("mintkrnl")
 
 
 
