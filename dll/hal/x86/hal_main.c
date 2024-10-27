@@ -16,6 +16,7 @@
 #include <arc/arc.h>
 #include <ndk/arch/i386/ke.h>
 #include <xdk/ketypes.h>
+#include <ddk/wdm.h>
 
 CODE_SEG("init")
 BOOLEAN

@@ -10,9 +10,11 @@
  */
 
 #pragma once
-#include <ddk/wdm.h>
-#include <WinDef.h>
 
+#ifndef _NTDEF_H
+#define _NTDEF_H
+
+#include <WinDef.h>
 #include <psdk/ntstatus.h>
 #include <psdk/winerror.h>
 
@@ -23,3 +25,15 @@ typedef struct _LIST_ENTRY {
 } LIST_ENTRY, *PLIST_ENTRY, PRLIST_ENTRY;
 
 
+
+/* STRING structure (common for KD) */
+/* http://sysprogs.com/legacy/articles/kdvmware/kdcom/ */
+typedef struct _STRING
+{
+  USHORT Length;
+  USHORT MaximumLength;
+  PCHAR Buffer;
+} STRING, *PKD_BUFFER;
+
+
+#endif

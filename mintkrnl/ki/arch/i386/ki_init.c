@@ -26,6 +26,6 @@ VOID
 MINTAPI
 KiSystemStartup(IN PLOADER_PARAMETER_BLOCK LoaderBlock)
 {
-    __asm__ __volatile__("outb %b[Data], %w[Port]" :: [Port] "Nd" (0x3F8), [Data] "a" ('h'));
+    
     for (;;);
 }

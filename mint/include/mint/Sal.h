@@ -10,12 +10,19 @@
 #undef _Out_
 #define _Out_
 
+
+/* Preprocessor shenanigans */
+#define STATIC static
+#define EXTERN extern
+
+
+/* IN/OUT/OPTIONAL */
+
 #undef IN
 #define IN
 
 #undef OUT
 #define OUT
 
-/* Preprocessor shenanigans */
-#define STATIC static
-#define EXTERN extern
+#undef OPTIONAL
+#define OPTIONAL

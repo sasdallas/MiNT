@@ -42,6 +42,8 @@
 /* Types */
 typedef unsigned short wchar_t; // Shouldn't be here
 
+
+
 #include <IntSafe.h>
 
 typedef unsigned char BYTE;

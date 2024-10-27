@@ -16,7 +16,6 @@
 #include <xdk/ntdef.h>
 
 
-
 NTSTATUS
 MINTAPI
 KdDebuggerInitialize(

@@ -2,6 +2,8 @@
 // This file is not protected and is released to the public domain
 #pragma once
 
+#include <WinDef.h>
+
 
 /* NTSTATUS */
 typedef LONG NTSTATUS;
