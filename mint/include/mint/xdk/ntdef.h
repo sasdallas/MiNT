@@ -13,6 +13,8 @@
 #include <ddk/wdm.h>
 #include <WinDef.h>
 
+#include <psdk/ntstatus.h>
+#include <psdk/winerror.h>
 
 /* LIST_ENTRY structure */
 typedef struct _LIST_ENTRY {
@@ -20,12 +22,4 @@ typedef struct _LIST_ENTRY {
   struct _LIST_ENTRY *Blink;
 } LIST_ENTRY, *PLIST_ENTRY, PRLIST_ENTRY;
 
-
-/* NTSTATUS */
-typedef LONG NTSTATUS;
-
-#define NT_SUCCESS(Status) ((Status >= 0 && Status <= 0x3FFFFFFF) || (Status >= 0x40000000 && Status <= 0x7FFFFFFF)) 
-#define NT_INFORMATION(Status) (Status >= 0x40000000 && Status <= 0x7FFFFFFF)
-#define NT_WARNING(Status) (Status >= 0x80000000 && Status <= 0xBFFFFFFF)
-#define NT_ERROR(Status) (Status >= 0xC0000000 && Status <= 0xFFFFFFFF)
 

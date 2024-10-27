@@ -2,6 +2,18 @@
 // This file is not protected and is released to the public domain
 #pragma once
 
+
+/* NTSTATUS */
+typedef LONG NTSTATUS;
+
+#define NT_SUCCESS(Status) ((Status >= 0 && Status <= 0x3FFFFFFF) || (Status >= 0x40000000 && Status <= 0x7FFFFFFF)) 
+#define NT_INFORMATION(Status) (Status >= 0x40000000 && Status <= 0x7FFFFFFF)
+#define NT_WARNING(Status) (Status >= 0x80000000 && Status <= 0xBFFFFFFF)
+#define NT_ERROR(Status) (Status >= 0xC0000000 && Status <= 0xFFFFFFFF)
+
+
+/* STATUS codes */
+
 #define STATUS_ABANDON_HIBERFILE 0x40000033
 #define STATUS_ABANDONED 0x80
 #define STATUS_ABANDONED_WAIT_0 0x80

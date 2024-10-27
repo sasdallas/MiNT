@@ -28,7 +28,7 @@ set_target_properties(
 )
 
 # RTL, HAL, and other libraries will be made elsewhere
-target_link_libraries(mintkrnl hal)
+target_link_libraries(mintkrnl hal kdcom)
 
 
 # Apply NT OS flags

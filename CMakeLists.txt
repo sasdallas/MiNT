@@ -85,10 +85,15 @@ include_directories(
     mint/include/mint/
     ${MINT_BINARY_DIR}/mint/include/
     ${MINT_BINARY_DIR}/mint/include/mint/
-    ${MINT_BINARY_DIR}/mint/include/mint/ddk
-    ${MINT_BINARY_DIR}/mint/include/mint/psdk
-    ${MINT_BINARY_DIR}/mint/include/mint/xdk
+    ${MINT_BINARY_DIR}/mint/include/mint/ddk/
+    ${MINT_BINARY_DIR}/mint/include/mint/psdk/
+    ${MINT_BINARY_DIR}/mint/include/mint/xdk/
 )
+
+# Extra CMake flags
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_SHARED_LIBRARY_PREFIX "")
+set(CMAKE_SHARED_MODULE_PREFIX "")
 
 # Setup project directories
 add_subdirectory("boot")

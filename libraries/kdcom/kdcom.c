@@ -13,7 +13,7 @@
 
 #include <WinDef.h>
 #include <arc/arc.h>
-#include <ntdef.h>
+#include <xdk/ntdef.h>
 
 
 
@@ -23,5 +23,5 @@ KdDebuggerInitialize(
     IN PLOADER_PARAMETER_BLOCK LoaderBlock
 )
 {
-    
+    return STATUS_SUCCESS;
 }
