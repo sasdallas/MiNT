@@ -27,11 +27,3 @@ HalInitSystem (IN ULONG BootPhase,
     // Initialize the thingamajigger
     return TRUE;
 }
-
-
-KIRQL
-MINTHALAPI
-KeGetCurrentIrql (VOID)
-{
-    return 0;
-}

@@ -49,13 +49,13 @@ READ_PORT_UCHAR(
 );
 
 /* Read 16-bit value */
-UCHAR
+USHORT
 READ_PORT_USHORT(
     IN UINT Port
 );
 
 /* Read 32-bit value */
-UCHAR
+ULONG
 READ_PORT_ULONG(
     IN UINT Port
 );

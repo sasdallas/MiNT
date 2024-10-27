@@ -84,11 +84,14 @@ add_subdirectory("mint/include/asm/")
 include_directories(
     mint/include/
     mint/include/mint/
-    ${MINT_BINARY_DIR}/mint/include/
-    ${MINT_BINARY_DIR}/mint/include/mint/
-    ${MINT_BINARY_DIR}/mint/include/mint/ddk/
-    ${MINT_BINARY_DIR}/mint/include/mint/psdk/
-    ${MINT_BINARY_DIR}/mint/include/mint/xdk/
+    ${MINT_SOURCE_DIR}/mint/include/
+    ${MINT_SOURCE_DIR}/mint/include/mint/
+    ${MINT_SOURCE_DIR}/mint/include/mint/ddk/
+    ${MINT_SOURCE_DIR}/mint/include/mint/psdk/
+    ${MINT_SOURCE_DIR}/mint/include/mint/xdk/
+    ${MINT_SOURCE_DIR}/mint/include/mint/arc/
+    ${MINT_SOURCE_DIR}/mint/include/mint/ndk/arch/${ARCH}
+    ${MINT_SOURCE_DIR}/mint/include/libraries/
 )
 
 # Extra CMake flags
@@ -101,6 +104,7 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 # Setup project directories
 add_subdirectory("boot")
 add_subdirectory("dll")
+add_subdirectory("libraries")
 add_subdirectory("mintkrnl")
 
 

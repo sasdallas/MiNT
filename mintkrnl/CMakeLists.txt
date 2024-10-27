@@ -27,8 +27,7 @@ set_target_properties(
     DEFINE_SYMBOL ""
 )
 
-# RTL, HAL, and other libraries will be made elsewhere
-target_link_libraries(mintkrnl hal kdcom)
+
 
 
 # Apply NT OS flags
@@ -52,5 +51,10 @@ add_custom_command(
 )
 #set_property(TARGET mintkrnl APPEND PROPERTY LINK_DEPENDS $<TARGET_PROPERTY:mint-pefixup,IMPORTED_LOCATION>)
 
+# RTL, HAL, and other libraries will be made elsewhere
+target_link_libraries(mintkrnl hal)
+target_link_libraries(mintkrnl kdcom)
+
 
 add_cd_file(TARGET mintkrnl FILE ${CMAKE_CURRENT_BINARY_DIR}/mintkrnl.exe DESTINATION MINT FOR bootcd) 
+

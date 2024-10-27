@@ -15,8 +15,10 @@
 #include <mintdefs.h>
 #include <WinDef.h>
 
+#include <xdk/iofuncs.h>
 
-DECLSPEC_IMPORT  UCHAR  KeGetCurrentIrql(VOID);
+
+#include <kddll.h>
 
 
 /* The big bang! */
@@ -26,6 +28,13 @@ VOID
 MINTAPI
 KiSystemStartup(IN PLOADER_PARAMETER_BLOCK LoaderBlock)
 {
+    /* HalInitSystem should not be called like this, too bad. */
+    HalInitSystem(0, LoaderBlock);
+
+    /* Initialize kernel debugger */
+    KdDebuggerInitialize0(LoaderBlock);
+
     
+
     for (;;);
 }

@@ -25,4 +25,8 @@
 #include <ndk/arch/i386/ke.h>
 #include <xdk/ketypes.h>
 
+/* HAL-specific includes */
+#include <xdk/iofuncs.h>
+
+
 #endif

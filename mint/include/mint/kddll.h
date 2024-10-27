@@ -11,9 +11,6 @@
 
 #pragma once
 
-#ifndef _KDDLL_H
-#define _KDDLL_H
-
 /** Includes **/
 #include <psdk/ntstatus.h>
 #include <arc/arc.h>
@@ -21,6 +18,7 @@
 #include <mintdefs.h>
 #include <WinDef.h>
 #include <kddbg.h>
+
 
 /** Functions **/
 
@@ -30,6 +28,7 @@ MINTAPI
 KdDebuggerInitialize0(
     IN PLOADER_PARAMETER_BLOCK LoaderBlock
 );
+
 
 /* Phase 1 initialize */
 NTSTATUS
@@ -44,7 +43,7 @@ VOID
 MINTAPI
 KdSendPacket(
     IN ULONG PacketType,
-    IN PKD_Buffer FirstBuffer,
+    IN PKD_BUFFER FirstBuffer,
     IN OPTIONAL PKD_BUFFER SecondBuffer,
     IN OUT PKD_CONTEXT KdContext
 );
@@ -60,5 +59,3 @@ KdReceivePacket(
     IN OUT OPTIONAL PKD_CONTEXT KdContext
 );
 
-
-#endif
