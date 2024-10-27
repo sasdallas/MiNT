@@ -34,6 +34,7 @@ MintStart() {
     UiPrint("MINTLDR v%s\n", VERSION_STR);
     UiPrint("Starting MiNT\n");
 
+    UiPrint("MINT: Performing register call\n");
     REGISTERS Registers;
     Registers.x.eflags = 0;
     Registers.b.ah = 0x04;

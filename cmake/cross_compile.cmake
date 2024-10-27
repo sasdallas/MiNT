@@ -18,7 +18,7 @@ function(setup_crosscompile)
 
     message(STATUS "Configuring host tools")
 
-    list(APPEND HOST_TOOLS obj2bin hpp)
+    list(APPEND HOST_TOOLS obj2bin pefixup)
 
     # See root project CMake file for explanation
     ExternalProject_add(tools

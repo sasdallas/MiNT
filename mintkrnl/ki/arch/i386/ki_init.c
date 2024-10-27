@@ -11,3 +11,18 @@
  * Copyright (C) 2024 Samuel S.
  */
 
+#include <arc/arc.h>
+#include <mintdefs.h>
+#include <WinDef.h>
+
+
+
+/* The big bang! */
+CODE_SEG("INIT")
+DECLSPEC_NORETURN
+VOID
+MINTAPI
+KiSystemStartup(IN PLOADER_PARAMETER_BLOCK LoaderBlock)
+{
+    for (;;);
+}

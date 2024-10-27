@@ -3,6 +3,7 @@ PROJECT(MINTKRNL)
 
 include(krnlsrc.cmake)
 include("${CMAKE_MODULE_PATH}/CMakeMacros.cmake")
+include("${CMAKE_MODULE_PATH}/cds.cmake")
 
 set(MINTKRNL_SOURCE ${SOURCE})
 set(MINTKRNL_ASM_SOURCE ${ASM_SOURCE})
@@ -31,10 +32,10 @@ set_target_properties(
 
 # Apply NT OS flags
 target_link_options(mintkrnl
-        PRIVATE -Wl,--major-image-version,5,-Wl,--minor-image-version,01 -Wl,--major-os-version,5,-Wl,--minor-os-version,01)
+        PRIVATE -Wl,--major-image-version,5 -Wl,--minor-image-version,01 -Wl,--major-os-version,5 -Wl,--minor-os-version,01)
 
 # Apply extra flags
-target_link_options(mintkrnl PRIVATE -Wl,--exclude-all-symbols,--ile-alignment=0x1000,-section-alignment=0x1000)
+target_link_options(mintkrnl PRIVATE -Wl,--exclude-all-symbols,--file-alignment=0x1000,-section-alignment=0x1000)
 
 # Add in init-sections
 get_filename_component(_linker_script ${MINT_SOURCE_DIR}/cmake/init-sections.lds ABSOLUTE)
@@ -49,3 +50,5 @@ add_custom_command(
     DEPENDS mint-pefixup
 )
 #set_property(TARGET mintkrnl APPEND PROPERTY LINK_DEPENDS $<TARGET_PROPERTY:mint-pefixup,IMPORTED_LOCATION>)
+
+add_cd_file(TARGET mintkrnl FILE ${CMAKE_CURRENT_BINARY_DIR}/mintkrnl.exe DESTINATION MINT FOR bootcd) 

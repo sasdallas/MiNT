@@ -17,4 +17,9 @@
 #define __MINT__
 #endif
 
+/* DATA and CODE segments */
+#define DATA_SEG(segment) __attribute__((section(segment)))
+#define CODE_SEG(segment) __attribute__((section(segment)))
+
+
 #endif

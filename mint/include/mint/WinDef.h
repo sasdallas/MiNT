@@ -24,6 +24,7 @@
 
 /* DECLSPEC definitions */
 #define DECLSPEC_IMPORT __declspec(dllimport)
+#define DECLSPEC_NORETURN __declspec(noreturn)
 
 /* Calling conventions */
 #define APIENTRY MINTAPI
