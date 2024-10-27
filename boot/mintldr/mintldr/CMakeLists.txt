@@ -43,6 +43,7 @@ if (ARCH STREQUAL "i386")
             arch/i386/tinyhal.c
             arch/i386/mach/mach.c
             arch/i386/mach/serial.c
+            arch/i386/mach/memory.c
             arch/i386/idt.c
             arch/i386/irq.c
             arch/i386/gfx.c)

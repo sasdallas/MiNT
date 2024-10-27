@@ -22,6 +22,10 @@ MachInitializeSerialController(
     UINT BaudRate
 );
 
+EXTERN
+VOID
+MachInitializeMemory();
+
 
 /* Initialize mach interface */
 VOID
@@ -31,6 +35,8 @@ MachInit()
         1, /* COM1 */
         38400 /* 38400 baud */
     );
+
+    MachInitializeMemory();
 }
 
 

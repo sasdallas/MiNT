@@ -62,6 +62,49 @@
 #define MACH_I386_ICW4_SFNM         0x10    /* Special fully nested */
 
 
+/* Memory Map Types */
+typedef enum
+{
+    MEM_USABLE              = 1,
+    MEM_RESERVED            = 2,
+    MEM_ACPI_RECLAIMABLE    = 3,
+    MEM_ACPI_NVS            = 4,
+    MEM_BAD_MEMORY          = 5
+} BIOS_MEMORY_TYPE;
+
+/* Memory Map */
+typedef struct _BIOS_MEMORY_MAP
+{
+    union
+    {
+        ULONGLONG BaseAddress;
+        struct {
+            ULONG BaseAddressLow;
+            ULONG BaseAddressHigh;
+        } ba;
+    };
+
+
+    union
+    {
+        ULONGLONG RegionLength;
+        struct {
+            ULONG RegionLengthLow;
+            ULONG RegionLengthHigh;
+        } rl;
+    };
+ 
+    ULONG RegionType; /* See enum BIOS_MEMORY_TYPE */
+
+    /* Part of ACPI 3.0 standard */
+    struct _ACPI_DATA
+    {
+        ULONG IgnoreEntry:1; /* Do not use */
+        ULONG Nonvolatile:1; /* Nonvolatile. Requires further probing */
+
+        ULONG Reserved:30; /* TODO: Check if all of these are reserved. Seen information that they aren't in later ACPI versions */
+    } AcpiData;
+} BIOS_MEMORY_MAP, *PBIOS_MEMORY_MAP;
 
 
 

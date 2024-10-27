@@ -31,6 +31,25 @@ MachPrintSerial(
 );
 
 
+/*** STRUCTURES ***/
+
+/* Mainly just reserved. This could be a boolean */
+typedef enum {
+    MEM_USABLE = 0,
+    MEM_NOT_USABLE = 1
+} GENERIC_MEMORY_TYPE;
+
+/* Normally memory maps (or at least their descriptors) are hardware-specific */
+/* MiNT's memory manager requires descriptors to construct its own map */
+/* Because of this, we will use a generic memory descriptor */
+typedef struct _GENERIC_MEMORY_DESCRIPTOR
+{
+    ULONGLONG BaseAddress;
+    ULONGLONG RegionSize;
+    GENERIC_MEMORY_TYPE RegionType;
+} GENERIC_MEMORY_DESCRIPTOR, *PGENERIC_MEMORY_DESCRIPTOR;
+
+
 
 
 

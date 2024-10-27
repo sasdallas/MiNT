@@ -41,7 +41,7 @@ MachPrintSerial(
         if (critical) MintBugCheckMsg(NULL, __FILE__, __LINE__, message);
 
 /* DEBUG macro - Used for debugging messages */
-#ifdef DEBUG
+#ifdef __DEBUG__
 #define DEBUG(message)
 #else
 #define DEBUG(message)

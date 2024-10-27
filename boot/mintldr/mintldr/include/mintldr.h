@@ -23,7 +23,7 @@
 /*** MINTLDR Functions ***/
 
 /* Bug check method */
-void
+VOID
 __cdecl
 MintBugCheckEx(
     _In_ ULONG BugCode,
@@ -38,9 +38,13 @@ MintBugCheckMsg(
     ULONG BugCode,
     PCHAR File,
     ULONG Line,
-    PCSTR *Format,
+    PCSTR Format,
     ...
 );
+
+/* Bug code lists */
+#define UNKNOWN_EXCEPTION 0
+#define INSUFFICIENT_HARDWARE_REQUIREMENTS 1
 
 
 #endif 

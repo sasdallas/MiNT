@@ -47,13 +47,13 @@ endif()
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Building for a DEBUG target")
     add_definitions(
-        -DDEBUG
+        -D__DEBUG__
         -DBUILDTYPE=DEBUG
     )
 else()
     message(STATUS "Building for a RELEASE target")
     add_definitions(
-        -DRELEASE
+        -D__RELEASE__
         -DBUILDTYPE=RELEASE
     )
 endif()

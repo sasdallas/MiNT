@@ -130,5 +130,11 @@ int __cdecl bios32(int vector, REGISTERS* input, REGISTERS* output);
 
 
 
+/* BIOS32 buffer parameters */
+#define BIOSCALLBUFFER      0x4000 /* Temporary BIOS call buffer */
+#define BIOSCALLBUFSEGMENT (BIOSCALLBUFFER/16) /* Buffer to store temporary data for any BIOS32 call */
+#define BIOSCALLBUFOFFSET   0x0000 /* Buffer to store temporary data for any BIOS32 call */
+#define BIOSCALLBUFSIZE     4096  
+
 
 #endif
