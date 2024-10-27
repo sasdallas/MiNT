@@ -13,10 +13,11 @@ include_directories(
 include("halsource.cmake")
 
 # Create the HAL
-add_library(hal SHARED ${hal_source})
+add_library(hal SHARED ${HAL_SOURCE})
 
 # Link to MINTKRNL
 #target_link_libraries(hal mintkrnl)
 
-
 setModuleType(hal kerneldll ENTRYPOINT HalInitSystem)
+
+add_cd_file(TARGET hal FILE ${CMAKE_CURRENT_BINARY_DIR}/hal.dll DESTINATION MINT FOR bootcd) 
