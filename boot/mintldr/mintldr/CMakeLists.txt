@@ -83,7 +83,7 @@ add_dependencies(mintldr_executable asm)
 # Setup parameters for that executable
 setImageBase(mintldr_executable 0x10000) # Higher half baby
 setImageSubsystem(mintldr_executable native)
-setEntrypoint(mintldr_executable arch_entrypoint)
+setImageEntrypoint(mintldr_executable arch_entrypoint)
 
 # Add in our mintldr common
 target_link_libraries(mintldr_executable mintldr_general minilib_library)

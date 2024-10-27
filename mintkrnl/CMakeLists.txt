@@ -15,7 +15,8 @@ add_executable(mintkrnl
     ${MINTKRNL_SOURCE}
     )
 
-setEntrypoint(mintkrnl KiSystemStartup)
+# Too scared to make this a setModuleType
+setImageEntrypoint(mintkrnl KiSystemStartup)
 setImageBase(mintkrnl 0x00400000)
 setImageSubsystem(mintkrnl native)
 
@@ -27,7 +28,7 @@ set_target_properties(
 )
 
 # RTL, HAL, and other libraries will be made elsewhere
-#target_link_libraries(mintkrnl)
+target_link_libraries(mintkrnl hal)
 
 
 # Apply NT OS flags
@@ -50,5 +51,6 @@ add_custom_command(
     DEPENDS mint-pefixup
 )
 #set_property(TARGET mintkrnl APPEND PROPERTY LINK_DEPENDS $<TARGET_PROPERTY:mint-pefixup,IMPORTED_LOCATION>)
+
 
 add_cd_file(TARGET mintkrnl FILE ${CMAKE_CURRENT_BINARY_DIR}/mintkrnl.exe DESTINATION MINT FOR bootcd) 
