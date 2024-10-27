@@ -44,7 +44,7 @@ endfunction()
 
 function(setModuleType MODULE TYPE)
     # Parse for more arguments
-    cmake_parse_arguments(__module "BASE" "ENTRY" ${ARGN})
+    cmake_parse_arguments(__module "BASE" "ENTRYPOINT" ${ARGN})
 
     # Only support kernel objects at the moment
     if (NOT (TYPE STREQUAL kernel) AND NOT (TYPE STREQUAL kerneldll))

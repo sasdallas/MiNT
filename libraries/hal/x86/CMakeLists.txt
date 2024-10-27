@@ -16,6 +16,7 @@ include("halsource.cmake")
 add_library(hal SHARED ${hal_source})
 
 # Link to MINTKRNL
-#target_link_libraries(hal mintkrnl) 
+#target_link_libraries(hal mintkrnl)
+
 
 setModuleType(hal kerneldll ENTRYPOINT HalInitSystem)

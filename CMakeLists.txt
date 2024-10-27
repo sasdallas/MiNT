@@ -25,6 +25,7 @@ string(TOLOWER ${ARCH} ARCH)
 include(cmake/build_config.cmake)   # Configuration options
 include(cmake/cross_compile.cmake)  # Cross-compilation (future)
 include(cmake/cds.cmake)            # CD files
+include(GenerateExportHeader)       # GenerateExportHeader (CMake default) 
 
 # MiNT specific compiler flags
 # __MINT__          Identifies MiNT project
@@ -94,6 +95,8 @@ include_directories(
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_SHARED_MODULE_PREFIX "")
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
 
 # Setup project directories
 add_subdirectory("boot")

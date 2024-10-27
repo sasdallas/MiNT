@@ -1,6 +1,6 @@
 /**
- * @file libraries/hal/x86/hal_main.c
- * @brief Basic test header file.
+ * @file hal/x86/include/hal.h
+ * @brief HAL header file
  * 
  * 
  * @copyright
@@ -11,26 +11,18 @@
  * Copyright (C) 2024 Samuel S.
  */
 
+#pragma once
+
+#ifndef _HAL_H
+#define _HAL_H
+
+/* Includes */
 #include <WinDef.h>
 #include <mintdefs.h>
+
 #include <arc/arc.h>
+
 #include <ndk/arch/i386/ke.h>
 #include <xdk/ketypes.h>
 
-CODE_SEG("init")
-BOOLEAN
-MINTHALAPI
-HalInitSystem (IN ULONG BootPhase,
-                IN PLOADER_PARAMETER_BLOCK LoaderBlock)
-{
-    // Initialize the thingamajigger
-    return TRUE;
-}
-
-
-KIRQL
-MINTHALAPI
-KeGetCurrentIrql (VOID)
-{
-    return 0;
-}
+#endif

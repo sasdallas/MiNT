@@ -1,6 +1,6 @@
 /**
- * @file mint/include/mint/ddk/wdm.h
- * @brief WDM header
+ * @file mint/include/mint/xdk/ketypes.h
+ * @brief Kernel types
  * 
  * 
  * @copyright
@@ -11,13 +11,14 @@
 
 #pragma once
 
-#ifndef _WDMDDK_
-#define _WDMDDK_
+#ifndef _KETYPES_H
+#define _KETYPES_H
 
-#ifndef _MINTHALDLL_
-#define MINTHALAPI  DECLSPEC_IMPORT 
-#else
-#define MINTHALAPI  DECLSPEC_EXPORT
-#endif
+#include <WinDef.h>
+
+/* IRQL */
+typedef UCHAR KIRQL, *PKIRQL;
+
+
 
 #endif

@@ -12,7 +12,9 @@
  */
 
 
+#pragma once
 
+#include <xdk/ketypes.h>
 
 /* Descriptors (IDT/GDT/...) */
 typedef struct _KDESCRIPTOR {

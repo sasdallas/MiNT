@@ -19,12 +19,14 @@
 #include <msvctarget.h>
 #include <Sal.h>
 
-/* API definitions */
-#define MINTAPI __stdcall
 
 /* DECLSPEC definitions */
 #define DECLSPEC_IMPORT __declspec(dllimport)
+#define DECLSPEC_EXPORT __declspec(dllexport)
 #define DECLSPEC_NORETURN __declspec(noreturn)
+
+/* API definitions */
+#define MINTAPI __stdcall 
 
 /* Calling conventions */
 #define APIENTRY MINTAPI

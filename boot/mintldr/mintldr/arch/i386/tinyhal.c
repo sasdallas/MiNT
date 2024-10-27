@@ -18,7 +18,6 @@
 
 /* Write 8-bit value */
 VOID
-MINTHALAPI
 WRITE_PORT_UCHAR(
     IN UINT Port,
     IN UCHAR Value
@@ -29,7 +28,6 @@ WRITE_PORT_UCHAR(
 
 /* Write 16-bit value */
 VOID
-MINTHALAPI
 WRITE_PORT_USHORT(
     IN UINT Port,
     IN USHORT Value
@@ -40,7 +38,6 @@ WRITE_PORT_USHORT(
 
 /* Write 32-bit value */
 VOID
-MINTHALAPI
 WRITE_PORT_ULONG(
     IN UINT Port,
     IN ULONG Value
@@ -52,7 +49,6 @@ WRITE_PORT_ULONG(
 
 /* Read 8-bit value */
 UCHAR
-MINTHALAPI
 READ_PORT_UCHAR(
     IN UINT Port
 )
@@ -64,7 +60,6 @@ READ_PORT_UCHAR(
 
 /* Read 16-bit value */
 UCHAR
-MINTHALAPI
 READ_PORT_USHORT(
     IN UINT Port
 )
@@ -76,7 +71,6 @@ READ_PORT_USHORT(
 
 /* Read 32-bit value */
 UCHAR
-MINTHALAPI
 READ_PORT_ULONG(
     IN UINT Port
 )
