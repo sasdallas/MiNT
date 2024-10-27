@@ -17,6 +17,43 @@
 #include <ui/ui.h>
 #include <arch/mach.h>
 #include <arch/i386/i386.h>
+#include <arch/i386/mach.h>
+
+#include <asm/reactos/x86common.h>
+
+/* BIOS Memory Map */
+typedef struct
+{
+    // ACPI 1.0.
+    ULONGLONG   BaseAddress;
+    ULONGLONG   Length;
+    ULONG       Type;
+    // ACPI 3.0.
+    union
+    {
+        ULONG   ExtendedAttributesAsULONG;
+
+        struct
+        {
+            // Bit 0. ACPI 3.0.
+            // As of ACPI 4.0, became "Reserved -> must be 1".
+            ULONG Enabled_Reserved : 1;
+            // Bit 1. ACPI 3.0.
+            // As of ACPI 6.1, became "Unimplemented -> Deprecated".
+            // As of ACPI 6.3, became "Reserved -> must be 0".
+            ULONG NonVolatile_Deprecated_Reserved : 1;
+            // Bit 2. ACPI 4.0.
+            // As of ACPI 6.1, became "Unimplemented -> Deprecated".
+            // As of ACPI 6.3, became "Reserved -> must be 0".
+            ULONG SlowAccess_Deprecated_Reserved : 1;
+            // Bit 3. ACPI 4.0.
+            // ACPI 5.0-A added "Used only on PC-AT BIOS" (not UEFI).
+            ULONG ErrorLog : 1;
+            // Bits 4-31. ACPI 3.0.
+            ULONG Reserved : 28;
+        } ExtendedAttributes;
+    };
+} BIOS_MEMORY_MAP, *PBIOS_MEMORY_MAP;
 
 void
 __cdecl
@@ -36,12 +73,17 @@ MintStart() {
 
     UiPrint("MINT: Performing register call\n");
     REGISTERS Registers;
-    Registers.x.eflags = 0;
-    Registers.b.ah = 0x04;
-    bios32(0x1A, &Registers, &Registers);
+    Registers.x.ebx = 0x00000000;
+    Registers.x.eax = 0x0000E820;
+    Registers.x.edx = 0x534D4150;
+    Registers.x.ecx = sizeof(BIOS_MEMORY_MAP);
+    Registers.w.es = BIOSCALLBUFSEGMENT;
+    Registers.w.di = BIOSCALLBUFOFFSET;
+    bios32(0x15, &Registers, &Registers);
 
-    if (!BIOS32_SUCCESS(Registers)) UiPrint("Failed\n");
-    else UiPrint("OK");
+    UiPrint("MINT: Register call completed. Results:\n");
+    UiPrint("EAX=0x%x EBX = 0x%x ECX = 0x%x EDX = 0x%x\n", Registers.x.eax, Registers.x.ebx, Registers.x.ecx, Registers.x.edx);
+ 
     for (;;);
 }
 

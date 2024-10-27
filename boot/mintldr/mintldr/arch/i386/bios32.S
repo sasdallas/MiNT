@@ -48,6 +48,7 @@ _bios32:
     mov esi, dword ptr [Bios32RegsInput]
     mov edi, BSS_RegisterSet
     mov ecx, REGS_SIZE / 4
+    rep movsd
 
     /* Switch to real mode */
     mov dword ptr [_arch_continue], offset bios32_return
