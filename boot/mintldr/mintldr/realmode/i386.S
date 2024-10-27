@@ -32,7 +32,7 @@ _rm_entrypoint:
     mov ss, ax
 
     /* Setup a 16-bit stack */
-    mov sp, word ptr ds:[HEX(6F00)]
+    mov sp, word ptr ds:[stack16]
 
     /* Enable A20 line */
     call enableA20_KKbrd_Out
@@ -107,7 +107,7 @@ JumpToProtectedMode:
 
     /* Install GDT */
     call installGDT
-    
+
     /* Enable protected mode */
     mov eax, cr0
     or eax, 1

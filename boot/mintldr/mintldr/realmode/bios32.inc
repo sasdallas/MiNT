@@ -53,8 +53,8 @@ RealModeBios32_SetupRegs:
     // mov ebp, dword ptr cs:[BSS_RegisterSet + REGS_EBP]
 
     /* Encode interrupt vector (CD = INT opcode) */
-
     
+
     .byte HEX(0cd)
 RealModeBios32_Interrupt:
     .byte 00
