@@ -100,7 +100,7 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
 # Setup project directories
 add_subdirectory("boot")
-add_subdirectory("libraries")
+add_subdirectory("dll")
 add_subdirectory("mintkrnl")
 
 
