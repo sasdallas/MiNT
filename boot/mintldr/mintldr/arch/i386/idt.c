@@ -111,6 +111,20 @@ IdtInit()
 
     IdtSetVector(32, &i386IRQ0, 0x8E00, 0x08);
     IdtSetVector(33, &i386IRQ1, 0x8E00, 0x08);
+    IdtSetVector(34, &i386IRQ2, 0x8E00, 0x08);
+    IdtSetVector(35, &i386IRQ3, 0x8E00, 0x08);
+    IdtSetVector(36, &i386IRQ4, 0x8E00, 0x08);
+    IdtSetVector(37, &i386IRQ5, 0x8E00, 0x08);
+    IdtSetVector(38, &i386IRQ6, 0x8E00, 0x08);
+    IdtSetVector(39, &i386IRQ7, 0x8E00, 0x08);
+    IdtSetVector(40, &i386IRQ8, 0x8E00, 0x08);
+    IdtSetVector(41, &i386IRQ9, 0x8E00, 0x08);
+    IdtSetVector(42, &i386IRQ10, 0x8E00, 0x08);
+    IdtSetVector(43, &i386IRQ11, 0x8E00, 0x08);
+    IdtSetVector(44, &i386IRQ12, 0x8E00, 0x08);
+    IdtSetVector(45, &i386IRQ13, 0x8E00, 0x08);
+    IdtSetVector(46, &i386IRQ14, 0x8E00, 0x08);
+    IdtSetVector(47, &i386IRQ15, 0x8E00, 0x08);
 
     /** Reprogram the PIC **/
     /* TODO: This should be constantized and needs to be better */

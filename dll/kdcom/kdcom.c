@@ -65,7 +65,7 @@ KdpPortInitialize(
     }
     else
     {
-        KdpDbgPrint("MiNTy fresh!");
+        KdpDbgPrint("KdpPortInitialize completed\n");
         return STATUS_SUCCESS;
     }
 }
