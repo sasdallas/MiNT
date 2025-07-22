@@ -23,3 +23,5 @@ target_link_options(mintkrnl
     PRIVATE  -Wl,--exclude-all-symbols,--file-alignment=0x1000,-section-alignment=0x1000)
 
 set_image_entrypoint(mintkrnl KiSystemStartup)
+set_image_base(mintkrnl 0x00400000)
+set_image_subsystem(mintkrnl native)
