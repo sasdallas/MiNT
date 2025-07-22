@@ -13,8 +13,8 @@
 #include <ui.h>
 
 /* UI X/Y values */
-INT UiPositionX = 0;
-INT UiPositionY = 0;
+int UiPositionX = 0;
+int UiPositionY = 0;
 
 /* UI colors */
 GFX_COLOR UiForegroundColor = GFX_COLOR_WHITE;

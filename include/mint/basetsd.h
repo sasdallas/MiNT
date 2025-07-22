@@ -91,6 +91,8 @@ typedef LONG64 *PLONG64;
 #define POINTER_SIGNED __sptr
 #define POINTER_UNSIGNED __uptr
 
+typedef WORD *PWORD;
+
 typedef ULONG_PTR SIZE_T;
 typedef LONG_PTR SSIZE_T;
 typedef SIZE_T *PSIZE_T;

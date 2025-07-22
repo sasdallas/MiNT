@@ -15,6 +15,7 @@
 #include <ui.h>
 
 void __cdecl MintLoaderMain() {
-    GfxPutCharacter(0, 0, 'c', GFX_COLOR_BLACK, GFX_COLOR_WHITE);
+    UiInit();
+    UiPutCharacter('m');
     for (;;);
 }

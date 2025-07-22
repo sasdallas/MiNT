@@ -20,7 +20,7 @@ __MINT_BEGIN_DECLS
 #include <ntdef.h>
 
 typedef enum {
-    GFX_COLOR_BLACK,
+    GFX_COLOR_BLACK = 0,
     GFX_COLOR_BLUE,
     GFX_COLOR_GREEN,
     GFX_COLOR_CYAN,
