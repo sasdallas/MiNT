@@ -17,9 +17,10 @@
 
 __MINT_BEGIN_DECLS
 
-#define MINTAPI __stdcall
+#define NTAPI __stdcall
 
 #include <basetsd.h>
+#include <ntdef.h>
 
 #ifndef DECLSPEC_EXPORT
 #define DECLSPEC_EXPORT __declspec(dllexport)
@@ -45,10 +46,6 @@ __MINT_BEGIN_DECLS
 typedef char            CHAR, *PCHAR;
 typedef short           SHORT, *PSHORT;
 typedef int             LONG, *PLONG;
-
-#ifndef VOID
-#define VOID void
-#endif
 
 typedef VOID *PVOID;
 

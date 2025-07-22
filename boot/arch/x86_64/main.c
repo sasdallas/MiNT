@@ -12,9 +12,9 @@
 
 #include <winnt.h>
 #include <ntdef.h>
+#include <ui.h>
 
-void __stdcall MintLoaderMain() {
-    *(PUINT8)0xb8000 = 'm';
-    *(PUINT8)0xb8002 = 'i';
+void __cdecl MintLoaderMain() {
+    GfxPutCharacter(0, 0, 'c', GFX_COLOR_BLACK, GFX_COLOR_WHITE);
     for (;;);
 }

@@ -17,10 +17,26 @@
 
 __MINT_BEGIN_DECLS
 
+#include <basetsd.h>
+
+#define CONST const
+
+/* Uppercase types */
+#ifndef VOID
+typedef char CHAR;
+typedef short SHORT;
+typedef int LONG;
+typedef int INT;
+typedef double DOUBLE;
+#define VOID void
+#endif
+
 /* Types */
 typedef unsigned char UCHAR, *PUCHAR;
 typedef unsigned short USHORT, *PUSHORT;
 typedef unsigned int ULONG, *PULONG;
+typedef CHAR *PCHAR, *LPCH, *PCH;
+typedef CONST CHAR *PCSTR;
 
 __MINT_END_DECLS
 

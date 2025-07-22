@@ -39,7 +39,7 @@ align 16
 MintLoaderStackBottom:
 resb 16384
 MintLoaderStackTop:
-
+    
 MintLoaderBasePML:
 resb 16384
 MintLoaderBasePMLEnd:
@@ -178,9 +178,7 @@ MintLoaderEntry64:
     mov ss, ax
 
     ; Call into the main loader code
-    pop rdi
-    pop rsi
-    pop rdx
+    mov rbp, rsp
     call MintLoaderMain
 
     ; We returned, disable IRQs + halt

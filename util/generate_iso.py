@@ -34,7 +34,11 @@ for file in files:
 
 # !!!: Temporary GRUB
 print("==> Generating boot/grub/grub.cfg")
-os.makedirs(OUTPUT_DIR + "/boot/grub/")
+
+try:
+    os.makedirs(OUTPUT_DIR + "/boot/grub/")
+except FileExistsError:
+    pass
 
 with open(OUTPUT_DIR + "/boot/grub/grub.cfg", "w+") as grub_config:
     grub_config.write("menuentry \"MiNT\" { multiboot /mintldr.sys }")
