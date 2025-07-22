@@ -1,0 +1,69 @@
+# Main CMake build file for MiNT
+
+cmake_minimum_required(VERSION 3.15)
+
+project(MiNT  VERSION 1.0
+		DESCRIPTION "The MiNT operating system"
+		LANGUAGES C ASM)
+
+# Set the CMake module path
+set(MINT_SOURCE_DIR "${PROJECT_SOURCE_DIR}")
+set(CMAKE_MODULE_PATH "${MINT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
+# Get project architecture
+if (NOT ARCH)
+	message(FATAL_ERROR "Please specify ARCH when building (available options: x86_64)")
+endif()
+
+string(TOLOWER ${ARCH} ARCH)
+
+# Include our CMake scripts
+include(cmake/cross_compile.cmake)
+
+# Load the architecture profile
+MINT_LOAD_PROFILE(${ARCH})
+
+# Add C definitions
+add_definitions(
+	-D__MINT__
+	-D__MINT_VERSION__=${CMAKE_PROJECT_VERSION}
+	-D__MINT_VERSION_STR__="${CMAKE_PROJECT_VERSION}"
+)
+
+# Select the build type
+if (NOT CMAKE_BUILDTYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+	message(WARNING "No build type specified, using DEBUG build type")
+	set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Select build type" FORCE)
+endif()
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Building for a DEBUG target")
+    add_definitions(
+        -D__DEBUG__
+        -D__BUILDTYPE__=DEBUG
+    )
+else()
+    message(STATUS "Building for a RELEASE target")
+    add_definitions(
+        -D__RELEASE__
+        -D__BUILDTYPE__=RELEASE
+    )
+endif()
+
+# if (NOT CMAKE_CROSSCOMPILING)
+    # message(FATAL_ERROR "how are you not cross compiling")
+# endif() 
+
+# Create our include directories
+include_directories(
+	include/mint/
+)
+
+# More CMake flags
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_SHARED_LIBRARY_PREFIX "")
+set(CMAKE_SHARED_MODULE_PREFIX "")
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
+
+add_subdirectory("mintkrnl")

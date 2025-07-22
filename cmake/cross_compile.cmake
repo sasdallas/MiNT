@@ -1,0 +1,17 @@
+
+FUNCTION(MINT_DETECT_HOST)
+	string(TOLOWER "${CMAKE_HOST_SYSTEM_PROCESSOR}" __HOST_SYSTEM_PROCESSOR_LOWER)
+
+	if (__HOST_SYSTEM_PROCESSOR_LOWER MATCHES "^[3456]86$")
+		set(__HOST_ARCH__ i686)
+	elseif (__HOST_SYSTEM_PROCESSOR_LOWER STREQUAL "x86_64" OR __HOST_SYSTEM_PROCESSOR_LOWER STREQUAL "amd64")
+		set(__HOST_ARCH__ x86_64)
+	else()
+		message(FATAL_ERROR "Unknown/unsupported host architecture: ${__HOST_SYSTEM_PROCESSOR_LOWER}")
+	endif()
+endfunction()
+
+FUNCTION(MINT_LOAD_PROFILE ARCH) 
+	message(STATUS "Loading profile for architecture ${ARCH}")
+	MINT_DETECT_HOST()
+endfunction()
