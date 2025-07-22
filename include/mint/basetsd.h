@@ -18,6 +18,7 @@
 __MINT_BEGIN_DECLS
 
 #include <Int64.h>
+#include <msvctarget.h>
 
 #if defined(_WIN64) 
  typedef __int64 INT_PTR; 

@@ -14,11 +14,16 @@
 #include <ntdef.h>
 #include <ui.h>
 
+#include <arch/serial.h>
+
 void __stdcall MintLoaderMain(UINT32 MultibootHeader, UINT32 MultibootMagic) {
     UiPrint("MINTLDR v1\nHello, MiNT world\n\n");
 
     UiPrint("Multiboot header: 0x%x\n", MultibootHeader);
     UiPrint("Multiboot magic: 0x%x\n", MultibootMagic);
+
+    SerialInitialize(0, 38400);
+    SerialPrint("MINTLDR v1\n");
 
     for (;;);
 }

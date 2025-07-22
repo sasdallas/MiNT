@@ -17,7 +17,9 @@ if (ARCH STREQUAL "x86_64")
     list(APPEND __ARCH_SOURCES_ASM arch/x86_64/bootstub.asm)
     list(APPEND __ARCH_SOURCES_C 
                                 arch/x86_64/main.c
-                                arch/x86_64/graphics.c)
+                                arch/x86_64/graphics.c
+                                arch/x86_64/serial.c
+                                arch/x86_64/io.c)
 
     set(__MINTLDR_LD_SCRIPT arch/x86_64/link.ld)
 else()
