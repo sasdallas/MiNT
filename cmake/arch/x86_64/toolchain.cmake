@@ -15,6 +15,7 @@ set(CMAKE_ASM_COMPILER_ID "GNU")
 set(CMAKE_MC_COMPILER   x86_64-w64-mingw32-windmc)
 set(CMAKE_RC_COMPILER   x86_64-w64-mingw32-windres)
 set(CMAKE_OBJCOPY       x86_64-w64-mingw32-objcopy)
+set(CMAKE_C_STANDARD_LIBRARIES "")
 
 # CMake should only test these without linking (it will try to use Glibc)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
@@ -30,7 +31,7 @@ set(CMAKE_ASM_COMPILE_OBJECT "<CMAKE_ASM_COMPILER>  -x assembler-with-cpp -o <OB
 
 set(CMAKE_FIND_ROOT_PATH /usr/x86_64-w64-mingw32)
 
-add_compile_options("$<$<NOT:$<COMPILE_LANGUAGE:CXX>>:-nostdinc>")
+add_compile_options("$<$<NOT:$<COMPILE_LANGUAGE:ASM_NASM>>:-nostdinc>")
 
 message (STATUS "Building for x86_64 toolchain with MinGW32-based compiler")
 

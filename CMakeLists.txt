@@ -6,6 +6,9 @@ project(MiNT  VERSION 1.0
 		DESCRIPTION "The MiNT operating system"
 		LANGUAGES C ASM)
 
+# Enable NASM
+enable_language(ASM_NASM)
+
 # Set the CMake module path
 set(MINT_SOURCE_DIR "${PROJECT_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${MINT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -68,3 +71,4 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
 
 add_subdirectory("mintkrnl")
+add_subdirectory("boot")
