@@ -19,6 +19,7 @@ string(TOLOWER ${ARCH} ARCH)
 
 # Include our CMake scripts
 include(cmake/cross_compile.cmake)
+include(cmake/macros.cmake)
 
 # Load the architecture profile
 MINT_LOAD_PROFILE(${ARCH})
