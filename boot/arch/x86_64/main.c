@@ -14,8 +14,8 @@
 #include <ntdef.h>
 #include <ui.h>
 
-void __cdecl MintLoaderMain() {
-    UiInit();
-    UiPutCharacter('m');
+void __stdcall MintLoaderMain() {
+    UiPrint("MINTLDR v1\nHello, MiNT world");
+
     for (;;);
 }

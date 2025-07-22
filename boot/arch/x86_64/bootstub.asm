@@ -40,6 +40,7 @@ MintLoaderStackBottom:
 resb 16384
 MintLoaderStackTop:
     
+align 4096
 MintLoaderBasePML:
 resb 16384
 MintLoaderBasePMLEnd:
@@ -178,6 +179,7 @@ MintLoaderEntry64:
     mov ss, ax
 
     ; Call into the main loader code
+    and rsp, 0xFFFFFFFFFFFFFFF0
     mov rbp, rsp
     call MintLoaderMain
 

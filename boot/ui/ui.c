@@ -56,19 +56,19 @@ void UiPutCharacter(char c) {
 
 int UiDefaultPrintCallback(PCHAR Str, SIZE_T Size) {
     for (unsigned i = 0; i < Size; i++) {
-        UiPutCharacter(Str[i]);
+        UiPutCharacter(*Str);
     }
 
     return Size;
 }
 
 void UiPrintCallback(UiCallback Callback, PCHAR Format, va_list ap) {
-    PCHAR Ptr = Format;
+    char *p = Format;
 
-    while (*Ptr) {
+    while (*p) {
         // Temporary while I work on format specifiers
-        Callback(Ptr, 1);
-        Ptr++;
+        Callback(p, 1);
+        p++;
     }
 }
 
