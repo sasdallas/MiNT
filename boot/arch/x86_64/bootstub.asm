@@ -40,16 +40,148 @@ MintLoaderStackBottom:
 resb 16384
 MintLoaderStackTop:
 
+MintLoaderBasePML:
+resb 16384
+MintLoaderBasePMLEnd:
 
 ; ========== START ==========
+
+[bits 32]
 section .text
+
+; ==== GDT ==== 
+
+align 8
+
+; GDT pointer
+MintLoaderBaseGdtr:
+    dw GdtBaseEnd - GdtBaseStart
+    dq GdtBaseStart
+
+
+; GDT data
+GdtBaseStart:
+    ; NULL segment
+    dd 0
+    dd 0
+
+    ; Code segment - 64-bit kernel mode
+    dw 0xFFFF
+    dw 0x0000
+    db 0x00
+    db 0x9A
+    db 0x20
+    db 0x00
+
+    ; Data segment - 64-bit kernel mode
+    dw 0xFFFF
+    dw 0x0000
+    db 0x00
+    db 0x92
+    db 0x00
+    db 0x00
+GdtBaseEnd:
+
+
 global MintLoaderEntry
+global MintLoaderEntry64
+
 extern _MintLoaderMain
 MintLoaderEntry:
     mov esp, MintLoaderStackTop
+
+    ; 16-byte align the stack
+    and esp, 0xFFFFFFF0
+
+    ; Clear EBP
+    xor ebp, ebp
+
+    ; Push our multiboot information
+    push dword 0
+    push esp
+    push dword 0
+    push eax
+    push dword 0
+    push ebx
+
+MintLoaderInitializePaging:
+    mov edi, MintLoaderBasePML
     
-    ; Call the MintLoaderMain function
-    call _MintLoaderMain
+    ; Set entry #0 of PML4 to opint to PDPT[0] with present, writable, and user
+    mov eax, 0x1007
+    add eax, edi
+    mov [edi], eax
+
+    ; Do the same for PDPT
+    add edi, 0x1000
+    mov eax, 0x1003
+    add eax, edi
+    mov [edi], eax
+
+    ; Map in 32 2MiB pages to map 64MiB of low memory
+    add edi, 0x1000
+    mov ebx, 0x87
+    mov ecx, 32
+
+.MintLoaderPagingSetEntryLoop:
+    mov [edi], ebx
+    add ebx, 0x200000
+    add edi, 8
+    loop .MintLoaderPagingSetEntryLoop
+
+    ; Move CR3 to our PML4
+    mov edi, MintLoaderBasePML
+    mov cr3, edi
+
+    ; Enable PAE
+    mov eax, cr4
+    or eax, 32
+    mov cr4, eax
+
+    ; Enable EFER
+    mov ecx, 0xC0000080
+    rdmsr
+    or eax, 256
+    wrmsr
+
+    ; Enable paging
+    mov eax, cr0
+    or eax, 0x80000000
+    mov cr0, eax
+
+    ; Load our GDT
+    lgdt [MintLoaderBaseGdtr]
+
+    ; Leap of faith
+    jmp 0x8:MintLoaderEntry64
+
+    ; Else, failed, halt the system.
+    jmp 0xFFFF:0
+    cli
+    hlt
+    jmp $
+
+; ========= 64-bit CODE START =========
+
+[bits 64]
+align 8
+
+extern MintLoaderMain
+
+MintLoaderEntry64:
+    cli
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+
+    ; Call into the main loader code
+    pop rdi
+    pop rsi
+    pop rdx
+    call MintLoaderMain
 
     ; We returned, disable IRQs + halt
     cli

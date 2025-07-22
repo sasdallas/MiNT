@@ -1,4 +1,3 @@
-OUTPUT_FORMAT(pe-i386)
 ENTRY(MintLoaderEntry)
 
 SECTIONS

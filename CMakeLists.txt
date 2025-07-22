@@ -12,6 +12,9 @@ enable_language(ASM_NASM)
 # Set the CMake module path
 set(MINT_SOURCE_DIR "${PROJECT_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${MINT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+set(CMAKE_BINARY_DIR "${PROJECT_BINARY_DIR}")
+set(MINT_BINARY_DIR "${PROJECT_BINARY_DIR}")
+set(MINT_UTILITY_DIR "${MINT_SOURCE_DIR}/util/")
 
 # Get project architecture
 if (NOT ARCH)
@@ -23,6 +26,7 @@ string(TOLOWER ${ARCH} ARCH)
 # Include our CMake scripts
 include(cmake/cross_compile.cmake)
 include(cmake/macros.cmake)
+include(cmake/iso.cmake)
 
 # Load the architecture profile
 MINT_LOAD_PROFILE(${ARCH})
@@ -54,9 +58,9 @@ else()
     )
 endif()
 
-# if (NOT CMAKE_CROSSCOMPILING)
-    # message(FATAL_ERROR "how are you not cross compiling")
-# endif() 
+if (NOT CMAKE_CROSSCOMPILING)
+    message(FATAL_ERROR "You forgot to specify -DCMAKE_TOOLCHAIN_FILE. It should be cmake/arch/${ARCH}/toolchain.cmake")
+endif() 
 
 # Create our include directories
 include_directories(
@@ -69,6 +73,13 @@ set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_SHARED_MODULE_PREFIX "")
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
+# Create ISO target
+add_custom_target(iso
+                    COMMAND python3 ${MINT_UTILITY_DIR}/generate_iso.py ${MINT_BINARY_DIR}/boot/iso.$<CONFIG>.lst ${MINT_BINARY_DIR}/iso)
 
+# Subdirectories
 add_subdirectory("mintkrnl")
 add_subdirectory("boot")
+
+# Create ISO files
+create_iso_list()

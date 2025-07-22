@@ -13,7 +13,7 @@
 #include <winnt.h>
 #include <ntdef.h>
 
-void MintLoaderMain() {
+void __stdcall MintLoaderMain() {
     *(PUINT8)0xb8000 = 'm';
     *(PUINT8)0xb8002 = 'i';
     for (;;);
