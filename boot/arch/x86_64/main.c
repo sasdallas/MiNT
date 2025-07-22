@@ -15,7 +15,15 @@
 #include <ui.h>
 
 void __stdcall MintLoaderMain() {
-    UiPrint("MINTLDR v1\nHello, MiNT world");
+    UiPrint("MINTLDR v1\nHello, MiNT world\n\n");
+
+    UiPrint("Character: %c\n", 'c');
+    UiPrint("String: %s\n", "str!");
+    UiPrint("Decimal: %i\n", 42);
+    UiPrint("Hexadecimal: 0x%x\n", 0xDEADBEEF);
+
+    UiPrint("Padded decimal: %16i\n", 1234);
+    UiPrint("Padded hex: 0x%16x", 0xDEADBEEF);
 
     for (;;);
 }

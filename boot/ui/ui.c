@@ -11,6 +11,8 @@
  */
 
 #include <ui.h>
+#include <minilibc/stdlib.h>
+#include <minilibc/string.h>
 
 /* UI X/Y values */
 int UiPositionX = 0;
@@ -56,29 +58,128 @@ void UiPutCharacter(char c) {
 
 int UiDefaultPrintCallback(PCHAR Str, SIZE_T Size) {
     for (unsigned i = 0; i < Size; i++) {
-        UiPutCharacter(*Str);
+        UiPutCharacter(Str[i]);
     }
 
     return Size;
 }
 
-void UiPrintCallback(UiCallback Callback, PCHAR Format, va_list ap) {
+int UiPrintCallback(UiCallback Callback, PCHAR Format, va_list ap) {
     char *p = Format;
 
+    SIZE_T CharactersWritten = 0;
+    INT ArgumentWidth = 0;
+
     while (*p) {
-        // Temporary while I work on format specifiers
-        Callback(p, 1);
+        ArgumentWidth = 0;
+
+        /* Check for format */
+        if (*p != '%' || *(p+1) == '%') {
+            if (*p == '%') p++;
+
+            /* Calculate characters until next % */
+            SIZE_T CharactersUntilFormat = 0;
+            while (p[CharactersUntilFormat] && p[CharactersUntilFormat] != '%') {
+                CharactersUntilFormat++;
+            }
+
+            /* Print out said characters */
+            Callback(p, CharactersUntilFormat);
+            
+            p += CharactersUntilFormat;
+            CharactersWritten += CharactersUntilFormat;
+        
+            continue;
+        }
+
+        /* We have a format, let's process it */
+        const PCHAR FormatStart = p;
         p++;
+
+        while (*p >= '0' && *p <= '9') {
+            ArgumentWidth *= 10;
+            ArgumentWidth += (INT)((*p) - '0');
+            p++;
+        }
+
+        switch (*p) {
+            /* %c - Character */
+            case 'C':
+            case 'c':
+                p++;
+                CHAR c = (CHAR)va_arg(ap, INT);
+
+                Callback(&c, sizeof(c));
+                CharactersWritten++;
+
+                break;
+
+            /* %s - String */
+            case 'S':
+            case 's':
+                p++;
+                CONST CHAR* Str = va_arg(ap, const char*);
+                SIZE_T StrLength = strlen(Str);
+
+                Callback(Str, StrLength);
+                CharactersWritten += StrLength;
+
+                break;
+
+            /* %i - Integer */
+            /* %x - Hexadecimal */
+            case 'I':
+            case 'i':
+            case 'x':
+            case 'X':
+            case 'u':
+            case 'U':
+                LONG integer = va_arg(ap, long);
+                CHAR StringBuffer[32] = { 0 };
+                itoa(integer, StringBuffer, (*p == 'i') ? 10 : 16);
+
+                p++;
+
+                StrLength = strlen(StringBuffer);
+                
+                if (ArgumentWidth && ArgumentWidth > StrLength) {
+                    CHAR PaddingBuffer[32];
+                    for (int i = 0; i < ArgumentWidth - StrLength; i++) {
+                        PaddingBuffer[i] = '0';
+                        PaddingBuffer[i+1] = 0;
+                    }
+
+                    Callback(PaddingBuffer, ArgumentWidth - StrLength);
+                    CharactersWritten += ArgumentWidth - StrLength;
+                }
+
+                Callback(StringBuffer, StrLength);
+                CharactersWritten += StrLength;
+                
+                break;
+
+            default:
+                /* Just print the rest out */
+                p = FormatStart;
+                StrLength = strlen(p);
+                Callback(p, StrLength);
+                CharactersWritten += StrLength;
+                p += StrLength;
+                break;
+        }
     }
+
+    return CharactersWritten;
 }
 
-void UiPrintVA(PCHAR Format, va_list ap) {
-    UiPrintCallback(UiDefaultPrintCallback, Format, ap);
+int UiPrintVA(PCHAR Format, va_list ap) {
+    return UiPrintCallback(UiDefaultPrintCallback, Format, ap);
 }
 
-void UiPrint(PCHAR Format, ...) {
+int UiPrint(PCHAR Format, ...) {
     va_list ap;
     va_start(ap, Format);
-    UiPrintVA(Format, ap);
+    int r = UiPrintVA(Format, ap);
     va_end(ap);
-}
+    return r;
+}  

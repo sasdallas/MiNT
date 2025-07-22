@@ -22,9 +22,9 @@ typedef INT (*UiCallback)(PCHAR, SIZE_T);
 void UiInit();
 void UiSetColors(GFX_COLOR Foreground, GFX_COLOR Background);
 void UiPutCharacter(char c);
-void UiPrintCallback(UiCallback Callback, PCHAR Format, va_list ap);
-void UiPrintVA(PCHAR Format, va_list ap);
-void UiPrint(PCHAR Format, ...);
+int UiPrintCallback(UiCallback Callback, PCHAR Format, va_list ap);
+int UiPrintVA(PCHAR Format, va_list ap);
+int UiPrint(PCHAR Format, ...);
 void UiClearScreen();
 
 #endif

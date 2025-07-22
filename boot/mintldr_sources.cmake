@@ -32,5 +32,12 @@ list(APPEND __ARCH_SOURCES ${__ARCH_SOURCES_ASM} ${__ARCH_SOURCES_C})
 list(APPEND __UI_SOURCES
                     ui/ui.c)
 
+                
+# ===== MINILIBC SOURCES =====
+
+list(APPEND __MINILIBC_SOURCES
+                    minilibc/string.c
+                    minilibc/stdlib.c)
+
 # ===== FINAL SOURCES =====
-list(APPEND __MINTLDR_SOURCE ${__ARCH_SOURCES} ${__UI_SOURCES})
+list(APPEND __MINTLDR_SOURCE ${__ARCH_SOURCES} ${__UI_SOURCES} ${__MINILIBC_SOURCES})
