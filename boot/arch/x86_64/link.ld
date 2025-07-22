@@ -1,8 +1,7 @@
 SECTIONS
 {
-  . = 1M;
 
-  .text BLOCK(4K) : ALIGN(4K)
+  .text __image_base__ + __section_alignment__ : ALIGN(__file_alignment__)
   {
 	  *(.multiboot)
 

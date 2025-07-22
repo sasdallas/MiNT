@@ -12,12 +12,13 @@ get_filename_component(__LD_ABSOLUTE_PATH ${__MINTLDR_LD_SCRIPT} ABSOLUTE)
 target_link_options(mintldr_executable PRIVATE "-Wl,-T,${__LD_ABSOLUTE_PATH}")
 set_property(TARGET mintldr_executable APPEND PROPERTY LINK_DEPENDS ${__LD_ABSOLUTE_PATH})
 
-    target_link_options(mintldr_executable PRIVATE -Wl,--exclude-all-symbols,--file-alignment,0x200,--section-alignment,0x200)
-    # Strip everything, including rossym data
-    add_custom_command(TARGET mintldr_executable
-                    POST_BUILD
-                    COMMAND ${CMAKE_STRIP} --remove-section=.rossym $<TARGET_FILE:mintldr_executable>
-                    COMMAND ${CMAKE_STRIP} --strip-all $<TARGET_FILE:mintldr_executable>)
+target_link_options(mintldr_executable PRIVATE -Wl,--exclude-all-symbols,--file-alignment,0x200,--section-alignment,0x200)
+
+# Strip everything, including rossym data
+add_custom_command(TARGET mintldr_executable
+            POST_BUILD
+            COMMAND ${CMAKE_STRIP} --remove-section=.rossym $<TARGET_FILE:mintldr_executable>
+            COMMAND ${CMAKE_STRIP} --strip-all $<TARGET_FILE:mintldr_executable>)
 
 # Set image base
 set_image_base(mintldr_executable 0x100000)

@@ -35,15 +35,15 @@ MintLoaderAoutKludge:
 
 ; ========== STACK ==========
 section .bss
-align 16
-MintLoaderStackBottom:
-resb 16384
-MintLoaderStackTop:
-    
 align 4096
 MintLoaderBasePML:
 resb 16384
 MintLoaderBasePMLEnd:
+
+align 16
+MintLoaderStackBottom:
+resb 16384
+MintLoaderStackTop:
 
 ; ========== START ==========
 
@@ -179,8 +179,12 @@ MintLoaderEntry64:
     mov ss, ax
 
     ; Call into the main loader code
+    pop rcx             ; RCX = Multiboot info
+    pop rdx             ; RDX = Magic
+
     and rsp, 0xFFFFFFFFFFFFFFF0
     mov rbp, rsp
+
     call MintLoaderMain
 
     ; We returned, disable IRQs + halt

@@ -14,16 +14,11 @@
 #include <ntdef.h>
 #include <ui.h>
 
-void __stdcall MintLoaderMain() {
+void __stdcall MintLoaderMain(UINT32 MultibootHeader, UINT32 MultibootMagic) {
     UiPrint("MINTLDR v1\nHello, MiNT world\n\n");
 
-    UiPrint("Character: %c\n", 'c');
-    UiPrint("String: %s\n", "str!");
-    UiPrint("Decimal: %i\n", 42);
-    UiPrint("Hexadecimal: 0x%x\n", 0xDEADBEEF);
-
-    UiPrint("Padded decimal: %16i\n", 1234);
-    UiPrint("Padded hex: 0x%16x", 0xDEADBEEF);
+    UiPrint("Multiboot header: 0x%x\n", MultibootHeader);
+    UiPrint("Multiboot magic: 0x%x\n", MultibootMagic);
 
     for (;;);
 }
