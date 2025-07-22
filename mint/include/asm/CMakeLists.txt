@@ -1,1 +1,0 @@
-add_custom_target(asm DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_filename})
