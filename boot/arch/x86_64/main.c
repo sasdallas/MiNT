@@ -13,6 +13,7 @@
 #include <winnt.h>
 #include <ntdef.h>
 #include <ui.h>
+#include <dbg.h>
 
 #include <arch/serial.h>
 
@@ -22,8 +23,11 @@ void __stdcall MintLoaderMain(UINT32 MultibootHeader, UINT32 MultibootMagic) {
     UiPrint("Multiboot header: 0x%x\n", MultibootHeader);
     UiPrint("Multiboot magic: 0x%x\n", MultibootMagic);
 
+    /* Initialize the serial port */
     SerialInitialize(0, 38400);
-    SerialPrint("MINTLDR v1\n");
+
+    /* Say hello */
+    INFO("MINTLDR v1.0\n");
 
     for (;;);
 }
