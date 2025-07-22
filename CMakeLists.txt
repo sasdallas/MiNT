@@ -74,8 +74,15 @@ set(CMAKE_SHARED_MODULE_PREFIX "")
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
 # Create ISO target
-add_custom_target(iso
-                    COMMAND python3 ${MINT_UTILITY_DIR}/generate_iso.py ${MINT_BINARY_DIR}/boot/iso.$<CONFIG>.lst ${MINT_BINARY_DIR}/iso)
+set(MINT_ISO_DIR ${MINT_BINARY_DIR}/iso)
+file(REMOVE_RECURSE ${MINT_ISO_DIR})
+
+add_custom_target(iso ALL
+                    COMMAND python3 ${MINT_UTILITY_DIR}/generate_iso.py ${MINT_BINARY_DIR}/boot/iso.$<CONFIG>.lst ${MINT_ISO_DIR}
+                    COMMAND grub-mkrescue -o ${MINT_BINARY_DIR}/mint.iso ${MINT_BINARY_DIR}/iso
+                    )
+
+set_property(TARGET iso PROPERTY ALWAYS_RECOMPILE TRUE)
 
 # Subdirectories
 add_subdirectory("mintkrnl")

@@ -32,9 +32,9 @@ function (add_iso_file)
 
         set_property(GLOBAL APPEND PROPERTY MINT_ISO_FILE_LIST "${_ISO_DESTINATION}/${__FILE_TO_ADD}=${item}")
         
-        # if (_ISO_TARGET)
-        #     add_dependencies(iso ${_ISO_TARGET})
-        # endif()
+        if (_ISO_TARGET)
+            add_dependencies(iso ${_ISO_TARGET})
+        endif()
     endforeach()
 endfunction()
 
