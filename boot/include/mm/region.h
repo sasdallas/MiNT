@@ -22,12 +22,18 @@ __MINT_BEGIN_DECLS
 typedef enum {
     RegionAvailable,
     RegionReserved,
+    RegionBad,
+    RegionLoaderCode,
+    RegionLoaderHeap,
 } MINTLDR_MEMORY_TYPE;
 
 typedef struct MINTLDR_MEMORY_REGION {
-    MINTLDR_MEMORY_TYPE MemoryType;         // Memory type
-    UINT_PTR            Base;               // Base address
-    UINT_PTR            Size;               // Size
+    MINTLDR_MEMORY_TYPE                 MemoryType;         // Memory type
+    UINT_PTR                            Base;               // Base address
+    UINT_PTR                            Size;               // Size
+
+    struct MINTLDR_MEMORY_REGION*       NextRegion;         // Next region
+    struct MINTLDR_MEMORY_REGION*       PrevRegion;         // Previous region
 } MINTLDR_MEMORY_REGION, *PMINTLDR_MEMORY_REGION;
 
 __MINT_END_DECLS

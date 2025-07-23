@@ -42,6 +42,10 @@ __MINT_BEGIN_DECLS
 #define FALSE 0
 #endif
 
+#ifndef NULL
+#define NULL 0
+#endif
+
 /* Type definitions */
 typedef char            CHAR, *PCHAR;
 typedef short           SHORT, *PSHORT;

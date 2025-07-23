@@ -19,7 +19,8 @@ if (ARCH STREQUAL "x86_64")
                                 arch/x86_64/main.c
                                 arch/x86_64/graphics.c
                                 arch/x86_64/serial.c
-                                arch/x86_64/io.c)
+                                arch/x86_64/io.c
+                                arch/x86_64/mm.c)
 
     set(__MINTLDR_LD_SCRIPT arch/x86_64/link.ld)
 else()
@@ -32,9 +33,14 @@ list(APPEND __ARCH_SOURCES ${__ARCH_SOURCES_ASM} ${__ARCH_SOURCES_C})
 # ===== UI SOURCES =====
 
 list(APPEND __UI_SOURCES
-                    ui/ui.c)
+                    ui/ui.c
+                    ui/bugcheck.c)
 
-                
+# ===== MM SOURCES =====
+
+list(APPEND __MM_SOURCES
+                    mm/pmm.c)
+
 # ===== MINILIBC SOURCES =====
 
 list(APPEND __MINILIBC_SOURCES
@@ -42,4 +48,4 @@ list(APPEND __MINILIBC_SOURCES
                     minilibc/stdlib.c)
 
 # ===== FINAL SOURCES =====
-list(APPEND __MINTLDR_SOURCE ${__ARCH_SOURCES} ${__UI_SOURCES} ${__MINILIBC_SOURCES})
+list(APPEND __MINTLDR_SOURCE ${__ARCH_SOURCES} ${__UI_SOURCES} ${__MM_SOURCES} ${__MINILIBC_SOURCES})

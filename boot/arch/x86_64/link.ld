@@ -1,6 +1,8 @@
 SECTIONS
 {
 
+  __mintldr_image_start = __image_base__;
+
   .text __image_base__ + __section_alignment__ : ALIGN(__file_alignment__)
   {
 	  *(.multiboot)
@@ -31,6 +33,8 @@ SECTIONS
     *(COMMON)
     __bss_end = . ;
   }
+
+  __mintldr_image_end = .;
 
 
   /DISCARD/ :
