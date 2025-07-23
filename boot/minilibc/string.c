@@ -20,7 +20,7 @@ void *memset(void *destination, char ch, SIZE_T n) {
     return destination;
 }
 
-int strlen(char *s) {
+SIZE_T strlen(const char *s) {
     int len = 0;
     while (*s++) len++; 
     return len;

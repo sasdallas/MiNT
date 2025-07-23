@@ -43,7 +43,7 @@ void __stdcall MintLoaderProcessMultibootInformation(PMULTIBOOT_HEADER Multiboot
 
     /* Process the Multiboot memory map */
     PMULTIBOOT_MMAP_ENTRY MmapEntry = (PMULTIBOOT_MMAP_ENTRY)(UINT64)MultibootHeader->MemoryMapBase;
-    while ((PVOID)MmapEntry < (PVOID)(MultibootHeader->MemoryMapBase + MultibootHeader->MemoryMapLength)) {
+    while ((PVOID)MmapEntry < (PVOID)(UINT64)(MultibootHeader->MemoryMapBase + MultibootHeader->MemoryMapLength)) {
         if (MmapEntry->Length == 0) {
             /* Invalid + marks end */
             break;

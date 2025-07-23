@@ -21,7 +21,7 @@ __MINT_BEGIN_DECLS
 
 char *itoa(int value, char *str, int base);
 void *memset(void *destination, char ch, SIZE_T length);
-int strlen(char *s);
+SIZE_T strlen(const char *s);
 char *strcpy(char *dest, char *src);
 
 __MINT_END_DECLS

@@ -29,6 +29,8 @@ set(CMAKE_SHARED_LINKER_FLAGS_INIT "-nostdlib -nodefaultlibs -Wl,--enable-auto-i
 set(CMAKE_MODULE_LINKER_FLAGS_INIT "-nostdlib -nodefaultlibs -Wl,--enable-auto-image-base,--disable-auto-import")
 set(CMAKE_EXE_LINKER_FLAGS_INIT "-nostdlib -nodefaultlibs -Wl,--enable-auto-image-base,--disable-auto-import")
 
+add_compile_options("$<$<NOT:$<COMPILE_LANGUAGE:ASM_NASM>>:-Wno-builtin-declaration-mismatch>")
+
 set(CMAKE_ASM_COMPILE_OBJECT "<CMAKE_ASM_COMPILER>  -x assembler-with-cpp -o <OBJECT> <INCLUDES> <FLAGS> <DEFINES> -D__ASM__ -c <SOURCE>")
 
 # CMake tripping

@@ -42,7 +42,7 @@ VOID MintBugCheckWithMessage(UINT32 Bugcode, PCSTR Format, ...) {
 
         va_list ap;
         va_start(ap, Format);
-        UiPrintVA(Format, ap);
+        UiPrintVA((PCHAR)Format, ap);
         va_end(ap);
 
         UiPrint("\n");

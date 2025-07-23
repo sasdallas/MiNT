@@ -118,7 +118,7 @@ int UiPrintCallback(UiCallback Callback, PCHAR Format, va_list ap) {
             case 'S':
             case 's':
                 p++;
-                CONST CHAR* Str = va_arg(ap, const char*);
+                CHAR* Str = va_arg(ap, char*);
                 SIZE_T StrLength = strlen(Str);
 
                 Callback(Str, StrLength);

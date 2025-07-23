@@ -32,6 +32,6 @@ VOID GfxClear(GFX_COLOR Color) {
 }
 
 VOID GfxPutCharacter(int x, int y, char c, GFX_COLOR Foreground, GFX_COLOR Background) {
-    *(PUSHORT)(VGA_MEMORY + ((y * VGA_WIDTH + x)*2)) = VGA_ENTRY(c, Foreground, Background);
+    *(PUSHORT)(UINT_PTR)(VGA_MEMORY + ((y * VGA_WIDTH + x)*2)) = VGA_ENTRY(c, Foreground, Background);
     return;
 }
