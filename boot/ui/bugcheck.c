@@ -15,14 +15,14 @@
 
 PCHAR MintBugCodeStrings[] = {
     [BOOT_INFORMATION_MISSING]          = "BOOT_INFORMATION_MISSING",
-    [PMM_BITMAP_NO_SPACE]               = "PMM_BITMAP_NO_SPACE",
+    [MEMORY_NO_SPACE]                   = "MEMORY_NO_SPACE",
     [MEMORY_MAP_CORRUPTED]              = "MEMORY_MAP_CORRUPTED",
     [OUT_OF_MEMORY]                     = "OUT_OF_MEMORY",
 };
 
 PCHAR MintBugCodeMessages[] = {
     [BOOT_INFORMATION_MISSING]          = "Boot information missing or corrupted.",
-    [PMM_BITMAP_NO_SPACE]               = "Not enough space for physical memory bitmap.",
+    [MEMORY_NO_SPACE]                   = "Not enough space for memory management objects.",
     [MEMORY_MAP_CORRUPTED]              = "The physical memory map has been corrupted",
     [OUT_OF_MEMORY]                     = "Not enough memory is available to load MiNT.",
 };

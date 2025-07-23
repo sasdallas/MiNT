@@ -21,7 +21,7 @@ __MINT_BEGIN_DECLS
 #include <winnt.h>
 
 #define BOOT_INFORMATION_MISSING        ((ULONG)0x00000001)
-#define PMM_BITMAP_NO_SPACE             ((ULONG)0x00000002)
+#define MEMORY_NO_SPACE                 ((ULONG)0x00000002)
 #define MEMORY_MAP_CORRUPTED            ((ULONG)0x00000003)
 #define OUT_OF_MEMORY                   ((ULONG)0x00000004)
 

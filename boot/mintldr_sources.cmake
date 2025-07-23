@@ -39,7 +39,8 @@ list(APPEND __UI_SOURCES
 # ===== MM SOURCES =====
 
 list(APPEND __MM_SOURCES
-                    mm/pmm.c)
+                    mm/pmm.c
+                    mm/vmm.c)
 
 # ===== MINILIBC SOURCES =====
 

@@ -91,15 +91,14 @@ void __stdcall MintLoaderMain(PMULTIBOOT_HEADER MultibootHeader, UINT32 Multiboo
     MmInitializeMemoryMap(MemoryRegionList);
     UiPrint("Physical memory manager initialized\n");
 
-    UINT_PTR Block = MmAllocatePhysicalPages(1);
-    UiPrint("Got physical page: 0x%x\n", Block);
-    UINT_PTR Block2 = MmAllocatePhysicalPages(2);
-    UiPrint("Got physical page: 0x%x\n", Block2);
-    MmFreePhysicalPages(Block, 1);
-    UINT_PTR Block3 = MmAllocatePhysicalPages(5);
-    UiPrint("Got physical page: 0x%x\n", Block3);
-    UINT_PTR Block4 = MmAllocatePhysicalPages(1);
-    UiPrint("Got physical page: 0x%x\n", Block4);
+    /* Initialize virtual memory manager */
+    MmInitializeMemoryManager();
+
+    MINTLDR_PAGE Page = {
+        .Flags = MINTLDR_PAGE_PRESENT | MINTLDR_PAGE_WRITABLE | MINTLDR_PAGE_USERMODE,
+        .Address = 0xDEAD0000
+    };
+    MmArchSetPage(&Page, 0xDEAD0000);
 
     for (;;);
 }

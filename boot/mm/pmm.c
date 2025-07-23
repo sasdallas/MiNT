@@ -51,7 +51,7 @@ static INT MmTestPhysicalFrame(UINT32 Frame) {
 }
 
 
-static INT MmMarkPhysicalRegion(PMINTLDR_MEMORY_REGION Region) {
+INT MmMarkPhysicalRegion(PMINTLDR_MEMORY_REGION Region) {
     PhysicalMemoryTotalBlocks += (Region->Size / MM_PAGE_SIZE);
     SIZE_T BlockBase = (SIZE_T)(Region->Base / MM_PAGE_SIZE);
     if (Region->MemoryType == RegionAvailable) {
@@ -165,7 +165,7 @@ INT MmInitializeMemoryMap(PMINTLDR_MEMORY_REGION MapStart) {
     /* Get space to put our bitmap */
     PhysicalMemoryFrameBitmap = (PUINT32)MmArchFindSpaceForPmmBitmap(PhysicalMemoryFrameCount / 8);
     if (!PhysicalMemoryFrameBitmap) {
-        MintBugCheck(PMM_BITMAP_NO_SPACE);
+        MintBugCheck(MEMORY_NO_SPACE);
     }
 
     /* Go over the regions one more time, marking them as free or not free */
@@ -174,6 +174,20 @@ INT MmInitializeMemoryMap(PMINTLDR_MEMORY_REGION MapStart) {
         MmMarkPhysicalRegion(Region);
         Region = Region->NextRegion;
     }
+    
+    /* Unmark the MINTLDR image */
+    MmArchUnmarkMintldrImagePhysical();
+
+    /* Unmark the PMM bitmap */
+    MINTLDR_MEMORY_REGION PmmBitmapMemoryRegion = {
+        .Base = (UINT_PTR)PhysicalMemoryFrameBitmap,
+        .Size = (UINT_PTR)(PhysicalMemoryFrameCount / 8),
+        .MemoryType = RegionLoaderHeap,
+        .NextRegion = NULL,
+        .PrevRegion = NULL
+    };
+
+    MmMarkPhysicalRegion(&PmmBitmapMemoryRegion);
 
     INFO("Physical memory manager is using %i blocks / %i blocks total\n", PhysicalMemoryInUseBlocks, PhysicalMemoryTotalBlocks);
 

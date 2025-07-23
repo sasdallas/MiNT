@@ -35,11 +35,6 @@ MintLoaderAoutKludge:
 
 ; ========== STACK ==========
 section .bss
-align 4096
-MintLoaderBasePML:
-resb 16384
-MintLoaderBasePMLEnd:
-
 align 16
 MintLoaderStackBottom:
 resb 16384
@@ -86,6 +81,7 @@ GdtBaseEnd:
 
 global MintLoaderEntry
 global MintLoaderEntry64
+extern MintLoaderBasePML
 
 extern _MintLoaderMain
 MintLoaderEntry:

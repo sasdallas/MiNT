@@ -20,10 +20,11 @@ __MINT_BEGIN_DECLS
 #include <ntdef.h>
 
 typedef enum {
-    RegionAvailable,
+    RegionAvailable,    /* This is the only reason you can initialize! */
     RegionReserved,
     RegionBad,
     RegionLoaderCode,
+    RegionLoaderData,
     RegionLoaderHeap,
 } MINTLDR_MEMORY_TYPE;
 
