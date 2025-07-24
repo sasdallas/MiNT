@@ -18,6 +18,7 @@ PCHAR MintBugCodeStrings[] = {
     [MEMORY_NO_SPACE]                   = "MEMORY_NO_SPACE",
     [MEMORY_MAP_CORRUPTED]              = "MEMORY_MAP_CORRUPTED",
     [OUT_OF_MEMORY]                     = "OUT_OF_MEMORY",
+    [HEAP_CORRUPTION_DETECTED]          = "HEAP_CORRUPTION_DETECTED"
 };
 
 PCHAR MintBugCodeMessages[] = {
@@ -25,6 +26,7 @@ PCHAR MintBugCodeMessages[] = {
     [MEMORY_NO_SPACE]                   = "Not enough space for memory management objects.",
     [MEMORY_MAP_CORRUPTED]              = "The physical memory map has been corrupted",
     [OUT_OF_MEMORY]                     = "Not enough memory is available to load MiNT.",
+    [HEAP_CORRUPTION_DETECTED]          = "Heap corruption detected.",
 };
 
 

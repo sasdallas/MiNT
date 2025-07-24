@@ -22,12 +22,14 @@ extern UINT32 __mintldr_image_end;
 /* Base PML, contains enough space to hold some initial PDPTs/PDs/PTs as well */
 MEMORY_PAGE MintLoaderBasePML[3][512] __attribute__((aligned(MM_PAGE_SIZE))) = { 0 };
 
+/* PDPT/PD/PT that contains the lower physical memory mapping for MINTLDR */
+MEMORY_PAGE MintLoaderLowMapPDPT[512] __attribute__((aligned(MM_PAGE_SIZE)))            = { 0 };
+MEMORY_PAGE MintLoaderLowMapPD[512] __attribute__((aligned(MM_PAGE_SIZE)))              = { 0 };
+MEMORY_PAGE MintLoaderLowMapPT[512*2] __attribute__((aligned(MM_PAGE_SIZE)))              = { 0 };
+
 /* PDPT/PD/PT that contains the physical memory identity mapping */
 MEMORY_PAGE MintLoaderIdentityMapPDPT[512] __attribute__((aligned(MM_PAGE_SIZE)))       = { 0 };
 MEMORY_PAGE MintLoaderIdentityMapPD[128][512] __attribute__((aligned(MM_PAGE_SIZE)))    = { 0 };
-
-
-
 
 UINT_PTR MmArchFindSpaceForPmmBitmap(SIZE_T SpaceRequired) {
     /* For now place the PMM buffer at the end. This isn't how you memory manage */
@@ -38,6 +40,14 @@ UINT_PTR MmArchFindSpaceForPmmBitmap(SIZE_T SpaceRequired) {
     DEBUG("Placing PMM buffer at 0x%x\n", PmmBufferLocation);
     return PmmBufferLocation;
 }
+
+UINT_PTR MmArchFindSpaceForInitialHeap(SIZE_T SpaceRequired) {
+    /* TODO: Validate this spot is available */
+    UINT_PTR InitialHeapLocation = (UINT_PTR)MM_PAGE_ALIGN_UP((UINT64)&__mintldr_image_end);
+    DEBUG("Placing initial heap at 0x%x\n", InitialHeapLocation);
+    return InitialHeapLocation;
+}
+
 VOID MmArchUnmarkMintldrImagePhysical() {
     UINT_PTR MintldrImageStart, MintldrImageSize;
     MintldrImageStart = (UINT_PTR)MM_PAGE_ALIGN_DOWN((UINT64)&__mintldr_image_start);
@@ -61,6 +71,28 @@ VOID MmArchUnmarkMintldrImage() {
 
 INT MmArchSetupPageMap() {
     /* The bootloader setup an initial stub for us with valid addresses in the low memory, but we have to setup identity map */
+
+    /* We should probably also build a new low memory map not using 2MB pages */
+    /* Two PTs should be all we need */
+    /* TODO: Implement checks */
+
+    MintLoaderLowMapPDPT[0].Present = 1;
+    MintLoaderLowMapPDPT[0].Writable = 1;
+    MintLoaderLowMapPDPT[0].Address = ((UINT64)&(MintLoaderLowMapPD)) >> MM_PAGE_SHIFT;
+
+    for (SIZE_T i = 0; i < 2; i++) {
+        MintLoaderLowMapPD[i].Present = 1;
+        MintLoaderLowMapPD[i].Writable = 1;
+        MintLoaderLowMapPD[i].Address = ((UINT64)&(MintLoaderLowMapPT[i*512])) >> MM_PAGE_SHIFT;
+
+        for (SIZE_T j = 0; j < 512; j++) {
+            MintLoaderLowMapPT[j+(i*512)].Present = 1;
+            MintLoaderLowMapPT[j+(i*512)].Writable = 1;
+            MintLoaderLowMapPT[j+(i*512)].Address = (((MM_PAGE_SIZE*512)*i) + (MM_PAGE_SIZE * j)) >> MM_PAGE_SHIFT;
+        }
+    }
+
+    MintLoaderBasePML[0][0].Raw = ((UINT64)&MintLoaderLowMapPDPT) | 0x3;
 
     /* Using 2MiB pages, identity map */
     for (SIZE_T i = 0; i < MM_PHYSICAL_MAP_SIZE / MM_PAGE_SIZE_LARGE / 512; i++) {

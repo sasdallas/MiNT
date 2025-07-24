@@ -18,6 +18,7 @@
 __MINT_BEGIN_DECLS
 
 #include <mm/region.h>
+#include <mm/heap.h>
 #include <msvctarget.h>
 #include <winnt.h>
 
@@ -51,12 +52,13 @@ INT                     MmMarkPhysicalRegion(PMINTLDR_MEMORY_REGION Region);
 /* VMM */
 INT                     MmInitializeMemoryManager();
 UINT_PTR                MmAllocatePages(SIZE_T PageCount);
-INT                     MmFreePages(SIZE_T PageCount);
+INT                     MmFreePages(UINT_PTR Base, SIZE_T PageCount);
 INT                     MmCreateNewAllocation(UINT_PTR Address, SIZE_T Size);
 INT                     MmSetAllocationType(UINT_PTR Address, MINTLDR_MEMORY_TYPE Type);
 
 /* The architecture should implement these */
 UINT_PTR                MmArchFindSpaceForPmmBitmap(SIZE_T SpaceRequired);
+UINT_PTR                MmArchFindSpaceForInitialHeap(SIZE_T SpaceRequired);
 VOID                    MmArchUnmarkMintldrImagePhysical();
 VOID                    MmArchUnmarkMintldrImage();
 INT                     MmArchSetupPageMap();

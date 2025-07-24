@@ -22,6 +22,7 @@ typedef INT (*UiCallback)(PCHAR, SIZE_T);
 void UiInit();
 void UiSetColors(GFX_COLOR Foreground, GFX_COLOR Background);
 void UiPutCharacter(char c);
+void UiSetPosition(INT X, INT Y);
 int UiPrintCallback(UiCallback Callback, PCHAR Format, va_list ap);
 int UiPrintVA(PCHAR Format, va_list ap);
 int UiPrint(PCHAR Format, ...);

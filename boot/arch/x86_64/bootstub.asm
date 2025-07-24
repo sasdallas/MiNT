@@ -118,7 +118,7 @@ MintLoaderInitializePaging:
     ; Map in 32 2MiB pages to map 64MiB of low memory
     add edi, 0x1000
     mov ebx, 0x87
-    mov ecx, 32
+    mov ecx, 1
 
 .MintLoaderPagingSetEntryLoop:
     mov [edi], ebx

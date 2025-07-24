@@ -18,6 +18,7 @@
 __MINT_BEGIN_DECLS
 
 #include <arch/serial.h>
+#include <bugcheck.h>
 
 #define LOG(module, ...)    SerialPrint("[%s] (%s:%i) %s: ", module, __FILE__, __LINE__, __FUNCTION__); \
                             SerialPrint(__VA_ARGS__)
@@ -26,6 +27,10 @@ __MINT_BEGIN_DECLS
 #define WARN(...) LOG("WARN ", __VA_ARGS__)
 #define ERROR(...) LOG("ERROR", __VA_ARGS__)
 #define DEBUG(...) LOG("DEBUG", __VA_ARGS__)
+
+#ifndef ASSERT_BUGCHECK
+#define ASSERT_BUGCHECK(cond, bugcheck, ...) ({ if (!(cond)) { MintBugCheckWithMessage(bugcheck, __VA_ARGS__); }})
+#endif
 
 __MINT_END_DECLS
 

@@ -74,7 +74,14 @@ void __stdcall MintLoaderProcessMultibootInformation(PMULTIBOOT_HEADER Multiboot
 
 void __stdcall MintLoaderMain(PMULTIBOOT_HEADER MultibootHeader, UINT32 MultibootMagic) {
     UiInit();
-    UiPrint("MINTLDR v1.0\n");
+    UiSetColors(GFX_COLOR_BLACK, GFX_COLOR_LIGHT_GRAY);
+    UiPrint("MINTLDR v1.0                                                                  \n");
+
+    UiSetPosition(0, 24);
+    UiPrint("Starting MiNT                                                                 ");
+    UiSetPosition(0, 1);
+
+    UiSetColors(GFX_COLOR_LIGHT_GRAY, GFX_COLOR_BLACK);
 
     /* Initialize the serial port */
     SerialInitialize(1, 38400);
@@ -93,12 +100,10 @@ void __stdcall MintLoaderMain(PMULTIBOOT_HEADER MultibootHeader, UINT32 Multiboo
 
     /* Initialize virtual memory manager */
     MmInitializeMemoryManager();
+    UiPrint("Memory manager online\n");
 
-    MINTLDR_PAGE Page = {
-        .Flags = MINTLDR_PAGE_PRESENT | MINTLDR_PAGE_WRITABLE | MINTLDR_PAGE_USERMODE,
-        .Address = 0xDEAD0000
-    };
-    MmArchSetPage(&Page, 0xDEAD0000);
+    UiPrint("Getting ready to load MiNT\n");
+    MintBugCheckWithMessage(OUT_OF_MEMORY, "MiNTy Fresh\n");
 
     for (;;);
 }

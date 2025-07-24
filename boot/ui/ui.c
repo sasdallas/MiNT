@@ -19,7 +19,7 @@ int UiPositionX = 0;
 int UiPositionY = 0;
 
 /* UI colors */
-GFX_COLOR UiForegroundColor = GFX_COLOR_WHITE;
+GFX_COLOR UiForegroundColor = GFX_COLOR_LIGHT_GRAY;
 GFX_COLOR UiBackgroundColor = GFX_COLOR_BLACK;
 
 void UiInit() {
@@ -35,6 +35,11 @@ void UiClearScreen() {
     GfxClear(UiBackgroundColor);
     UiPositionY = 0;
     UiPositionX = 0;
+}
+
+void UiSetPosition(INT X, INT Y) {
+    UiPositionX = X;
+    UiPositionY = Y;
 }
 
 void UiPutCharacter(char c) {
