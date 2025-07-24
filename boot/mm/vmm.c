@@ -23,6 +23,37 @@ MINTLDR_HEAP MintInitialHeap = { 0 };
 
 #define MINTLDR_INITIAL_HEAP_PAGES          32
 
+static PCHAR MmMemoryTypeToString(MINTLDR_MEMORY_TYPE Type) {
+    switch (Type) {
+        case RegionAvailable:
+            return "Available";
+        case RegionReserved:
+            return "Reserved";
+        case RegionBad:
+            return "BadMemory";
+        case RegionLoaderCode:
+            return "LoaderCode";
+        case RegionLoaderData:
+            return "LoaderData";
+        case RegionLoaderHeap:
+            return "LoaderHeap";
+        default:
+            return "Unknown";
+    }
+}
+
+static VOID MmPrintMemoryMap() {
+    DEBUG("MINTLDR memory region list:\n");
+    PMINTLDR_MEMORY_REGION Region = MintMemoryRegionList;
+    while (Region) {
+        DEBUG("Region: %16x - %16x: %s\n", Region->Base, Region->Base + Region->Size, MmMemoryTypeToString(Region->MemoryType));
+
+        if (!Region->NextRegion) break;
+        Region = Region->NextRegion;
+    }
+    
+}
+
 INT MmInitializeMemoryManager() {
     /* Setup the architecture's page map */
     MmArchSetupPageMap();
@@ -38,13 +69,162 @@ INT MmInitializeMemoryManager() {
 
     /* Initialize the heap */
     MmInitHeap(&MintInitialHeap);
+    DEBUG("Initial heap initialized to 0x%16x - 0x%16x\n", MintInitialHeap.Base, MintInitialHeap.Base + MintInitialHeap.Size);
 
-    DEBUG("Initial heap initialized to 0x%16x - 0x%16x, first big block at %16x\n", MintInitialHeap.Base, MintInitialHeap.Base + MintInitialHeap.Size, MintInitialHeap.Head);
+    /* Unmark the MINTLDR image in the region map */
+    MmArchUnmarkMintldrImage();
 
-    MmAllocateHeap(&MintInitialHeap, sizeof(MINTLDR_MEMORY_REGION));
+    /* Unmark the initial heap */
+    MmCreateNewRegion(RegionLoaderHeap, MintInitialHeap.Base, MintInitialHeap.Size);
 
-    MmAllocateHeap(&MintInitialHeap, sizeof(MINTLDR_MEMORY_REGION));
+    /* Start the default heap */
+    MmInitDefaultHeap();
+
+    /* Debug */
+    MmPrintMemoryMap();
 
     return 0;
 }
 
+INT MmCreateNewRegion(MINTLDR_MEMORY_TYPE Type, UINT_PTR Address, SIZE_T Size) {
+    /* Find out where we need to put this region */
+    PMINTLDR_MEMORY_REGION Region = MintMemoryRegionList;
+    while (Region) {
+        if (!Region->NextRegion) break;
+        
+        if (Region->Base > Address) {
+            /* Don't panic, maybe this is the first region? */
+            if (Region == MintMemoryRegionList) {
+                /* Is there enough space? */
+                if (Address + Size <= Region->Base) {
+                    /* Yes, we can put a region here */
+                    PMINTLDR_MEMORY_REGION NewRegion = MmAllocateHeap(&MintInitialHeap, sizeof(MINTLDR_MEMORY_REGION));
+                    NewRegion->Base = Address;
+                    NewRegion->MemoryType = Type;
+                    NewRegion->NextRegion = MintMemoryRegionList;
+                    NewRegion->PrevRegion = NULL;
+                    NewRegion->Size = Size;
+
+                    Region->PrevRegion = NewRegion;
+                    MintMemoryRegionList = NewRegion;
+                    return 0;
+                }
+            }
+
+            MintBugCheckWithMessage(MEMORY_REGION_LIST_CORRUPT, "Region collision. This is a bug");
+        }
+
+        /* Check the next region */
+        PMINTLDR_MEMORY_REGION Next = Region->NextRegion;
+        UINT_PTR End = Region->Base + Region->Size;
+        ASSERT_BUGCHECK_SIMPLE(Next->Base >= Region->Base + Region->Size, MEMORY_REGION_LIST_CORRUPT);
+        SIZE_T HoleSize = Next->Base - (Region->Base + Region->Size);
+
+        if (HoleSize >= Size && Address > End && Address + Size < Next->Base) {
+            /* We have space in between these two areas */
+            PMINTLDR_MEMORY_REGION NewRegion = MmAllocateHeap(&MintInitialHeap, sizeof(MINTLDR_MEMORY_REGION));
+            NewRegion->Base = Address;
+            NewRegion->MemoryType = Type;
+            NewRegion->NextRegion = Next;
+            NewRegion->PrevRegion = Region;
+            NewRegion->Size = Size;
+
+            Next->PrevRegion = NewRegion;
+            Region->NextRegion = NewRegion;
+            return 0;
+        }
+        
+        Region = Region->NextRegion;
+    }
+
+    /* Create a new region and append it to the back of the memory system */
+    PMINTLDR_MEMORY_REGION NewRegion = MmAllocateHeap(&MintInitialHeap, sizeof(MINTLDR_MEMORY_REGION));
+    NewRegion->Base = Address;
+    NewRegion->MemoryType = Type;
+    NewRegion->NextRegion = NULL;
+    NewRegion->PrevRegion = Region;
+    NewRegion->Size = Size;
+
+    if (!Region) {
+        MintMemoryRegionList = NewRegion;
+    } else {
+        /* Region should be the last region */
+        Region->NextRegion = NewRegion;
+    }
+
+    return 0;
+}
+UINT_PTR MmAllocatePagesEx(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut) {
+    if (!PageCount) {
+        WARN("MmAllocatePagesEx called for 0 pages\n");
+        return NULL;
+    }
+
+    /* Get total size needed */
+    SIZE_T Size = PageCount * MM_PAGE_SIZE;
+
+    /* Find holes to place pages */
+    PMINTLDR_MEMORY_REGION Region = MintMemoryRegionList;
+
+    /* Check for big enough holes */
+    if (Region->Base > Size) {
+        /* We have enough space to put one at the beginning */
+        PMINTLDR_MEMORY_REGION NewRegion = MmAllocateHeap(&MintInitialHeap, sizeof(MINTLDR_MEMORY_REGION));
+        NewRegion->Base = 0x0;
+        NewRegion->MemoryType = RegionLoaderData;
+        NewRegion->NextRegion = Region;
+        NewRegion->PrevRegion = NULL;
+        Region->PrevRegion = NewRegion;
+        NewRegion->Size = Size;
+        MintMemoryRegionList = NewRegion;
+        if (RegionOut) *RegionOut = NewRegion;
+        return NewRegion->Base;
+    }
+
+    while (Region) {
+        if (!Region->NextRegion) break;
+        PMINTLDR_MEMORY_REGION Next = Region->NextRegion;
+
+        /* Check for hole size */
+        ASSERT_BUGCHECK_SIMPLE(Next->Base >= Region->Base + Region->Size, MEMORY_REGION_LIST_CORRUPT);
+        SIZE_T HoleSize = Next->Base - (Region->Base + Region->Size);
+        UINT_PTR End = Region->Base + Region->Size;
+
+        if (HoleSize > Size) {
+            /* We have space in between these two areas */
+            PMINTLDR_MEMORY_REGION NewRegion = MmAllocateHeap(&MintInitialHeap, sizeof(MINTLDR_MEMORY_REGION));
+            NewRegion->Base = End;
+            NewRegion->MemoryType = RegionLoaderData;
+            NewRegion->NextRegion = Next;
+            NewRegion->PrevRegion = Region;
+            NewRegion->Size = Size;
+
+            Next->PrevRegion = NewRegion;
+            Region->NextRegion = NewRegion;
+            if (RegionOut) *RegionOut = NewRegion;
+            return NewRegion->Base;
+        } 
+
+        Region = Region->NextRegion;
+    }
+
+    /* Create a new region and append it to the back of the memory system */
+    PMINTLDR_MEMORY_REGION NewRegion = MmAllocateHeap(&MintInitialHeap, sizeof(MINTLDR_MEMORY_REGION));
+    NewRegion->Base = Region->Base + Region->Size;
+    NewRegion->MemoryType = RegionLoaderData;
+    NewRegion->NextRegion = NULL;
+    NewRegion->PrevRegion = Region;
+    NewRegion->Size = Size;
+    Region->NextRegion = NewRegion;
+    if (RegionOut) *RegionOut = NewRegion;
+    return NewRegion->Base;
+}
+
+UINT_PTR MmAllocatePages(SIZE_T PageCount) {
+    return MmAllocatePagesEx(PageCount, NULL);
+}
+
+INT MmFreePages(UINT_PTR Base, SIZE_T PageCount) {
+    ERROR("MmFreePages: TODO\n");
+    return 0;
+}

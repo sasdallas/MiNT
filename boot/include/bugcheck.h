@@ -25,6 +25,7 @@ __MINT_BEGIN_DECLS
 #define MEMORY_MAP_CORRUPTED            ((ULONG)0x00000003)
 #define OUT_OF_MEMORY                   ((ULONG)0x00000004)
 #define HEAP_CORRUPTION_DETECTED        ((ULONG)0x00000005)
+#define MEMORY_REGION_LIST_CORRUPT      ((ULONG)0x00000006)
 
 VOID MintBugCheck(UINT32 Bugcode);
 VOID MintBugCheckWithMessage(UINT32 Bugcode, PCSTR Format, ...);

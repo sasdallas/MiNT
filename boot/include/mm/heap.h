@@ -57,7 +57,7 @@ INT             MmInitHeap(PMINTLDR_HEAP Heap);
 INT             MmInitDefaultHeap();
 PMINTLDR_HEAP   MmCreateHeapEx(MINTLDR_MEMORY_TYPE MemoryType, UINT_PTR Base, SIZE_T Size);
 PMINTLDR_HEAP   MmCreateHeap(MINTLDR_MEMORY_TYPE MemoryType);
-UINT_PTR        MmAllocateHeap(PMINTLDR_HEAP Heap, SIZE_T Size);
+PVOID           MmAllocateHeap(PMINTLDR_HEAP Heap, SIZE_T Size);
 INT             MmFreeHeap(PMINTLDR_HEAP Heap, UINT_PTR Allocation);
 INT             MmDestroyHeap(PMINTLDR_HEAP Heap);
 

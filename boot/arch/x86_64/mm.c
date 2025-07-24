@@ -66,7 +66,11 @@ VOID MmArchUnmarkMintldrImagePhysical() {
 }
 
 VOID MmArchUnmarkMintldrImage() {
+    UINT_PTR MintldrImageStart, MintldrImageSize;
+    MintldrImageStart = (UINT_PTR)MM_PAGE_ALIGN_DOWN((UINT64)&__mintldr_image_start);
+    MintldrImageSize = (UINT_PTR)MM_PAGE_ALIGN_UP((UINT64)&__mintldr_image_end) - MintldrImageStart;
 
+    MmCreateNewRegion(RegionLoaderCode, MintldrImageStart, MintldrImageSize);
 }
 
 INT MmArchSetupPageMap() {

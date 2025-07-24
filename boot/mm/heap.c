@@ -25,7 +25,7 @@ INT MmInitHeap(PMINTLDR_HEAP Heap) {
 }
 
 
-UINT_PTR MmAllocateHeap(PMINTLDR_HEAP Heap, SIZE_T Size) {
+PVOID MmAllocateHeap(PMINTLDR_HEAP Heap, SIZE_T Size) {
     if (!Heap->Base || !Heap->Size) {
         ERROR("Bad heap passed to MmAllocateHeap in attempt to get %i bytes: %16x\n", Size, Heap);
         return 0x0;
@@ -39,7 +39,7 @@ UINT_PTR MmAllocateHeap(PMINTLDR_HEAP Heap, SIZE_T Size) {
     while (BigBlock) {
         /* Does this block, supposedly, have enough? */
         if (BigBlock->BytesFree >= Size) {
-            DEBUG("Block %16x has enough space for us theoretically\n", BigBlock);
+            // DEBUG("Block %16x has enough space for us theoretically\n", BigBlock);
 
             /* First, check if any space is available at the start of the block */
             if ((UINT_PTR)BigBlock->Start - (UINT_PTR)BigBlock > Size) {
@@ -60,11 +60,19 @@ UINT_PTR MmAllocateHeap(PMINTLDR_HEAP Heap, SIZE_T Size) {
                 UINT_PTR Next = (UINT_PTR)SmallBlock->Next;
                 UINT_PTR End = (UINT_PTR)SmallBlock + SmallBlock->Size + sizeof(MINTLDR_HEAP_SMALL_BLOCK);
 
-                DEBUG("Checking for space between %16x and %16x\n", End, Next);
+                // DEBUG("Checking for space between %16x and %16x\n", End, Next);
 
                 if (Next - End > Size) {
-                    /* We have enough space */
-                    MintBugCheck(HEAP_CORRUPTION_DETECTED);
+                    /* We have enough space, place a small block there */
+                    PMINTLDR_HEAP_SMALL_BLOCK NewSmallBlock = (PMINTLDR_HEAP_SMALL_BLOCK)((UINT_PTR)SmallBlock + sizeof(MINTLDR_HEAP_SMALL_BLOCK) + SmallBlock->Size);
+                    NewSmallBlock->Identifier = MINTLDR_HEAP_SMALL_BLOCK_ALIVE;
+                    NewSmallBlock->Next = SmallBlock->Next;
+                    NewSmallBlock->Prev = SmallBlock;
+                    SmallBlock->Next = NewSmallBlock;
+                    NewSmallBlock->Size = Size - sizeof(MINTLDR_HEAP_SMALL_BLOCK);
+                    NewSmallBlock->Parent = BigBlock;
+                    NewSmallBlock->Next->Prev = NewSmallBlock;
+                    return ((PVOID)NewSmallBlock + sizeof(MINTLDR_HEAP_SMALL_BLOCK));
                 }
 
                 SmallBlock = SmallBlock->Next;
@@ -75,7 +83,7 @@ UINT_PTR MmAllocateHeap(PMINTLDR_HEAP Heap, SIZE_T Size) {
                 UINT_PTR BigBlockEnd = (UINT_PTR)BigBlock + sizeof(MINTLDR_HEAP_BIG_BLOCK) + BigBlock->BytesTotal;
                 UINT_PTR SmallBlockEnd = (UINT_PTR)SmallBlock + SmallBlock->Size + sizeof(MINTLDR_HEAP_SMALL_BLOCK);
 
-                DEBUG("Space check: %16x - %16x\n", SmallBlockEnd, BigBlockEnd);
+                // DEBUG("Space check: %16x - %16x\n", SmallBlockEnd, BigBlockEnd);
                 
                 if (BigBlockEnd - SmallBlockEnd > Size) {
                     /* There's enough space in this block */
@@ -91,11 +99,12 @@ UINT_PTR MmAllocateHeap(PMINTLDR_HEAP Heap, SIZE_T Size) {
                     SmallBlock->Next = NULL;
                     SmallBlock->Parent = BigBlock;
                     
-                    return (UINT_PTR)SmallBlock + sizeof(MINTLDR_HEAP_SMALL_BLOCK);
+                    return (PVOID)SmallBlock + sizeof(MINTLDR_HEAP_SMALL_BLOCK);
                 }
             } else {
                 /* The heap has no head */
                 /* We can just make a new small block at the start */
+                /* TODO */
                 MintBugCheck(HEAP_CORRUPTION_DETECTED);
             }
         }
@@ -155,35 +164,39 @@ UINT_PTR MmAllocateHeap(PMINTLDR_HEAP Heap, SIZE_T Size) {
     BigBlock->Start->Parent = BigBlock;
     BigBlock->Start->Size = Size - sizeof(MINTLDR_HEAP_SMALL_BLOCK);
 
-    return (UINT_PTR)BigBlock->Start + sizeof(MINTLDR_HEAP_SMALL_BLOCK);
+    return (PVOID)BigBlock->Start + sizeof(MINTLDR_HEAP_SMALL_BLOCK);
 }
 
 
 INT MmInitDefaultHeap() {
     MmInitHeap(MintDefaultHeap);
-    MintDefaultHeap->Base = MmAllocatePages(32);
+
+    PMINTLDR_MEMORY_REGION Region;
+    MintDefaultHeap->Base = MmAllocatePagesEx(32, &Region);
     MintDefaultHeap->Size = 32 * MM_PAGE_SIZE;
     MintDefaultHeap->Head = NULL;
     MintDefaultHeap->Type = RegionLoaderHeap;
+    Region->MemoryType = RegionLoaderHeap;
+    
     return 0;
 }
 
-PMINTLDR_HEAP MmCreateHeapEx(MINTLDR_MEMORY_TYPE MemoryType, UINT_PTR Base, SIZE_T Size) {
-    return NULL; /* TODO */
-}
+// PMINTLDR_HEAP MmCreateHeapEx(MINTLDR_MEMORY_TYPE MemoryType, UINT_PTR Base, SIZE_T Size) {
+//     return NULL; /* TODO */
+// }
 
-PMINTLDR_HEAP MmCreateHeap(MINTLDR_MEMORY_TYPE MemoryType) {
-    return MmCreateHeapEx(MemoryType, MmAllocatePages(32), 32 * MM_PAGE_SIZE);
-}
+// PMINTLDR_HEAP MmCreateHeap(MINTLDR_MEMORY_TYPE MemoryType) {
+//     return MmCreateHeapEx(MemoryType, MmAllocatePages(32), 32 * MM_PAGE_SIZE);
+// }
 
-INT MmFreeHeap(PMINTLDR_HEAP Heap, UINT_PTR Allocation) {
-    /* TODO */
-    DEBUG("MmFreeHeap %016x\n", Allocation);
-    return 0;
-}
+// INT MmFreeHeap(PMINTLDR_HEAP Heap, UINT_PTR Allocation) {
+//     /* TODO */
+//     DEBUG("MmFreeHeap %016x\n", Allocation);
+//     return 0;
+// }
 
-INT MmDestroyHeap(PMINTLDR_HEAP Heap) {
-    /* TODO */
-    DEBUG("MmDestroyHeap %016x\n", Heap);
-    return 0;
-}
+// INT MmDestroyHeap(PMINTLDR_HEAP Heap) {
+//     /* TODO */
+//     DEBUG("MmDestroyHeap %016x\n", Heap);
+//     return 0;
+// }

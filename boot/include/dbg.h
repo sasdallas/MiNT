@@ -30,6 +30,7 @@ __MINT_BEGIN_DECLS
 
 #ifndef ASSERT_BUGCHECK
 #define ASSERT_BUGCHECK(cond, bugcheck, ...) ({ if (!(cond)) { MintBugCheckWithMessage(bugcheck, __VA_ARGS__); }})
+#define ASSERT_BUGCHECK_SIMPLE(cond, bugcheck)  ({ if (!(cond)) { MintBugCheckWithMessage(bugcheck, "Assertion failed.\n\nASSERT: %s\nFILE: %s\nLINE: %i\n", #cond, __FILE__, __LINE__); }})
 #endif
 
 __MINT_END_DECLS
