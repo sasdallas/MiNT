@@ -41,6 +41,6 @@ except FileExistsError:
     pass
 
 with open(OUTPUT_DIR + "/boot/grub/grub.cfg", "w+") as grub_config:
-    grub_config.write("menuentry \"MiNT\" { multiboot /mintldr.sys }")
+    grub_config.write("menuentry \"MiNT\" {\n\tmultiboot /mintldr.sys\n\tmodule /mintkrnl.exe kernel\n}")
     grub_config.close()
 

@@ -23,6 +23,7 @@ char *itoa(int value, char *str, int base);
 void *memset(void *destination, char ch, SIZE_T length);
 SIZE_T strlen(const char *s);
 char *strcpy(char *dest, char *src);
+int strcmp(const char* str1, const char* str2);
 
 __MINT_END_DECLS
 

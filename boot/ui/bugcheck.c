@@ -19,7 +19,8 @@ PCHAR MintBugCodeStrings[] = {
     [MEMORY_MAP_CORRUPTED]              = "MEMORY_MAP_CORRUPTED",
     [OUT_OF_MEMORY]                     = "OUT_OF_MEMORY",
     [HEAP_CORRUPTION_DETECTED]          = "HEAP_CORRUPTION_DETECTED",
-    [MEMORY_REGION_LIST_CORRUPT]        = "MEMORY_REGION_LIST_CORRUPT"
+    [MEMORY_REGION_LIST_CORRUPT]        = "MEMORY_REGION_LIST_CORRUPT",
+    [FILE_NOT_FOUND]                    = "FILE_NOT_FOUND",
 };
 
 PCHAR MintBugCodeMessages[] = {
@@ -29,6 +30,7 @@ PCHAR MintBugCodeMessages[] = {
     [OUT_OF_MEMORY]                     = "Not enough memory is available to load MiNT.",
     [HEAP_CORRUPTION_DETECTED]          = "Heap corruption detected.",
     [MEMORY_REGION_LIST_CORRUPT]        = "Memory region list corrupted.",
+    [FILE_NOT_FOUND]                    = "A critical boot file was not found.",
 };
 
 

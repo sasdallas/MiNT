@@ -53,6 +53,8 @@ typedef struct MINTLDR_HEAP {
     PMINTLDR_HEAP_BIG_BLOCK     Head;       /* First big block of the head */
 } MINTLDR_HEAP, *PMINTLDR_HEAP;
 
+extern PMINTLDR_HEAP MintDefaultHeap;
+
 INT             MmInitHeap(PMINTLDR_HEAP Heap);
 INT             MmInitDefaultHeap();
 PMINTLDR_HEAP   MmCreateHeapEx(MINTLDR_MEMORY_TYPE MemoryType, UINT_PTR Base, SIZE_T Size);

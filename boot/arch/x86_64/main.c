@@ -17,9 +17,14 @@
 #include <multiboot.h>
 #include <mm/mm.h>
 #include <arch/serial.h>
+#include <arch/x86_64/main.h>
+#include <minilibc/string.h>
 
 /* Memory region list */
 MINTLDR_MEMORY_REGION MemoryRegionList[81];
+
+/* Module list */
+MINTLDR_MODULE ModuleList[80];
 
 MINTLDR_MEMORY_TYPE MintLoaderMultibootToLoaderType(INT Type) {
     switch (Type) {
@@ -37,7 +42,16 @@ MINTLDR_MEMORY_TYPE MintLoaderMultibootToLoaderType(INT Type) {
     }
 }
 
-void __stdcall MintLoaderProcessMultibootInformation(PMULTIBOOT_HEADER MultibootHeader) {
+static PCHAR ModuleTypeToString(MINTLDR_MODULE_TYPE Type) {
+    switch (Type) {
+        case ModuleKernel:
+            return "KernelImage";
+        default:
+            return "Unknown";
+    }
+}
+
+VOID __stdcall MintLoaderProcessMultibootInformation(PMULTIBOOT_HEADER MultibootHeader) {
     SIZE_T Entry = 0;
 
 
@@ -70,6 +84,43 @@ void __stdcall MintLoaderProcessMultibootInformation(PMULTIBOOT_HEADER Multiboot
 
     /* Zero last entry */
     MemoryRegionList[Entry-1].NextRegion = NULL;
+
+    /* Now get each Multiboot entry */
+    PMULTIBOOT_MODULE Module = (PMULTIBOOT_MODULE)(UINT64)MultibootHeader->ModuleStart;
+    SIZE_T ModIndex = 0;
+    while ((PVOID)Module < (PVOID)(UINT64)(MultibootHeader->ModuleStart + MultibootHeader->ModuleCount)) {
+        ModuleList[ModIndex].PhysicalPageBase = Module->ModuleStart;
+        ModuleList[ModIndex].ModuleSize = Module->ModuleEnd - Module->ModuleStart;
+
+        /* Check command line for type */
+        PCHAR Cmdline = (PCHAR)Module->ModuleCmdline;
+
+        /* !!! */   
+        if (!strcmp(Cmdline, "kernel")) {
+            INFO("Found MINTKRNL.EXE: %16x - %16x\n", Module->ModuleStart, Module->ModuleEnd);
+            ModuleList[ModIndex].Type = ModuleKernel;
+        } else {
+            WARN("Unrecognized Multiboot module of type: %s\n", Cmdline);
+            ModuleList[ModIndex].Type = ModuleUnknown;
+        }
+
+        ModIndex++;
+        Module = (PMULTIBOOT_MODULE)((PVOID)Module + sizeof(MULTIBOOT_MODULE));
+    }
+
+    /* TEMP: Make sure we got kernel */
+    INT FoundKernel = 0;
+    for (SIZE_T i = 0; i < ModIndex; i++) {
+        if (ModuleList[i].Type == ModuleKernel) {
+            FoundKernel = 1;
+        }
+
+        DEBUG("Multiboot module: %16x - %16x: %s\n", ModuleList[i].PhysicalPageBase, ModuleList[i].PhysicalPageBase + ModuleList[i].ModuleSize, ModuleTypeToString(ModuleList[i].Type));
+    }
+
+    if (!FoundKernel) {
+        MintBugCheckWithMessage(FILE_NOT_FOUND, "Missing MINTKRNL.EXE or it was not passed to MINTLDR");
+    }
 }
 
 void __stdcall MintLoaderMain(PMULTIBOOT_HEADER MultibootHeader, UINT32 MultibootMagic) {

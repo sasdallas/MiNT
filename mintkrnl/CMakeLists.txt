@@ -25,3 +25,5 @@ target_link_options(mintkrnl
 set_image_entrypoint(mintkrnl KiSystemStartup)
 set_image_base(mintkrnl 0x00400000)
 set_image_subsystem(mintkrnl native)
+
+add_iso_file(TARGET mintkrnl FILE ${CMAKE_CURRENT_BINARY_DIR}/mintkrnl.exe DESTINATION root FOR iso)

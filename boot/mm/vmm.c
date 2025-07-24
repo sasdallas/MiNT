@@ -154,6 +154,7 @@ INT MmCreateNewRegion(MINTLDR_MEMORY_TYPE Type, UINT_PTR Address, SIZE_T Size) {
 
     return 0;
 }
+
 UINT_PTR MmAllocatePagesEx(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut) {
     if (!PageCount) {
         WARN("MmAllocatePagesEx called for 0 pages\n");
