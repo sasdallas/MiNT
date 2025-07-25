@@ -21,6 +21,7 @@ __MINT_BEGIN_DECLS
 
 char *itoa(int value, char *str, int base);
 void *memset(void *destination, char ch, SIZE_T length);
+void *memcpy(void *destination, const void *source, SIZE_T n);
 SIZE_T strlen(const char *s);
 char *strcpy(char *dest, char *src);
 int strcmp(const char* str1, const char* str2);

@@ -37,12 +37,14 @@ static PCHAR MmMemoryTypeToString(MINTLDR_MEMORY_TYPE Type) {
             return "LoaderData";
         case RegionLoaderHeap:
             return "LoaderHeap";
+        case RegionKernel:
+            return "KernelImage";
         default:
             return "Unknown";
     }
 }
 
-static VOID MmPrintMemoryMap() {
+VOID MmDbgPrintMemoryMap() {
     DEBUG("MINTLDR memory region list:\n");
     PMINTLDR_MEMORY_REGION Region = MintMemoryRegionList;
     while (Region) {
@@ -81,7 +83,7 @@ INT MmInitializeMemoryManager() {
     MmInitDefaultHeap();
 
     /* Debug */
-    MmPrintMemoryMap();
+    MmDbgPrintMemoryMap();
 
     return 0;
 }
@@ -155,6 +157,16 @@ INT MmCreateNewRegion(MINTLDR_MEMORY_TYPE Type, UINT_PTR Address, SIZE_T Size) {
     return 0;
 }
 
+PMINTLDR_MEMORY_REGION MmGetRegion(UINT_PTR Base) {
+    PMINTLDR_MEMORY_REGION Region = MintMemoryRegionList;
+    while (Region) {
+        if (Base >= Region->Base && Base <= Region->Base + Region->Size) return Region;
+        Region = Region->NextRegion;
+    }
+
+    return NULL;
+}
+
 INT MmAllocateRegion(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut) {
     if (!PageCount) {
         WARN("MmAllocatePagesEx called for 0 pages\n");
@@ -219,6 +231,28 @@ INT MmAllocateRegion(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut) {
     Region->NextRegion = NewRegion;
     if (RegionOut) *RegionOut = NewRegion;
     return 0;
+}
+
+UINT_PTR MmAllocatePagesAtAddress(SIZE_T PageCount, UINT_PTR Base, PMINTLDR_MEMORY_REGION *RegionOut) {
+    if (MmCreateNewRegion(RegionLoaderHeap, Base, PageCount * MM_PAGE_SIZE)) {
+        ERROR("MmCreateNewRegion failed\n");
+        return NULL;
+    }
+
+    PMINTLDR_MEMORY_REGION Region = MmGetRegion(Base);
+
+    /* Now allocate each part of the page */
+    for (UINT_PTR i = Region->Base; i < Region->Base + Region->Size; i += MM_PAGE_SIZE) {
+        MINTLDR_PAGE Page = {
+            .Flags = MINTLDR_PAGE_PRESENT | MINTLDR_PAGE_WRITABLE,
+            .Address = MmAllocatePhysicalPages(1)
+        };
+
+        MmArchSetPage(&Page, i);
+    }
+
+    if (RegionOut) *RegionOut = Region;
+    return Region->Base;
 }
 
 UINT_PTR MmAllocatePagesEx(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut) {

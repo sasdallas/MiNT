@@ -59,7 +59,6 @@ INT MmMarkPhysicalRegion(PMINTLDR_MEMORY_REGION Region) {
             MmClearPhysicalFrame(BlockBase + Block);
         }
     } else {
-        DEBUG("Region %16x - %16x DISALLOWED\n", Region->Base, Region->Base + Region->Size);
         for (SIZE_T Block = 0; Block < (Region->Size / MM_PAGE_SIZE); Block++) {
             if (MmTestPhysicalFrame(BlockBase + Block)) continue;
             MmSetPhysicalFrame(BlockBase + Block);

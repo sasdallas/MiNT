@@ -20,6 +20,17 @@ void *memset(void *destination, char ch, SIZE_T n) {
     return destination;
 }
 
+void *memcpy(void *destination, const void *source, SIZE_T n) {
+    char *dst = (char *)destination;
+    const char *src = (const char *)source;
+
+    for (SIZE_T i = 0; i < n; i++) {
+        dst[i] = src[i];
+    }
+
+    return destination;
+}
+
 SIZE_T strlen(const char *s) {
     int len = 0;
     while (*s++) len++; 

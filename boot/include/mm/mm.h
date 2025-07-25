@@ -51,12 +51,13 @@ INT                     MmMarkPhysicalRegion(PMINTLDR_MEMORY_REGION Region);
 
 /* VMM */
 INT                     MmInitializeMemoryManager();
+UINT_PTR                MmAllocatePagesAtAddress(SIZE_T PageCount, UINT_PTR Base, PMINTLDR_MEMORY_REGION *RegionOut);
 INT                     MmAllocateRegion(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut);
 UINT_PTR                MmAllocatePagesEx(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut);
 UINT_PTR                MmAllocatePages(SIZE_T PageCount);
 INT                     MmFreePages(UINT_PTR Base, SIZE_T PageCount);
 INT                     MmCreateNewRegion(MINTLDR_MEMORY_TYPE Type, UINT_PTR Address, SIZE_T Size);
-
+VOID                    MmDbgPrintMemoryMap();
 
 /* The architecture should implement these */
 UINT_PTR                MmArchFindSpaceForPmmBitmap(SIZE_T SpaceRequired);

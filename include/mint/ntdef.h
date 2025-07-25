@@ -37,6 +37,10 @@ typedef unsigned short USHORT, *PUSHORT;
 typedef unsigned int ULONG, *PULONG;
 typedef CHAR *PCHAR, *LPCH, *PCH;
 typedef CONST CHAR *PCSTR;
+typedef unsigned __int64 ULONGLONG, *PULONGLONG;
+
+/* TODO: Should be in ntbasedef.h */
+#define FIELD_OFFSET(Type, Field) ((LONG)__builtin_offsetof(Type, Field))
 
 __MINT_END_DECLS
 
