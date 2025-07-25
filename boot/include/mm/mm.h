@@ -51,6 +51,7 @@ INT                     MmMarkPhysicalRegion(PMINTLDR_MEMORY_REGION Region);
 
 /* VMM */
 INT                     MmInitializeMemoryManager();
+INT                     MmAllocateRegion(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut);
 UINT_PTR                MmAllocatePagesEx(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut);
 UINT_PTR                MmAllocatePages(SIZE_T PageCount);
 INT                     MmFreePages(UINT_PTR Base, SIZE_T PageCount);

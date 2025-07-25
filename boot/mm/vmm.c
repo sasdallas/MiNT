@@ -155,7 +155,7 @@ INT MmCreateNewRegion(MINTLDR_MEMORY_TYPE Type, UINT_PTR Address, SIZE_T Size) {
     return 0;
 }
 
-UINT_PTR MmAllocatePagesEx(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut) {
+INT MmAllocateRegion(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut) {
     if (!PageCount) {
         WARN("MmAllocatePagesEx called for 0 pages\n");
         return NULL;
@@ -179,7 +179,7 @@ UINT_PTR MmAllocatePagesEx(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut) 
         NewRegion->Size = Size;
         MintMemoryRegionList = NewRegion;
         if (RegionOut) *RegionOut = NewRegion;
-        return NewRegion->Base;
+        return 0;
     }
 
     while (Region) {
@@ -203,7 +203,7 @@ UINT_PTR MmAllocatePagesEx(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut) 
             Next->PrevRegion = NewRegion;
             Region->NextRegion = NewRegion;
             if (RegionOut) *RegionOut = NewRegion;
-            return NewRegion->Base;
+            return 0;
         } 
 
         Region = Region->NextRegion;
@@ -218,7 +218,28 @@ UINT_PTR MmAllocatePagesEx(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut) 
     NewRegion->Size = Size;
     Region->NextRegion = NewRegion;
     if (RegionOut) *RegionOut = NewRegion;
-    return NewRegion->Base;
+    return 0;
+}
+
+UINT_PTR MmAllocatePagesEx(SIZE_T PageCount, PMINTLDR_MEMORY_REGION *RegionOut) {
+    PMINTLDR_MEMORY_REGION Region;
+    if (MmAllocateRegion(PageCount, &Region)) {
+        ERROR("MmAllocateRegion failed\n");
+        return NULL; /* TODO: Error handling? */
+    }
+
+    /* Now allocate each part of the page */
+    for (UINT_PTR i = Region->Base; i < Region->Base + Region->Size; i += MM_PAGE_SIZE) {
+        MINTLDR_PAGE Page = {
+            .Flags = MINTLDR_PAGE_PRESENT | MINTLDR_PAGE_WRITABLE,
+            .Address = MmAllocatePhysicalPages(1)
+        };
+
+        MmArchSetPage(&Page, i);
+    }
+
+    if (RegionOut) *RegionOut = Region;
+    return Region->Base;
 }
 
 UINT_PTR MmAllocatePages(SIZE_T PageCount) {

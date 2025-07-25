@@ -33,8 +33,12 @@ typedef enum {
 typedef struct MINTLDR_MODULE {
     MINTLDR_MODULE_TYPE     Type;               // Type of module
     UINT_PTR                PhysicalPageBase;   // Physical page base
-    SIZE_T                  ModuleSize;         // Module size
+    UINT_PTR                Base;               // Module base in memory
+    SIZE_T                  Size;               // Module size
 } MINTLDR_MODULE, *PMINTLDR_MODULE; 
+
+extern MINTLDR_MODULE ModuleList[];
+extern SIZE_T ModuleCount;
 
 __MINT_END_DECLS
 

@@ -22,6 +22,7 @@
 
 /* Memory region list */
 MINTLDR_MEMORY_REGION MemoryRegionList[81];
+SIZE_T ModuleCount = 0;
 
 /* Module list */
 MINTLDR_MODULE ModuleList[80];
@@ -87,10 +88,9 @@ VOID __stdcall MintLoaderProcessMultibootInformation(PMULTIBOOT_HEADER Multiboot
 
     /* Now get each Multiboot entry */
     PMULTIBOOT_MODULE Module = (PMULTIBOOT_MODULE)(UINT64)MultibootHeader->ModuleStart;
-    SIZE_T ModIndex = 0;
     while ((PVOID)Module < (PVOID)(UINT64)(MultibootHeader->ModuleStart + MultibootHeader->ModuleCount)) {
-        ModuleList[ModIndex].PhysicalPageBase = Module->ModuleStart;
-        ModuleList[ModIndex].ModuleSize = Module->ModuleEnd - Module->ModuleStart;
+        ModuleList[ModuleCount].PhysicalPageBase = MM_PAGE_ALIGN_DOWN(Module->ModuleStart);
+        ModuleList[ModuleCount].Size = MM_PAGE_ALIGN_UP(Module->ModuleEnd - Module->ModuleStart);
 
         /* Check command line for type */
         PCHAR Cmdline = (PCHAR)Module->ModuleCmdline;
@@ -98,28 +98,49 @@ VOID __stdcall MintLoaderProcessMultibootInformation(PMULTIBOOT_HEADER Multiboot
         /* !!! */   
         if (!strcmp(Cmdline, "kernel")) {
             INFO("Found MINTKRNL.EXE: %16x - %16x\n", Module->ModuleStart, Module->ModuleEnd);
-            ModuleList[ModIndex].Type = ModuleKernel;
+            ModuleList[ModuleCount].Type = ModuleKernel;
         } else {
             WARN("Unrecognized Multiboot module of type: %s\n", Cmdline);
-            ModuleList[ModIndex].Type = ModuleUnknown;
+            ModuleList[ModuleCount].Type = ModuleUnknown;
         }
 
-        ModIndex++;
+        ModuleCount++;
         Module = (PMULTIBOOT_MODULE)((PVOID)Module + sizeof(MULTIBOOT_MODULE));
     }
 
     /* TEMP: Make sure we got kernel */
     INT FoundKernel = 0;
-    for (SIZE_T i = 0; i < ModIndex; i++) {
+    for (SIZE_T i = 0; i < ModuleCount; i++) {
         if (ModuleList[i].Type == ModuleKernel) {
             FoundKernel = 1;
         }
 
-        DEBUG("Multiboot module: %16x - %16x: %s\n", ModuleList[i].PhysicalPageBase, ModuleList[i].PhysicalPageBase + ModuleList[i].ModuleSize, ModuleTypeToString(ModuleList[i].Type));
+        DEBUG("Multiboot module: %16x - %16x: %s\n", ModuleList[i].PhysicalPageBase, ModuleList[i].PhysicalPageBase + ModuleList[i].Size, ModuleTypeToString(ModuleList[i].Type));
     }
 
     if (!FoundKernel) {
         MintBugCheckWithMessage(FILE_NOT_FOUND, "Missing MINTKRNL.EXE or it was not passed to MINTLDR");
+    }
+}
+
+void MintLoaderRelocateModules() {
+    for (SIZE_T i = 0; i < ModuleCount; i++) {
+        PMINTLDR_MEMORY_REGION Region;
+        MmAllocateRegion(ModuleList[i].Size / MM_PAGE_SIZE, &Region);
+        ModuleList[i].Base = Region->Base;
+        Region->MemoryType = RegionLoaderData;
+
+        /* Setup each page in the module */
+        for (UINT_PTR v = 0x0; v < ModuleList[i].Size; v += MM_PAGE_SIZE) {
+            MINTLDR_PAGE Page = {
+                .Flags = MINTLDR_PAGE_PRESENT,
+                .Address = ModuleList[i].PhysicalPageBase + v
+            };
+
+            MmArchSetPage(&Page, ModuleList[i].Base + v);
+        }
+
+        DEBUG("Copied module %s to %16x - %16x\n", ModuleTypeToString(ModuleList[i].Type), ModuleList[i].Base, ModuleList[i].Base + ModuleList[i].Size);
     }
 }
 
@@ -153,8 +174,11 @@ void __stdcall MintLoaderMain(PMULTIBOOT_HEADER MultibootHeader, UINT32 Multiboo
     MmInitializeMemoryManager();
     UiPrint("Memory manager online\n");
 
-    UiPrint("Getting ready to load MiNT\n");
-    MintBugCheckWithMessage(OUT_OF_MEMORY, "MiNTy Fresh\n");
+    /* Relocate modules */
+    MintLoaderRelocateModules();
+    UiPrint("Modules copied to memory\n");
 
+    UiPrint("Getting ready to load MiNT\n");
+    
     for (;;);
 }

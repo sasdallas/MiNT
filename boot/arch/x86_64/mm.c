@@ -11,6 +11,7 @@
  */
 
 #include <arch/x86_64/mm.h>
+#include <arch/x86_64/main.h>
 #include <mm/mm.h>
 #include <dbg.h>
 #include <ntdef.h>
@@ -63,6 +64,22 @@ VOID MmArchUnmarkMintldrImagePhysical() {
     };
 
     MmMarkPhysicalRegion(&Region);
+
+    /* Unmark all modules as well */
+    for (SIZE_T i = 0; i < ModuleCount; i++) {
+            
+        /* Unmark the Mintldr module */
+        MINTLDR_MEMORY_REGION ModRegion = {
+            .Base = (UINT_PTR)MM_PAGE_ALIGN_DOWN(ModuleList[i].PhysicalPageBase),
+            .Size = (UINT_PTR)MM_PAGE_ALIGN_UP(ModuleList[i].Size),
+            .MemoryType = RegionLoaderData,
+            .NextRegion = NULL,
+            .PrevRegion = NULL,
+        };
+
+        MmMarkPhysicalRegion(&ModRegion);
+
+    }
 }
 
 VOID MmArchUnmarkMintldrImage() {
