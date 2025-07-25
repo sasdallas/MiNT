@@ -34,10 +34,10 @@ MEMORY_PAGE MintLoaderIdentityMapPD[128][512] __attribute__((aligned(MM_PAGE_SIZ
 
 UINT_PTR MmArchFindSpaceForPmmBitmap(SIZE_T SpaceRequired) {
     /* For now place the PMM buffer at the end. This isn't how you memory manage */
-    DEBUG("MINTLDR image bounds: 0x%x - 0x%x\n", MM_PAGE_ALIGN_DOWN((UINT64)&__mintldr_image_start), MM_PAGE_ALIGN_UP(((UINT64)&__mintldr_image_end)));
+    DEBUG("MINTLDR image bounds: 0x%x - 0x%x\n", MintLoaderImageStart, MintLoaderImageEnd);
     
     /* TODO: Validate this spot is available */
-    UINT_PTR PmmBufferLocation = (UINT_PTR)MM_PAGE_ALIGN_UP((UINT64)&__mintldr_image_end);
+    UINT_PTR PmmBufferLocation = (UINT_PTR)MM_PAGE_ALIGN_UP(MintLoaderImageEnd);
     DEBUG("Placing PMM buffer at 0x%x\n", PmmBufferLocation);
     return PmmBufferLocation;
 }
@@ -64,22 +64,6 @@ VOID MmArchUnmarkMintldrImagePhysical() {
     };
 
     MmMarkPhysicalRegion(&Region);
-
-    /* Unmark all modules as well */
-    for (SIZE_T i = 0; i < ModuleCount; i++) {
-            
-        /* Unmark the Mintldr module */
-        MINTLDR_MEMORY_REGION ModRegion = {
-            .Base = (UINT_PTR)MM_PAGE_ALIGN_DOWN(ModuleList[i].PhysicalPageBase),
-            .Size = (UINT_PTR)MM_PAGE_ALIGN_UP(ModuleList[i].Size),
-            .MemoryType = RegionLoaderData,
-            .NextRegion = NULL,
-            .PrevRegion = NULL,
-        };
-
-        MmMarkPhysicalRegion(&ModRegion);
-
-    }
 }
 
 VOID MmArchUnmarkMintldrImage() {

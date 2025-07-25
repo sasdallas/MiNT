@@ -19,6 +19,7 @@
 #include <arch/serial.h>
 #include <arch/x86_64/main.h>
 #include <minilibc/string.h>
+#include <ldr/ldr.h>
 
 /* Memory region list */
 MINTLDR_MEMORY_REGION MemoryRegionList[81];
@@ -26,6 +27,17 @@ SIZE_T ModuleCount = 0;
 
 /* Module list */
 MINTLDR_MODULE ModuleList[80];
+
+/* The kernel module (ugh) */
+PMINTLDR_MODULE MintKernelModule = NULL;
+
+
+extern UINT32 __mintldr_image_start;
+extern UINT32 __mintldr_image_end;
+
+/* MINTLDR image bounds */
+UINT_PTR MintLoaderImageStart = NULL;
+UINT_PTR MintLoaderImageEnd = NULL;
 
 MINTLDR_MEMORY_TYPE MintLoaderMultibootToLoaderType(INT Type) {
     switch (Type) {
@@ -95,6 +107,11 @@ VOID __stdcall MintLoaderProcessMultibootInformation(PMULTIBOOT_HEADER Multiboot
         /* Check command line for type */
         PCHAR Cmdline = (PCHAR)Module->ModuleCmdline;
 
+        /* Increase image bounds to encompass module */
+        if (MM_PAGE_ALIGN_UP(Module->ModuleEnd) > MintLoaderImageEnd) {
+            MintLoaderImageEnd = MM_PAGE_ALIGN_UP(Module->ModuleEnd);
+        }
+        
         /* !!! */   
         if (!strcmp(Cmdline, "kernel")) {
             INFO("Found MINTKRNL.EXE: %16x - %16x\n", Module->ModuleStart, Module->ModuleEnd);
@@ -109,16 +126,15 @@ VOID __stdcall MintLoaderProcessMultibootInformation(PMULTIBOOT_HEADER Multiboot
     }
 
     /* TEMP: Make sure we got kernel */
-    INT FoundKernel = 0;
     for (SIZE_T i = 0; i < ModuleCount; i++) {
         if (ModuleList[i].Type == ModuleKernel) {
-            FoundKernel = 1;
+            MintKernelModule = &ModuleList[i];
         }
 
         DEBUG("Multiboot module: %16x - %16x: %s\n", ModuleList[i].PhysicalPageBase, ModuleList[i].PhysicalPageBase + ModuleList[i].Size, ModuleTypeToString(ModuleList[i].Type));
     }
 
-    if (!FoundKernel) {
+    if (!MintKernelModule) {
         MintBugCheckWithMessage(FILE_NOT_FOUND, "Missing MINTKRNL.EXE or it was not passed to MINTLDR");
     }
 }
@@ -162,7 +178,11 @@ void __stdcall MintLoaderMain(PMULTIBOOT_HEADER MultibootHeader, UINT32 Multiboo
     /* Say hello */
     INFO("MINTLDR v1.0\n");
 
-    /* Process Multiboot information */
+    /* Initialize MINTLDR bounds */
+    MintLoaderImageStart = MM_PAGE_ALIGN_DOWN((UINT64)&__mintldr_image_start);
+    MintLoaderImageEnd = MM_PAGE_ALIGN_UP((UINT64)&__mintldr_image_end);
+
+    /* Process Multiboot information and update bounds */
     MintLoaderProcessMultibootInformation(MultibootHeader);
     UiPrint("Finished processing loader data\n");
 
@@ -178,7 +198,9 @@ void __stdcall MintLoaderMain(PMULTIBOOT_HEADER MultibootHeader, UINT32 Multiboo
     MintLoaderRelocateModules();
     UiPrint("Modules copied to memory\n");
 
-    UiPrint("Getting ready to load MiNT\n");
-    
+    /* Load kernel */
+    UiPrint("Loading MINTKRNL.exe\n");
+    LdrImageLoad(MintKernelModule->Base, RegionKernel, NULL);
+
     for (;;);
 }

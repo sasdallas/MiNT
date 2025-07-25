@@ -39,6 +39,8 @@ typedef struct MINTLDR_MODULE {
 
 extern MINTLDR_MODULE ModuleList[];
 extern SIZE_T ModuleCount;
+extern UINT_PTR MintLoaderImageStart;
+extern UINT_PTR MintLoaderImageEnd;
 
 __MINT_END_DECLS
 

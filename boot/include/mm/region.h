@@ -26,6 +26,7 @@ typedef enum {
     RegionLoaderCode,
     RegionLoaderData,
     RegionLoaderHeap,
+    RegionKernel,
 } MINTLDR_MEMORY_TYPE;
 
 typedef struct MINTLDR_MEMORY_REGION {

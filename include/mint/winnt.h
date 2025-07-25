@@ -21,6 +21,7 @@ __MINT_BEGIN_DECLS
 
 #include <basetsd.h>
 #include <ntdef.h>
+#include <ddk/ntimage.h>
 
 #ifndef DECLSPEC_EXPORT
 #define DECLSPEC_EXPORT __declspec(dllexport)

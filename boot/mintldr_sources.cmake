@@ -49,5 +49,10 @@ list(APPEND __MINILIBC_SOURCES
                     minilibc/string.c
                     minilibc/stdlib.c)
 
+# ===== LDR SOURCES =====
+
+list(APPEND __LDR_SOURCES
+                    ldr/ldr.c)
+
 # ===== FINAL SOURCES =====
-list(APPEND __MINTLDR_SOURCE ${__ARCH_SOURCES} ${__UI_SOURCES} ${__MM_SOURCES} ${__MINILIBC_SOURCES})
+list(APPEND __MINTLDR_SOURCE ${__ARCH_SOURCES} ${__UI_SOURCES} ${__MM_SOURCES} ${__LDR_SOURCES} ${__MINILIBC_SOURCES})
