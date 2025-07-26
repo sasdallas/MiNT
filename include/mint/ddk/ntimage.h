@@ -65,6 +65,14 @@ typedef struct _IMAGE_DATA_DIRECTORY {
 #define IMAGE_NT_OPTIONAL_HDR_MAGIC             IMAGE_NT_OPTIONAL_HDR32_MAGIC
 #endif
 
+#define IMAGE_DIRECTORY_ENTRY_EXPORT            0
+#define IMAGE_DIRECTORY_ENTRY_IMPORT            1
+#define IMAGE_DIRECTORY_ENTRY_RESOURCE          2
+#define IMAGE_DIRECTORY_ENTRY_EXCEPTION         3
+#define IMAGE_DIRECTORY_ENTRY_SECURITY          4
+#define IMAGE_DIRECTORY_ENTRY_BASERELOC         5
+#define IMAGE_DIRECTORY_ENTRY_DEBUG             6
+
 typedef struct _IMAGE_OPTIONAL_HEADER {
     WORD                 Magic;
     BYTE                 MajorLinkerVersion;
@@ -208,11 +216,81 @@ typedef struct _IMAGE_SECTION_HEADER {
     DWORD Characteristics;
 } IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER;
 
-
 #define IMAGE_FIRST_SECTION(NtHeader) ((PIMAGE_SECTION_HEADER)((ULONG_PTR)(NtHeader) + (FIELD_OFFSET(IMAGE_NT_HEADERS, OptionalHeader) + ((NtHeader)->FileHeader.SizeOfOptionalHeader))))
 
+typedef struct _IMAGE_IMPORT_DESCRIPTOR {
+    union {
+        DWORD Characteristics;
+        DWORD OriginalFirstThunk;
+    } DUMMYUNIONNAME;
+
+    DWORD TimeDateStamp;
+    DWORD ForwarderChain;
+    DWORD Name;
+    DWORD FirstThunk;
+} IMAGE_IMPORT_DESCRIPTOR, *PIMAGE_IMPORT_DESCRIPTOR;
 
 
+typedef struct _IMAGE_EXPORT_DIRECTORY {
+    DWORD Characteristics;
+    DWORD TimeDateStamp;
+    USHORT MajorVersion;
+    USHORT MinorVersion;
+    DWORD Name;
+    DWORD Base;
+    DWORD NumberOfFunctions;
+    DWORD NumberOfNames;
+    DWORD AddressOfFunctions;
+    DWORD AddressOfNames;
+    DWORD AddressOfNameOrdinals;
+} IMAGE_EXPORT_DIRECTORY, *PIMAGE_EXPORT_DIRECTORY;
+
+typedef struct _IMAGE_IMPORT_BY_NAME {
+    WORD    Hint;
+    BYTE    Name[1];
+} IMAGE_IMPORT_BY_NAME, *PIMAGE_IMPORT_BY_NAME;
+
+#define IMAGE_ORDINAL_FLAG32            0x80000000
+#define IMAGE_ORDINAL_FLAG64            0x8000000000000000
+#define IMAGE_SNAP_BY_ORDINAL64(Ordinal)    (((Ordinal) & IMAGE_ORDINAL_FLAG64) == 0)
+#define IMAGE_SNAP_BY_ORDINAL32(Ordinal)    (((Ordinal) & IMAGE_ORDINAL_FLAG32) == 0)
+
+#ifdef _WIN64
+#define IMAGE_ORDINAL_FLAG              IMAGE_ORDINAL_FLAG64
+#define IMAGE_SNAP_BY_ORDINAL(Ordinal)  IMAGE_SNAP_BY_ORDINAL64(Ordinal)
+#else
+#define IMAGE_ORDINAL_FLAG              IMAGE_ORDINAL_FLAG32
+#define IMAGE_SNAP_BY_ORDINAL(Ordinal)  IMAGE_SNAP_BY_ORDINAL32(Ordinal)
+#endif
+
+#define IMAGE_ORDINAL(Ordinal)          ((Ordinal) & 0xFFFF)
+
+
+typedef struct _IMAGE_THUNK_DATA32 {
+    union {
+        DWORD   Function;
+        DWORD   Ordinal;
+        PIMAGE_IMPORT_BY_NAME AddressOfData;
+        DWORD ForwarderStringl;
+    } u1;
+} IMAGE_THUNK_DATA32, *PIMAGE_THUNK_DATA32;
+
+typedef struct _IMAGE_THUNK_DATA64 {
+    union {
+        ULONGLONG   Function;
+        ULONGLONG   Ordinal;
+        PIMAGE_IMPORT_BY_NAME AddressOfData;
+        ULONGLONG ForwarderStringl;
+    } u1;
+} IMAGE_THUNK_DATA64, *PIMAGE_THUNK_DATA64;
+
+#ifdef _WIN64
+typedef IMAGE_THUNK_DATA64 IMAGE_THUNK_DATA;
+typedef PIMAGE_THUNK_DATA64 PIMAGE_THUNK_DATA;
+#else
+typedef IMAGE_THUNK_DATA32 IMAGE_THUNK_DATA;
+typedef PIMAGE_THUNK_DATA32 PIMAGE_THUNK_DATA;
+#endif
 
 __MINT_END_DECLS
 

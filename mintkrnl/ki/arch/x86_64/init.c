@@ -14,7 +14,12 @@
 #include <winnt.h>
 #include <ntdef.h>
 
+extern BOOL NTAPI HalInitSystem(ULONG BootPhase, PVOID LoaderBlock);
+
 DECLSPEC_NORETURN void __stdcall KiSystemStartup() {
+    /* Test */
+    HalInitSystem(0, NULL);
+
     for (;;);
     __builtin_unreachable();
 }

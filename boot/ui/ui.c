@@ -69,6 +69,30 @@ int UiDefaultPrintCallback(PCHAR Str, SIZE_T Size) {
     return Size;
 }
 
+static PCHAR UiHexToString(unsigned __int64 Value, PCHAR Buffer, DWORD BufferSize)
+{
+    // Pointer to the end of the buffer
+    PCHAR ptr = Buffer + BufferSize - 1;
+    *ptr = '\0'; // null-terminate
+
+    if (Buffer == 0) {
+        *(--ptr) = '0';
+    } else {
+        while (Buffer != 0 && ptr > Buffer) {
+            unsigned digit = Value & 0xF;
+            *(--ptr) = (digit < 10) ? ('0' + digit) : ('A' + digit - 10);
+            Value >>= 4;
+        }
+    }
+
+    // Move result to start of buffer
+    DWORD Length = (DWORD)(Buffer + BufferSize - 1 - ptr);
+    memcpy(Buffer, ptr, Length + 1); // include null terminator
+
+    return Buffer;
+}
+
+
 int UiPrintCallback(UiCallback Callback, PCHAR Format, va_list ap) {
     char *p = Format;
 
@@ -139,9 +163,21 @@ int UiPrintCallback(UiCallback Callback, PCHAR Format, va_list ap) {
             case 'X':
             case 'u':
             case 'U':
-                LONG integer = va_arg(ap, long);
+                /* HACK, as we don't support format specifiers like %16llX */
+                ULONGLONG integer;
+                if (ArgumentWidth > 8) {
+                    integer = va_arg(ap, unsigned long long);
+                } else {
+                    integer = (ULONGLONG)va_arg(ap, long);
+                }
+
                 CHAR StringBuffer[32] = { 0 };
-                itoa(integer, StringBuffer, (*p == 'i') ? 10 : 16);
+                if (*p == 'i') {
+                    itoa(integer, StringBuffer, (*p == 'i') ? 10 : 16);
+                } else {
+                    /* Use custom function for bigger hex values */
+                    UiHexToString(integer, StringBuffer, 16);
+                }
 
                 p++;
 

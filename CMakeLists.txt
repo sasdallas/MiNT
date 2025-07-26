@@ -85,6 +85,7 @@ add_custom_target(iso ALL
 set_property(TARGET iso PROPERTY ALWAYS_RECOMPILE TRUE)
 
 # Subdirectories
+add_subdirectory("dll")
 add_subdirectory("mintkrnl")
 add_subdirectory("boot")
 

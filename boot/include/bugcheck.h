@@ -27,6 +27,8 @@ __MINT_BEGIN_DECLS
 #define HEAP_CORRUPTION_DETECTED        ((ULONG)0x00000005)
 #define MEMORY_REGION_LIST_CORRUPT      ((ULONG)0x00000006)
 #define FILE_NOT_FOUND                  ((ULONG)0x00000007)
+#define KERNEL_IMAGE_CORRUPT            ((ULONG)0x00000008)
+#define DLL_CORRUPTED                   ((ULONG)0x00000009)
 
 VOID MintBugCheck(UINT32 Bugcode);
 VOID MintBugCheckWithMessage(UINT32 Bugcode, PCSTR Format, ...);

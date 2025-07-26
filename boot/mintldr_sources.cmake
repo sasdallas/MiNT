@@ -20,7 +20,8 @@ if (ARCH STREQUAL "x86_64")
                                 arch/x86_64/graphics.c
                                 arch/x86_64/serial.c
                                 arch/x86_64/io.c
-                                arch/x86_64/mm.c)
+                                arch/x86_64/mm.c
+                                arch/x86_64/ldr.c)
 
     set(__MINTLDR_LD_SCRIPT arch/x86_64/link.ld)
 else()

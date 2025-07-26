@@ -215,7 +215,7 @@ UINT_PTR MmAllocatePhysicalPages(SIZE_T PageCount) {
 
     PhysicalMemoryInUseBlocks += PageCount;
 
-    DEBUG("MmAllocatePhysicalPages returning 0x%x\n", Frame*MM_PAGE_SIZE);
+    // DEBUG("MmAllocatePhysicalPages returning 0x%x\n", Frame*MM_PAGE_SIZE);
     return (UINT_PTR)(Frame * MM_PAGE_SIZE);
 }
 

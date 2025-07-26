@@ -39,6 +39,8 @@ static PCHAR MmMemoryTypeToString(MINTLDR_MEMORY_TYPE Type) {
             return "LoaderHeap";
         case RegionKernel:
             return "KernelImage";
+        case RegionDll:
+            return "DllFile";
         default:
             return "Unknown";
     }
@@ -78,6 +80,8 @@ INT MmInitializeMemoryManager() {
 
     /* Unmark the initial heap */
     MmCreateNewRegion(RegionLoaderHeap, MintInitialHeap.Base, MintInitialHeap.Size);
+
+    MmCreateNewRegion(RegionBad, 0x0, MM_PAGE_SIZE);
 
     /* Start the default heap */
     MmInitDefaultHeap();

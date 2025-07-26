@@ -59,6 +59,14 @@ static PCHAR ModuleTypeToString(MINTLDR_MODULE_TYPE Type) {
     switch (Type) {
         case ModuleKernel:
             return "KernelImage";
+        case ModuleHal:
+            return "HalImage";
+        case ModuleKdcom:
+            return "KdcomImage";
+        case ModuleDll:
+            return "GenericDll";
+        case ModuleRamdisk:
+            return "LdrRamdisk";
         default:
             return "Unknown";
     }
@@ -100,7 +108,7 @@ VOID __stdcall MintLoaderProcessMultibootInformation(PMULTIBOOT_HEADER Multiboot
 
     /* Now get each Multiboot entry */
     PMULTIBOOT_MODULE Module = (PMULTIBOOT_MODULE)(UINT64)MultibootHeader->ModuleStart;
-    while ((PVOID)Module < (PVOID)(UINT64)(MultibootHeader->ModuleStart + MultibootHeader->ModuleCount)) {
+    while ((PVOID)Module < (PVOID)(UINT64)(MultibootHeader->ModuleStart + (MultibootHeader->ModuleCount * sizeof(MULTIBOOT_MODULE)))) {
         ModuleList[ModuleCount].PhysicalPageBase = MM_PAGE_ALIGN_DOWN(Module->ModuleStart);
         ModuleList[ModuleCount].Size = MM_PAGE_ALIGN_UP(Module->ModuleEnd - Module->ModuleStart);
 
@@ -116,10 +124,15 @@ VOID __stdcall MintLoaderProcessMultibootInformation(PMULTIBOOT_HEADER Multiboot
         if (!strcmp(Cmdline, "kernel")) {
             INFO("Found MINTKRNL.EXE: %16x - %16x\n", Module->ModuleStart, Module->ModuleEnd);
             ModuleList[ModuleCount].Type = ModuleKernel;
+        } else if (!strcmp(Cmdline, "hal.dll")) {
+            INFO("Found HAL.DLL: %16x - %16x\n", Module->ModuleStart, Module->ModuleEnd);
+            ModuleList[ModuleCount].Type = ModuleHal;
         } else {
             WARN("Unrecognized Multiboot module of type: %s\n", Cmdline);
             ModuleList[ModuleCount].Type = ModuleUnknown;
         }
+        
+        ModuleList[ModuleCount].Cmdline = Cmdline;
 
         ModuleCount++;
         Module = (PMULTIBOOT_MODULE)((PVOID)Module + sizeof(MULTIBOOT_MODULE));
@@ -153,10 +166,22 @@ void MintLoaderRelocateModules() {
                 .Address = ModuleList[i].PhysicalPageBase + v
             };
 
+         
             MmArchSetPage(&Page, ModuleList[i].Base + v);
         }
 
-        DEBUG("Copied module %s to %16x - %16x\n", ModuleTypeToString(ModuleList[i].Type), ModuleList[i].Base, ModuleList[i].Base + ModuleList[i].Size);
+        INFO("Copied module %s to %16x - %16x (%s)\n", ModuleTypeToString(ModuleList[i].Type), ModuleList[i].Base, ModuleList[i].Base + ModuleList[i].Size, ModuleList[i].Cmdline);
+
+        /* Relocate the module cmdline */
+        SIZE_T Len = strlen(ModuleList[i].Cmdline);
+        if (Len) {
+            PVOID NewCmdline = MmAllocateHeap(MintDefaultHeap, Len+1);
+            memcpy(NewCmdline, ModuleList[i].Cmdline, Len);
+            ((PCHAR)NewCmdline)[Len] = 0;
+            ModuleList[i].Cmdline = NewCmdline;
+        } else {
+            ModuleList[i].Cmdline = NULL;
+        }
     }
 }
 
@@ -199,8 +224,14 @@ void __stdcall MintLoaderMain(PMULTIBOOT_HEADER MultibootHeader, UINT32 Multiboo
     UiPrint("Modules copied to memory\n");
 
     /* Load kernel */
-    UiPrint("Loading MINTKRNL.exe\n");
-    LdrImageLoad(MintKernelModule->Base, RegionKernel, NULL);
+    PMINTLDR_LOADED_IMAGE KernelImage = NULL;
+    if (LdrImageLoadEx("mintkrnl.exe", MintKernelModule->Base, RegionKernel, NULL, &KernelImage) || !KernelImage) {
+        MintBugCheck(KERNEL_IMAGE_CORRUPT);
+    }
+
+    /* Away we go! */
+    UiPrint("Launching MINTKRNL\n");
+    ((void (*)())(KernelImage->Entrypoint))();
 
     for (;;);
 }

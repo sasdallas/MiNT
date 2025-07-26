@@ -21,6 +21,8 @@ PCHAR MintBugCodeStrings[] = {
     [HEAP_CORRUPTION_DETECTED]          = "HEAP_CORRUPTION_DETECTED",
     [MEMORY_REGION_LIST_CORRUPT]        = "MEMORY_REGION_LIST_CORRUPT",
     [FILE_NOT_FOUND]                    = "FILE_NOT_FOUND",
+    [KERNEL_IMAGE_CORRUPT]              = "KERNEL_IMAGE_CORRUPT",
+    [DLL_CORRUPTED]                     = "DLL_CORRUPTED",
 };
 
 PCHAR MintBugCodeMessages[] = {
@@ -31,6 +33,8 @@ PCHAR MintBugCodeMessages[] = {
     [HEAP_CORRUPTION_DETECTED]          = "Heap corruption detected.",
     [MEMORY_REGION_LIST_CORRUPT]        = "Memory region list corrupted.",
     [FILE_NOT_FOUND]                    = "A critical boot file was not found.",
+    [KERNEL_IMAGE_CORRUPT]              = "MINTKRNL.EXE is corrupt.",
+    [DLL_CORRUPTED]                     = "A critical DLL is corrupt.",
 };
 
 
@@ -54,7 +58,7 @@ VOID MintBugCheckWithMessage(UINT32 Bugcode, PCSTR Format, ...) {
         UiPrint("\n");
     }
 
-    UiPrint("Report this error on the MiNT GitHub repository.\n");
+    UiPrint("\nReport this error on the MiNT GitHub repository.\n");
 
     for (;;);
 }

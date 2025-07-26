@@ -28,6 +28,10 @@ __MINT_BEGIN_DECLS
 typedef enum {
     ModuleUnknown,
     ModuleKernel,
+    ModuleHal,
+    ModuleKdcom,
+    ModuleDll,
+    ModuleRamdisk,
 } MINTLDR_MODULE_TYPE;
 
 typedef struct MINTLDR_MODULE {
@@ -35,6 +39,7 @@ typedef struct MINTLDR_MODULE {
     UINT_PTR                PhysicalPageBase;   // Physical page base
     UINT_PTR                Base;               // Module base in memory
     SIZE_T                  Size;               // Module size
+    PCHAR                   Cmdline;            // Command line of the module
 } MINTLDR_MODULE, *PMINTLDR_MODULE; 
 
 extern MINTLDR_MODULE ModuleList[];
