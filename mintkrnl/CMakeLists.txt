@@ -29,5 +29,6 @@ set_image_subsystem(mintkrnl native)
 
 # Link to HAL
 target_link_libraries(mintkrnl hal)
+target_link_libraries(mintkrnl kdcom)
 
 add_iso_file(TARGET mintkrnl FILE ${CMAKE_CURRENT_BINARY_DIR}/mintkrnl.exe DESTINATION root FOR iso)

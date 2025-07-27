@@ -13,12 +13,18 @@
 
 #include <winnt.h>
 #include <ntdef.h>
+#include <hal.h>
+#include <kddll.h>
 
 extern BOOL NTAPI HalInitSystem(ULONG BootPhase, PVOID LoaderBlock);
 
 DECLSPEC_NORETURN void __stdcall KiSystemStartup() {
     /* Test */
     HalInitSystem(0, NULL);
+    KdDebuggerInitialize0(NULL);
+
+    KdpDebugPrint("MINTKRNL v1.0.0\n");
+    KdpDebugPrint("KdDebuggerInitialize0 success\n");
 
     for (;;);
     __builtin_unreachable();

@@ -38,6 +38,20 @@ PIMAGE_SECTION_HEADER LdrFindImageSection(UINT_PTR ImageBase, PCHAR SectionName)
     return NULL;
 } 
 
+BOOL LdrFindDllByName(PCHAR DllName, PMINTLDR_LOADED_IMAGE *LoadedImage) {
+    PMINTLDR_LOADED_IMAGE Image = LoadedImageList;
+    while (Image) {
+        if (!strcmp(Image->Name, DllName)) {
+            if (LoadedImage) *LoadedImage = Image;
+            return TRUE;
+        }
+
+        Image = Image->NextImage;
+    }
+
+    return FALSE;
+}
+
 BOOL LdrCheckIfDllLoaded(PCHAR DllName) {
     PMINTLDR_LOADED_IMAGE Image = LoadedImageList;
     while (Image) {
@@ -123,13 +137,22 @@ INT LdrProcessImportTable(PMINTLDR_LOADED_IMAGE LoadedImage, UINT_PTR Executable
 
         /* Look for the DLL */
         UINT_PTR DllBase = NULL;
-        if (!LdrCheckIfDllLoaded((PCHAR)(ExecutableBase + Descriptor->Name))) {
+        PMINTLDR_LOADED_IMAGE LoadedDLL = NULL;
+        if (!LdrFindDllByName((PCHAR)(ExecutableBase + Descriptor->Name), &LoadedDLL)) {
             /* Locate this DLL */
             DllBase = LdrArchImageLookup((PCHAR)(ExecutableBase + Descriptor->Name));
             if (DllBase) {
                 /* Temporary - TODO: We can get away with not loading these */
                 INFO("Found DLL \"%s\" at %16x\n", ExecutableBase + Descriptor->Name, DllBase);
+
+                /* The DLL has been loaded, we can now load it into memory */
+                if (LdrImageLoadEx((PCHAR)(ExecutableBase + Descriptor->Name), DllBase, RegionDll, NULL, &LoadedDLL)) {
+                    /* Temporary - TODO: We can get away with not loading these */
+                    MintBugCheckWithMessage(DLL_CORRUPTED, "Failed to load required DLL file \"%s\"\n", ExecutableBase + Descriptor->Name);
+                }
             }
+        } else {
+            DllBase = (UINT_PTR)LoadedDLL->LoadBase;
         }
 
         if (!DllBase) {
@@ -137,12 +160,7 @@ INT LdrProcessImportTable(PMINTLDR_LOADED_IMAGE LoadedImage, UINT_PTR Executable
             MintBugCheckWithMessage(FILE_NOT_FOUND, "Missing required DLL file \"%s\"\n", ExecutableBase + Descriptor->Name);
         }
 
-        /* The DLL has been loaded, we can now load it into memory */
-        PMINTLDR_LOADED_IMAGE LoadedDLL;
-        if (LdrImageLoadEx((PCHAR)(ExecutableBase + Descriptor->Name), DllBase, RegionDll, NULL, &LoadedDLL)) {
-            /* Temporary - TODO: We can get away with not loading these */
-            MintBugCheckWithMessage(DLL_CORRUPTED, "Failed to load required DLL file \"%s\"\n", ExecutableBase + Descriptor->Name);
-        }
+    
 
         /* Now we can start looking through each required function */
         /* Get the ILT */

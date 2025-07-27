@@ -35,6 +35,7 @@ typedef struct MINTLDR_LOADED_IMAGE {
     struct MINTLDR_LOADED_IMAGE  *PrevImage;    // Previous image in list
 } MINTLDR_LOADED_IMAGE, *PMINTLDR_LOADED_IMAGE;
 
+BOOL LdrFindDllByName(PCHAR DllName, PMINTLDR_LOADED_IMAGE *LoadedImage);
 BOOL LdrCheckIfDllLoaded(PCHAR DllName);
 INT LdrImageLoadEx(PCHAR ImageName, UINT_PTR Base, MINTLDR_MEMORY_TYPE MemoryType, PVOID *ImageBase, PMINTLDR_LOADED_IMAGE *LoadedImageOut);
 INT LdrImageLoad(PCHAR ImageName, UINT_PTR Base, MINTLDR_MEMORY_TYPE MemoryType, PVOID *ImageBase);

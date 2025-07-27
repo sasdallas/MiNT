@@ -176,24 +176,12 @@ int UiPrintCallback(UiCallback Callback, PCHAR Format, va_list ap) {
                     itoa(integer, StringBuffer, (*p == 'i') ? 10 : 16);
                 } else {
                     /* Use custom function for bigger hex values */
-                    UiHexToString(integer, StringBuffer, 16);
+                    UiHexToString(integer, StringBuffer, ArgumentWidth ? ArgumentWidth + 1 : 8);
                 }
 
                 p++;
 
                 StrLength = strlen(StringBuffer);
-                
-                if (ArgumentWidth && ArgumentWidth > StrLength) {
-                    CHAR PaddingBuffer[32];
-                    for (int i = 0; i < ArgumentWidth - StrLength; i++) {
-                        PaddingBuffer[i] = '0';
-                        PaddingBuffer[i+1] = 0;
-                    }
-
-                    Callback(PaddingBuffer, ArgumentWidth - StrLength);
-                    CharactersWritten += ArgumentWidth - StrLength;
-                }
-
                 Callback(StringBuffer, StrLength);
                 CharactersWritten += StrLength;
                 

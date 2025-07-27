@@ -16,6 +16,7 @@
 #include <dbg.h>
 
 UINT_PTR LdrArchImageLookup(PCHAR ImageName) {
+    DEBUG("%s\n", ImageName);
     /* Lookup the module based off the image name */
     for (SIZE_T i = 0; i < ModuleCount; i++) {
         if (ModuleList[i].Cmdline) {
