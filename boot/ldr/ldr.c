@@ -66,7 +66,7 @@ INT LdrProcessExportTable(PMINTLDR_LOADED_IMAGE LoadedImage, UINT_PTR Executable
 
     /* Start going through each export */
     PDWORD ExportNameTable = (PDWORD)(ExecutableBase + ExportDirectory->AddressOfNames);
-    PDWORD NameOrdinalsTable = (PDWORD)(ExecutableBase + ExportDirectory->AddressOfNameOrdinals);
+    PSHORT NameOrdinalsTable = (PSHORT)(ExecutableBase + ExportDirectory->AddressOfNameOrdinals);
     PDWORD ExportAddressTable = (PDWORD)(ExecutableBase + ExportDirectory->AddressOfFunctions);
 
     for (INT i = 0; i < ExportDirectory->NumberOfNames; i++) {
@@ -176,26 +176,6 @@ INT LdrProcessImportTable(PMINTLDR_LOADED_IMAGE LoadedImage, UINT_PTR Executable
             ImportAddressTable++;
         }
 
-        // while (ImportLookupTable->u1.Function) {
-        //     /* Check this entry for ordinal */
-        //     if (!ImportLookupTable->u1.Ordinal) {
-        //         /* Ordinal, damn. TODO */
-        //         MintBugCheckWithMessage(DLL_CORRUPTED, "DLL \"%s\" has ordinal entry (unimplemented)\n", LoadedImage->Name);
-        //     } else {
-        //         /* Normal, yay */
-        //         PIMAGE_IMPORT_BY_NAME HintName = (PIMAGE_IMPORT_BY_NAME)(ExecutableBase + (ImportLookupTable->u1.AddressOfData));
-        //         DEBUG("Require symbol hint=%4x %s\n", HintName->Hint, HintName->Name);
-
-        //         if (LdrLookupExportFromDLL(LoadedDLL, HintName, (PUINT_PTR)&ImportAddressTable->u1.Function)) {
-        //             ERROR("Failed to find symbol in \"%s\": %s\n", LoadedDLL->Name, HintName->Name);
-        //             Error = 1;
-        //         }
-        //     }
-
-        //     ImportLookupTable++;
-        //     ImportAddressTable++;
-        // }
-
         /* Next descriptor */
         Descriptor++;
     }
@@ -228,7 +208,7 @@ INT LdrImageLoadEx(PCHAR ImageName, UINT_PTR Base, MINTLDR_MEMORY_TYPE MemoryTyp
 
     /* TODO: Handle failure and relocation */
     PMINTLDR_MEMORY_REGION Region;
-    UINT_PTR ExecutableBase = MmAllocatePagesAtAddress(NtHeaders->OptionalHeader.SizeOfImage / MM_PAGE_SIZE, (UINT_PTR)NtHeaders->OptionalHeader.ImageBase, &Region);
+    UINT_PTR ExecutableBase = MmAllocatePagesAtAddress(MM_PAGE_ALIGN_UP(NtHeaders->OptionalHeader.SizeOfImage) / MM_PAGE_SIZE, (UINT_PTR)NtHeaders->OptionalHeader.ImageBase, &Region);
     Region->MemoryType = RegionKernel;
 
     /* Copy the headers to the executable base */
