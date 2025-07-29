@@ -107,6 +107,14 @@ typedef ULONG_PTR *PULONG_PTR;
 typedef ULONG32 *PULONG32;
 typedef ULONG64 *PULONG64;
 
+
+static inline void *IntToPtr (const int val) { return ((void *)(INT_PTR)val); }
+static inline void *UIntToPtr (const unsigned int val) { return ((void *)(UINT_PTR)val); }
+static inline void *LongToPtr (const long val) { return ((void *)(LONG_PTR)val); }
+static inline void *ULongToPtr (const unsigned long val) { return ((void *)(ULONG_PTR)val); }
+
+#define UlongToPtr ULongToPtr
+
 __MINT_END_DECLS
 
 #endif

@@ -35,6 +35,9 @@ __MINT_BEGIN_DECLS
 #undef OPTIONAL
 #define OPTIONAL
 
+#undef _Null_terminated_
+#define _Null_terminated_
+
 __MINT_END_DECLS
 
 #endif

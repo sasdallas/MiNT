@@ -19,7 +19,10 @@ __MINT_BEGIN_DECLS
 
 #include <winnt.h>
 #include <ntstatus.h>
+#include <windbgkd.h>
 
+
+/* NOT OFFICIAL, MINTKRNL INTERNAL */
 NTAPI
 NTSTATUS
 KdpDebugPrint(
@@ -28,9 +31,36 @@ KdpDebugPrint(
 );
 
 NTAPI
+VOID
+KdSendPacket(
+    IN ULONG PacketType,
+    IN PSTRING MessageHeader,
+    IN PSTRING MessageData,
+    IN OUT PKD_CONTEXT Context
+);
+
+
+NTAPI
+KDSTATUS
+KdReceivePacket(
+    IN ULONG PacketType,
+    OUT PSTRING MessageHeader,
+    OUT PSTRING MessageData,
+    OUT PULONG DataLength,
+    IN OUT PKD_CONTEXT Context
+);
+
+
+NTAPI
 NTSTATUS
 KdDebuggerInitialize0(
     IN OPTIONAL PVOID LoaderParamterBlock
+);
+
+NTAPI
+NTSTATUS
+KdDebuggerInitialize1(
+    IN OPTIONAL PVOID LoaderParameterBlock
 );
 
 __MINT_END_DECLS

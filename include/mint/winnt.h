@@ -24,16 +24,8 @@ __MINT_BEGIN_DECLS
 #include <ddk/ntimage.h>
 #include <sal.h>
 
-#ifndef DECLSPEC_EXPORT
-#define DECLSPEC_EXPORT __declspec(dllexport)
-#endif
-
-#ifndef DECLSPEC_IMPORT
-#define DECLSPEC_IMPORT __declspec(dllimport)
-#endif
-
-#ifndef DECLSPEC_NORETURN
-#define DECLSPEC_NORETURN __declspec(noreturn)
+#ifndef FORCEINLINE
+#define FORCEINLINE     __attribute__((__always_inline__))
 #endif
 
 #ifndef TRUE
@@ -48,10 +40,15 @@ __MINT_BEGIN_DECLS
 #define NULL 0
 #endif
 
+#ifndef C_ASSERT
+#define C_ASSERT(e) typedef char __C_ASSERT__[(e)?1:-1]
+#endif
+
 /* Type definitions */
 typedef char            CHAR, *PCHAR;
 typedef short           SHORT, *PSHORT;
 typedef int             LONG, *PLONG;
+typedef BOOL            BOOLEAN, *PBOOLEAN;
 
 typedef VOID *PVOID;
 

@@ -24,7 +24,9 @@ DECLSPEC_NORETURN void __stdcall KiSystemStartup() {
     KdDebuggerInitialize0(NULL);
 
     KdpDebugPrint("MINTKRNL v1.0.0\n");
-    KdpDebugPrint("KdDebuggerInitialize0 success\n");
+    KdpDebugPrint("(C) The MiNT operating system, 2025\n");
+
+
 
     for (;;);
     __builtin_unreachable();

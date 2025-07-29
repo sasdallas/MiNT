@@ -18,6 +18,7 @@
 __MINT_BEGIN_DECLS
 
 #include <basetsd.h>
+#include <minwindef.h>
 
 #define CONST const
 
@@ -31,13 +32,8 @@ typedef double DOUBLE;
 #define VOID void
 #endif
 
-/* Types */
-typedef unsigned char UCHAR, *PUCHAR;
-typedef unsigned short USHORT, *PUSHORT;
-typedef unsigned int ULONG, *PULONG;
-typedef CHAR *PCHAR, *LPCH, *PCH;
-typedef CONST CHAR *PCSTR;
-typedef unsigned __int64 ULONGLONG, *PULONGLONG;
+#include <ntbasedef.h>
+#include <ntdef_types.h>
 
 /* TODO: Should be in ntbasedef.h */
 #define FIELD_OFFSET(Type, Field) ((LONG)__builtin_offsetof(Type, Field))
