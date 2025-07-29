@@ -15,6 +15,7 @@
 #include <ntdef.h>
 #include <hal.h>
 #include <kddll.h>
+#include <ke.h>
 
 extern BOOL NTAPI HalInitSystem(ULONG BootPhase, PVOID LoaderBlock);
 
@@ -25,8 +26,10 @@ DECLSPEC_NORETURN void __stdcall KiSystemStartup() {
 
     KdpDebugPrint("MINTKRNL v1.0.0\n");
     KdpDebugPrint("(C) The MiNT operating system, 2025\n");
+    KdpDebugPrint("KdpDebugPrint test: 0x%x\n", 0xDEADBEEF);
+    KdpDebugPrint("KdpDebugPrint test: %s\n", "Hello");
 
-
+    KeInitExceptions();
 
     for (;;);
     __builtin_unreachable();

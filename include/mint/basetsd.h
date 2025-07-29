@@ -113,6 +113,8 @@ static inline void *UIntToPtr (const unsigned int val) { return ((void *)(UINT_P
 static inline void *LongToPtr (const long val) { return ((void *)(LONG_PTR)val); }
 static inline void *ULongToPtr (const unsigned long val) { return ((void *)(ULONG_PTR)val); }
 
+#define NULL (0)
+
 #define UlongToPtr ULongToPtr
 
 __MINT_END_DECLS

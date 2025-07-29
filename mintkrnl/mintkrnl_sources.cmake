@@ -21,6 +21,17 @@ endif()
 
 list(APPEND __KI_SOURCE ${__KI_ARCH_SOURCE})
 
+# ====== KE MODULE ========
+
+if (ARCH STREQUAL "x86_64")
+    list(APPEND __KE_ARCH_SOURCE
+                ke/x86_64/except.c)
+else()
+    message(FATAL_ERROR "ke module not defined for architecture: ${ARCH}")
+endif()
+
+list(APPEND __KE_SOURCE ${__KE_ARCH_SOURCE})
+
 # ======= FINAL SOURCES ========
 
-list(APPEND __MINTKRNL_SOURCE ${__KI_SOURCE})
+list(APPEND __MINTKRNL_SOURCE ${__KI_SOURCE} ${__KE_SOURCE})

@@ -36,10 +36,6 @@ __MINT_BEGIN_DECLS
 #define FALSE 0
 #endif
 
-#ifndef NULL
-#define NULL 0
-#endif
-
 #ifndef C_ASSERT
 #define C_ASSERT(e) typedef char __C_ASSERT__[(e)?1:-1]
 #endif
@@ -49,8 +45,6 @@ typedef char            CHAR, *PCHAR;
 typedef short           SHORT, *PSHORT;
 typedef int             LONG, *PLONG;
 typedef BOOL            BOOLEAN, *PBOOLEAN;
-
-typedef VOID *PVOID;
 
 
 __MINT_END_DECLS

@@ -55,6 +55,7 @@ typedef CONST CHAR *LPCSTR, *PCSTR;
 
 typedef unsigned int UINT, *PUINT;
 
+typedef VOID *PVOID;
 
 
 #endif

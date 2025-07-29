@@ -12,6 +12,7 @@
 
 #include <kddll.h>
 #include <libraries/serial/serial.h>
+#include <stdio.h>
 
 /* Default kernel debugger port */
 static SERIAL_PORT KdpDefaultDebugPort = { .BaudRate = 38400, };
@@ -32,6 +33,7 @@ KdDebuggerInitialize0(
     return STATUS_SUCCESS;
 }
 
+
 NTAPI
 NTSTATUS
 KdpDebugPrint(
@@ -39,10 +41,16 @@ KdpDebugPrint(
     ...
 )
 {
-    /* Temporary testing code */
-    while (*Format) {
-        SerialPutCharacter(&KdpDefaultDebugPort, *Format);
-        Format++;
+    char str[512] = { 0 };
+    va_list ap;
+    va_start(ap, Format);
+    vsnprintf(str, 512, Format, ap);
+    va_end(ap);
+
+    char *s = str;
+    while (*s) {
+        SerialPutCharacter(&KdpDefaultDebugPort, *s);
+        s++;
     }
 
     return STATUS_SUCCESS;

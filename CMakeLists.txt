@@ -64,7 +64,8 @@ endif()
 
 # Create our include directories
 include_directories(
-	include/mint/
+    include/libraries/libc/
+    include/mint/
     include/
 )
 

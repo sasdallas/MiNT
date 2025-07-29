@@ -34,6 +34,12 @@ typedef struct DECLSPEC_ALIGN(16) _M128A {
     LONGLONG High;
 } M128A, *PM128A;
 
+typedef struct _KDESCRIPTOR {
+    USHORT Pad[3];
+    USHORT Limit;
+    PVOID  Base;
+} KDESCRIPTOR, *PKDESCRIPTOR;
+
 __MINT_END_DECLS
 
 #endif 

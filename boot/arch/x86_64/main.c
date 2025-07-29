@@ -36,8 +36,8 @@ extern UINT32 __mintldr_image_start;
 extern UINT32 __mintldr_image_end;
 
 /* MINTLDR image bounds */
-UINT_PTR MintLoaderImageStart = NULL;
-UINT_PTR MintLoaderImageEnd = NULL;
+UINT_PTR MintLoaderImageStart;
+UINT_PTR MintLoaderImageEnd;
 
 MINTLDR_MEMORY_TYPE MintLoaderMultibootToLoaderType(INT Type) {
     switch (Type) {
