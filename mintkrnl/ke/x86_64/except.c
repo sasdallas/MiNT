@@ -14,7 +14,7 @@
 #include <kddll.h>
 
 KIDT_INIT_ENTRY KiInitialIdtEntries[] = { 
-    { .Vector = 0x00, .Dpl = 0x00, .IstIndex = 0x00, .ServiceRoutine = KiDivideErrorFault }
+    { .Vector = 0x00, .Dpl = 0x00, .IstIndex = 0x00, .ServiceRoutine = KiDivisionByZeroException }
 };
 
 KIDTENTRY64 KiIdt[256];
@@ -61,11 +61,19 @@ KeInitExceptions()
 
     /* IDT built, install. */
     __asm__ __volatile__("lidt %0" : : "m"(*(short*)(&KiIdtr.Limit)));
+
+    int a = 45;
+    int b = a / 0;
+    KdpDebugPrint("Result: %d\n", b);
+}
+
+
+VOID
+KiDisableInterrupts() {
+    __asm__ __volatile__ ("cli");
 }
 
 VOID 
-KiDivideErrorFault()
-{
-    KdpDebugPrint("*** Divide exception detected\n");
-    for (;;);
+KiEnableInterrupts() {
+    __asm__ __volatile__ ("sti");
 }

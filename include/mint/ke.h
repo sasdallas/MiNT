@@ -19,6 +19,8 @@ __MINT_BEGIN_DECLS
 
 #include <ketypes.h>
 #include <winnt.h>
+#include <hardware/hardware.h>
+#include <bugcodes.h>
 
 /* Initial IDT entry */
 typedef struct _KIDT_INIT_ENTRY {
@@ -42,13 +44,46 @@ typedef struct _KIDTENTRY64 {
 } KIDTENTRY64, *PKIDTENTRY64;
 
 /* Exception handlers */
-VOID KiDivideErrorFault();
+VOID KiDivisionByZeroException();
 VOID KiDebugTrapOrFault();
 VOID KiNmiInterrupt();
 
 NTAPI
 VOID
 KeInitExceptions();
+
+NTAPI
+VOID
+KeBugCheckWithFrame(
+    ULONG BugCheckCode,
+    ULONG_PTR BugCheckParameter1,
+    ULONG_PTR BugCheckParameter2,
+    ULONG_PTR BugCheckParameter3,
+    ULONG_PTR BugCheckParameter4,
+    PKTRAP_FRAME TrapFrame
+);
+
+NTAPI
+VOID
+KeBugCheckEx(
+    ULONG BugCheckCode,
+    ULONG_PTR BugCheckParameter1,
+    ULONG_PTR BugCheckParameter2,
+    ULONG_PTR BugCheckParameter3,
+    ULONG_PTR BugCheckParameter4
+);
+
+NTAPI
+VOID
+KeBugCheck(
+    ULONG BugCheckCode
+);
+
+VOID
+KiDisableInterrupts();
+
+VOID 
+KiEnableInterrupts();
 
 __MINT_END_DECLS
 

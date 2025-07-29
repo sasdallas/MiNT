@@ -25,10 +25,14 @@ list(APPEND __KI_SOURCE ${__KI_ARCH_SOURCE})
 
 if (ARCH STREQUAL "x86_64")
     list(APPEND __KE_ARCH_SOURCE
-                ke/x86_64/except.c)
+                ke/x86_64/except.c
+                ke/x86_64/trap.S)
 else()
     message(FATAL_ERROR "ke module not defined for architecture: ${ARCH}")
 endif()
+
+list(APPEND __KE_SOURCE
+                ke/bugcheck.c)
 
 list(APPEND __KE_SOURCE ${__KE_ARCH_SOURCE})
 
