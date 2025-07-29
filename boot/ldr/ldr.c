@@ -170,7 +170,7 @@ INT LdrProcessImportTable(PMINTLDR_LOADED_IMAGE LoadedImage, UINT_PTR Executable
         unsigned long long bit = (1 << 31);
     #endif
 
-        PIMAGE_THUNK_DATA ImportLookupTable = (PIMAGE_THUNK_DATA)(ExecutableBase + Descriptor->DUMMYUNIONNAME.OriginalFirstThunk);
+        PIMAGE_THUNK_DATA ImportLookupTable = (PIMAGE_THUNK_DATA)(ExecutableBase + Descriptor->OriginalFirstThunk);
         PIMAGE_THUNK_DATA ImportAddressTable = (PIMAGE_THUNK_DATA)(ExecutableBase + Descriptor->FirstThunk);
 
         while (ImportLookupTable->u1.Function) {
