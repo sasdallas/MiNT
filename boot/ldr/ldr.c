@@ -252,6 +252,7 @@ INT LdrImageLoadEx(PCHAR ImageName, UINT_PTR Base, MINTLDR_MEMORY_TYPE MemoryTyp
     LoadedImageObject->ImageExportList = NULL;
     LoadedImageObject->LoadBase = (PVOID)ExecutableBase;
     LoadedImageObject->PrevImage = NULL;
+    LoadedImageObject->Size = MM_PAGE_ALIGN_UP(NtHeaders->OptionalHeader.SizeOfImage);
     LoadedImageObject->NextImage = LoadedImageList;
     LoadedImageObject->Entrypoint = (PVOID)((UINT_PTR)ExecutableBase + NtHeaders->OptionalHeader.AddressOfEntryPoint);
 

@@ -19,6 +19,7 @@ __MINT_BEGIN_DECLS
 
 #include <winnt.h>
 #include <mm/region.h>
+#include <arc.h>
 
 typedef struct MINTLDR_IMAGE_EXPORT {
     PCHAR Name;                                 // Name of the export
@@ -29,17 +30,23 @@ typedef struct MINTLDR_IMAGE_EXPORT {
 typedef struct MINTLDR_LOADED_IMAGE {
     PCHAR Name;                                 // Name of the loaded image
     PVOID LoadBase;                             // Base of the loaded image
+    UINT_PTR Size;                              // Size, in memory, of the loaded image
     PVOID Entrypoint;                           // Rebased entrypoint
     PMINTLDR_IMAGE_EXPORT ImageExportList;      // Image export list
     struct MINTLDR_LOADED_IMAGE  *NextImage;    // Next image in list
     struct MINTLDR_LOADED_IMAGE  *PrevImage;    // Previous image in list
 } MINTLDR_LOADED_IMAGE, *PMINTLDR_LOADED_IMAGE;
 
+/* !!! */
+#define LDR_DEFAULT_KERNEL_STACK_SIZE               65535
+
 BOOL LdrFindDllByName(PCHAR DllName, PMINTLDR_LOADED_IMAGE *LoadedImage);
 BOOL LdrCheckIfDllLoaded(PCHAR DllName);
 INT LdrImageLoadEx(PCHAR ImageName, UINT_PTR Base, MINTLDR_MEMORY_TYPE MemoryType, PVOID *ImageBase, PMINTLDR_LOADED_IMAGE *LoadedImageOut);
 INT LdrImageLoad(PCHAR ImageName, UINT_PTR Base, MINTLDR_MEMORY_TYPE MemoryType, PVOID *ImageBase);
 UINT_PTR LdrImageGetEntrypoint(UINT_PTR ImageBase, PVOID LoadBase);
+
+INT LdrImageCreateLoaderBlock(PMINTLDR_LOADED_IMAGE LoadedImage, PLOADER_PARAMETER_BLOCK *LoaderBlock);
 
 /* Architecture must implement these */
 UINT_PTR LdrArchImageLookup(PCHAR ImageName);

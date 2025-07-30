@@ -35,8 +35,10 @@ typedef double DOUBLE;
 #include <ntbasedef.h>
 #include <ntdef_types.h>
 
-/* TODO: Should be in ntbasedef.h */
-#define FIELD_OFFSET(Type, Field) ((LONG)__builtin_offsetof(Type, Field))
+typedef struct _LIST_ENTRY {
+    struct _LIST_ENTRY *Flink;
+    struct _LIST_ENTRY *Blink;
+} LIST_ENTRY, *PLIST_ENTRY, PRLIST_ENTRY;
 
 __MINT_END_DECLS
 

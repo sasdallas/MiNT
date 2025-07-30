@@ -57,6 +57,7 @@
     movq %rbx, KTRAP_Rbx(\ktrap)
 
     /* TODO: debug registers, CPU stuff, gsbase, XMM, and more. */
+    /* will have to come back and save IRQL + processor mode once we get further */
 .endm
 
 .global KiDivisionByZeroException
@@ -70,5 +71,20 @@ KiDivisionByZeroException:
     leaq 40(%rsp), %r12             /* r10 = PKTRAP */
 
     EnterTrap       %r12
-    FatalBugcheck   KMODE_EXCEPTION_NOT_HANDLED, $1, $2, $3, $4, %r12
+    FatalBugcheck   KMODE_EXCEPTION_NOT_HANDLED, $0, $0, $0, $0, %r12
+.seh_endproc
+
+.global KiPageFaultException
+.seh_proc KiPageFaultException
+KiPageFaultException:
+    /* Allocate space for KTRAP + stack */
+    subq $KTRAP_Size + 8 + 32, %rsp
+    leaq 40(%rsp), %r12             /* r10 = PKTRAP */
+
+    /* Save CR2 as faulting address */
+    // mov %cr2, KTRAP_FaultAddress(%r12)
+
+    /* TODO: Should call MmAccessFault to resolve PF and then *that* will do KMODE_EXCEPTION_NOT_HANDLED/PAGE_FAULT_IN_NONPAGED_AREA */
+    EnterTrap       %r12
+    FatalBugcheck   KMODE_EXCEPTION_NOT_HANDLED, $0, $0, $0, $0, %r12
 .seh_endproc

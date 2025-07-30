@@ -48,6 +48,8 @@ VOID KiDivisionByZeroException();
 VOID KiDebugTrapOrFault();
 VOID KiNmiInterrupt();
 
+VOID KiPageFaultException();
+
 NTAPI
 VOID
 KeInitExceptions();
@@ -84,6 +86,12 @@ KiDisableInterrupts();
 
 VOID 
 KiEnableInterrupts();
+
+NTAPI
+VOID
+KePrintTrapFrame(
+    PKTRAP_FRAME TrapFrame
+);
 
 __MINT_END_DECLS
 

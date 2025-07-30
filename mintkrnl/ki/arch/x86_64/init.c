@@ -16,18 +16,26 @@
 #include <hal.h>
 #include <kddll.h>
 #include <ke.h>
+#include <arc.h>
 
 extern BOOL NTAPI HalInitSystem(ULONG BootPhase, PVOID LoaderBlock);
 
-DECLSPEC_NORETURN void __stdcall KiSystemStartup() {
+DECLSPEC_NORETURN
+VOID
+NTAPI
+KiSystemStartup(
+    IN PLOADER_PARAMETER_BLOCK LoaderBlock
+) 
+{
     /* Test */
     HalInitSystem(0, NULL);
     KdDebuggerInitialize0(NULL);
 
+    KdpDebugPrint("================================================\n");
     KdpDebugPrint("MINTKRNL v1.0.0\n");
-    KdpDebugPrint("(C) The MiNT operating system, 2025\n");
-    KdpDebugPrint("KdpDebugPrint test: 0x%x\n", 0xDEADBEEF);
-    KdpDebugPrint("KdpDebugPrint test: %s\n", "Hello");
+    KdpDebugPrint("(C) The MiNT operating system, 2025\n\n");
+
+    KdpDebugPrint("Booted from ARC partition: %s\n", LoaderBlock->ArcBootDeviceName);
 
     KeInitExceptions();
 

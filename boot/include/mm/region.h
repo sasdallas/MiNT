@@ -28,6 +28,8 @@ typedef enum {
     RegionLoaderHeap,
     RegionKernel,
     RegionDll,
+    RegionKernelStack,
+    RegionKernelParameterBlock,
 } MINTLDR_MEMORY_TYPE;
 
 typedef struct MINTLDR_MEMORY_REGION {

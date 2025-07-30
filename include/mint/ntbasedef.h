@@ -52,10 +52,17 @@ typedef __int64 LONGLONG, *PLONGLONG;
 typedef CHAR CCHAR;
 typedef CHAR *PCHAR, *LPCH, *PCH;
 typedef CONST CHAR *LPCSTR, *PCSTR;
+typedef _Null_terminated_ CHAR *LPSTR, *PSTR;
 
 typedef unsigned int UINT, *PUINT;
 
 typedef VOID *PVOID;
 
+
+#ifndef FIELD_OFFSET
+    #if defined(__GNUC__)
+        #define FIELD_OFFSET(Type, Field) ((LONG)__builtin_offsetof(Type, Field))
+    #endif
+#endif
 
 #endif

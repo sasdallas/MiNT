@@ -229,9 +229,13 @@ void __stdcall MintLoaderMain(PMULTIBOOT_HEADER MultibootHeader, UINT32 Multiboo
         MintBugCheck(KERNEL_IMAGE_CORRUPT);
     }
 
+    /* Create loader param block */
+    PLOADER_PARAMETER_BLOCK LoaderBlock;
+    LdrImageCreateLoaderBlock(KernelImage, &LoaderBlock);
+
     /* Away we go! */
     UiPrint("Launching MINTKRNL\n");
-    ((void (*)())(KernelImage->Entrypoint))();
+    ((void (*)(PLOADER_PARAMETER_BLOCK))(KernelImage->Entrypoint))(LoaderBlock);
 
     for (;;);
 }

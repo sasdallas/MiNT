@@ -24,7 +24,7 @@ target_link_options(mintkrnl
 
 # Setup image properties
 set_image_entrypoint(mintkrnl KiSystemStartup)
-set_image_base(mintkrnl 0x00400000)
+set_image_base(mintkrnl 0x400000)
 set_image_subsystem(mintkrnl native)
 
 # Link to HAL

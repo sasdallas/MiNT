@@ -53,7 +53,8 @@ list(APPEND __MINILIBC_SOURCES
 # ===== LDR SOURCES =====
 
 list(APPEND __LDR_SOURCES
-                    ldr/ldr.c)
+                    ldr/ldr.c
+                    ldr/parameter.c)
 
 # ===== FINAL SOURCES =====
 list(APPEND __MINTLDR_SOURCE ${__ARCH_SOURCES} ${__UI_SOURCES} ${__MM_SOURCES} ${__LDR_SOURCES} ${__MINILIBC_SOURCES})
