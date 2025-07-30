@@ -14,6 +14,7 @@ add_definitions(
 
 if (ARCH STREQUAL "x86_64")
     list(APPEND __KI_ARCH_SOURCE
+                ki/arch/x86_64/boot.S
                 ki/arch/x86_64/init.c)
 else()
     message(FATAL_ERROR "ki module not defined for architecture: ${ARCH}")

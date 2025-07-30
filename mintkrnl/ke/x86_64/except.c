@@ -40,7 +40,7 @@ VOID
 __attribute__((naked))
 KiUnexpectedInterrupt()
 {
-    /* TODO : Bugcheck */
+    /* TODO : Bugcheck properly */
     KeBugCheck(KMODE_EXCEPTION_NOT_HANDLED);
 }
 
@@ -63,8 +63,6 @@ KeInitExceptions()
 
     /* IDT built, install. */
     __asm__ __volatile__("lidt %0" : : "m"(*(short*)(&KiIdtr.Limit)));
-
-    *(PUINT32)0xDEADBEEF = 12345;
 }
 
 

@@ -1,7 +1,6 @@
 /**
  * @file mintkrnl/ki/arch/x86_64/boot.S
  * @brief Contains boot trampolines
- 
  * 
  * 
  * @copyright
@@ -10,3 +9,11 @@
  * 
  * Copyright (C) 2025 The MiNT development team
  */
+
+.extern KiContinueFromNewKernelStack
+
+.global KiSwitchStacks
+KiSwitchStacks:
+    mov %rsp, %rcx
+    sub $0x308, %rsp
+    jmp KiContinueFromNewKernelStack

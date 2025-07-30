@@ -54,7 +54,7 @@ KdReceivePacket(
 NTAPI
 NTSTATUS
 KdDebuggerInitialize0(
-    IN OPTIONAL PVOID LoaderParamterBlock
+    IN OPTIONAL PVOID LoaderParameterBlock
 );
 
 NTAPI

@@ -20,7 +20,7 @@ static SERIAL_PORT KdpDefaultDebugPort = { .BaudRate = 38400, };
 NTAPI
 NTSTATUS
 KdDebuggerInitialize0(
-    IN OPTIONAL PVOID LoaderParamterBlock
+    IN OPTIONAL PVOID LoaderParameterBlock
 )
 {
     NTSTATUS Status;

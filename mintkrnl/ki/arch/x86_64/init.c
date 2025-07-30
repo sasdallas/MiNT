@@ -19,6 +19,18 @@
 #include <arc.h>
 
 extern BOOL NTAPI HalInitSystem(ULONG BootPhase, PVOID LoaderBlock);
+extern VOID KiSwitchStacks(IN UINT_PTR Stack);
+
+/* Loader block */
+PLOADER_PARAMETER_BLOCK KeLoaderBlock = NULL;
+
+DECLSPEC_NORETURN
+VOID
+KiContinueFromNewKernelStack()
+{
+    KdpDebugPrint("KiContinueFromNewKernelStack Landed\n");
+    for (;;);
+}
 
 DECLSPEC_NORETURN
 VOID
@@ -27,10 +39,11 @@ KiSystemStartup(
     IN PLOADER_PARAMETER_BLOCK LoaderBlock
 ) 
 {
-    /* Test */
-    HalInitSystem(0, NULL);
-    KdDebuggerInitialize0(NULL);
-
+    if (!KeLoaderBlock) {
+        KeLoaderBlock = LoaderBlock;
+    }
+    
+    KdDebuggerInitialize0(LoaderBlock);
     KdpDebugPrint("================================================\n");
     KdpDebugPrint("MINTKRNL v1.0.0\n");
     KdpDebugPrint("(C) The MiNT operating system, 2025\n\n");
@@ -38,6 +51,8 @@ KiSystemStartup(
     KdpDebugPrint("Booted from ARC partition: %s\n", LoaderBlock->ArcBootDeviceName);
 
     KeInitExceptions();
+
+    KiSwitchStacks(LoaderBlock->KernelStack);
 
     for (;;);
     __builtin_unreachable();
